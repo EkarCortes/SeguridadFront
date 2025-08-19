@@ -41,7 +41,7 @@ const Dashboard = () => {
         {/* Fila superior: gráfica y cámara */}
         <div className="flex flex-col md:flex-row gap-4 w-full">
           {/* Gráfica */}
-          <div className="flex-1 bg-[#303036] rounded-lg shadow p-4 min-h-[220px] flex items-center justify-center">
+          <div className="flex-1 bg-[#303036] rounded-lg shadow p-4 min-h-[370px] flex items-center justify-center">
             <AccessChart />
           </div>
           {/* Cámara en vivo */}

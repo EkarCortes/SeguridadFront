@@ -3,6 +3,7 @@ import DataTable, { type TableProps } from "react-data-table-component";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
+import AddIcon from "@mui/icons-material/Add";
 import Modal from "../../components/Modal"; // Asegúrate de crear este archivo
 
 // Ejemplo de datos de agregados
@@ -25,7 +26,7 @@ const initialAgregados = [
     foto: "https://randomuser.me/api/portraits/women/44.jpg",
     telefono: "555-5678",
   },
-  // ...más agregados
+
 ];
 
 const columns = (
@@ -343,8 +344,9 @@ export default function ListaAgregados() {
   const [editUser, setEditUser] = useState<any | null>(null);
   const [deleteUser, setDeleteUser] = useState<any | null>(null);
   const [photoUser, setPhotoUser] = useState<any | null>(null);
+  const [addModal, setAddModal] = useState(false); // Nuevo estado para modal de agregar
   const [currentPage, setCurrentPage] = useState(1);
-  const [search, setSearch] = useState(""); // Nuevo estado para el buscador
+  const [search, setSearch] = useState("");
   const rowsPerPage = 5;
 
   // Filtrado por búsqueda
@@ -382,6 +384,15 @@ export default function ListaAgregados() {
     setPhotoUser(user);
   }
 
+  // Agregar usuario
+  function handleAddUser(data: any) {
+    setAgregados((prev) => [
+      ...prev,
+      { ...data, id: prev.length ? Math.max(...prev.map(a => a.id)) + 1 : 1 },
+    ]);
+    setAddModal(false);
+  }
+
   return (
     <div className="w-full min-h-[600px] p-2 md:p-4">
       <div className="flex flex-col gap-4 w-full">
@@ -392,9 +403,18 @@ export default function ListaAgregados() {
             placeholder="Buscar..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="rounded bg-[#18181b] text-white px-3 py-2 w-64 border border-[#303036] focus:outline-none focus:ring-2 focus:ring-blue-700"
+            className="rounded bg-[#18181b] text-white px-3 py-2 w-80 border border-[#303036] focus:outline-none focus:ring-2 focus:ring-blue-700"
             style={{ minWidth: 0 }}
           />
+          <button
+            className="flex items-center gap-2 px-4 py-2 rounded bg-green-700 text-white hover:bg-green-600 transition"
+            onClick={() => setAddModal(true)}
+            title="Agregar nuevo"
+            type="button"
+          >
+            <AddIcon fontSize="small" />
+            Agregar
+          </button>
         </div>
         <DataTable
           columns={columns(handleEdit, handleDelete, handleSelectPhoto)}
@@ -412,12 +432,28 @@ export default function ListaAgregados() {
           onChangePage={setCurrentPage}
           paginationDefaultPage={currentPage}
           noDataComponent={
+            
             <div className="py-6 text-center text-neutral-400">
               No hay agregados registrados.
             </div>
           }
         />
       </div>
+      {/* Modal agregar */}
+      <Modal open={addModal} onClose={() => setAddModal(false)} size="md" title="Agregar Agregado">
+        <EditForm
+          initial={{
+            nombre: "",
+            cedula: "",
+            email: "",
+            telefono: "",
+            activo: true,
+            foto: "",
+          }}
+          onSave={handleAddUser}
+          onCancel={() => setAddModal(false)}
+        />
+      </Modal>
       {/* Modal editar */}
       <Modal open={!!editUser} onClose={() => setEditUser(null)} size="md" title="Editar Agregado">
         {editUser && (
