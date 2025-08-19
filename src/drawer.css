@@ -1,0 +1,21 @@
+.drawer-layout {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  background: #18181b; /* tu color de fondo */
+}
+
+.drawer-sidebar {
+  width: 64px; /* o el ancho que uses para el menú */
+  background: #23232a;
+  display: flex;
+  flex-direction: column;
+  /* ...otros estilos */
+}
+
+.drawer-content {
+  flex: 1;
+  padding: 32px; /* o el espacio que desees */
+  overflow-y: auto;
+  /* ...otros estilos */
+}
