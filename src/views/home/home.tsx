@@ -82,11 +82,38 @@ const Dashboard = () => {
             style={{
               background: `linear-gradient(180deg, #23232a 0%, #1a1a1f 100%)`,
             }}>
-            {currentMonthData ? (
+            {/* Mostrar loading primero, luego error, luego datos, y finalmente el estado sin datos */}
+            {monthlyLoading ? (
+              <DonutChart 
+                monthlyData={{
+                  autorizados: 0,
+                  rechazados: 0,
+                  total_verificaciones: 0,
+                  tasa_autorizacion: 0,
+                  mes_nombre: '',
+                  personas_unicas: 0
+                }}
+                loading={true}
+                error={null}
+              />
+            ) : monthlyError ? (
+              <DonutChart 
+                monthlyData={{
+                  autorizados: 0,
+                  rechazados: 0,
+                  total_verificaciones: 0,
+                  tasa_autorizacion: 0,
+                  mes_nombre: '',
+                  personas_unicas: 0
+                }}
+                loading={false}
+                error={monthlyError}
+              />
+            ) : currentMonthData ? (
               <DonutChart 
                 monthlyData={currentMonthData} 
-                loading={monthlyLoading} 
-                error={monthlyError} 
+                loading={false} 
+                error={null} 
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center">
@@ -94,18 +121,7 @@ const Dashboard = () => {
               </div>
             )}
           </div>
-        </div>
 
-        {/* Fila inferior: tabla de accesos y cámara */}
-        <div className="flex flex-col md:flex-row gap-4 w-full">
-          {/* Tabla de accesos */}
-          <div className="flex-1 rounded-lg shadow p-4 min-h-[370px] flex items-center justify-center"
-            style={{
-              background: `linear-gradient(180deg, #23232a 0%, #1a1a1f 100%)`,
-            }}>
-            <AccessTable />
-          </div>
-          
           {/* Cámara en vivo */}
           <div className="w-full md:w-[350px] rounded-lg shadow p-4 min-h-[370px] flex flex-col items-center justify-center"
             style={{
@@ -122,6 +138,17 @@ const Dashboard = () => {
               </div>
               <span className="text-neutral-400 text-xs">Click para ampliar</span>
             </div>
+          </div>
+        </div>
+
+        {/* Fila inferior: tabla de accesos */}
+        <div className="w-full">
+          {/* Tabla de accesos */}
+          <div className="rounded-lg shadow p-4 min-h-[370px] flex items-center justify-center"
+            style={{
+              background: `linear-gradient(180deg, #23232a 0%, #1a1a1f 100%)`,
+            }}>
+            <AccessTable />
           </div>
         </div>
       </div>

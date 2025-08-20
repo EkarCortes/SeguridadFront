@@ -48,9 +48,18 @@ const DonutChart: React.FC<DonutChartProps> = ({ monthlyData, loading, error }) 
   if (loading) {
     return (
       <div className="w-full h-full flex items-center justify-center">
-        <div className="flex flex-col items-center gap-2">
-          <div className="w-8 h-8 border-2 border-neutral-600 border-t-blue-500 rounded-full animate-spin"></div>
-          <span className="text-neutral-400 text-sm">Cargando estadísticas...</span>
+        <div className="flex flex-col items-center gap-4">
+          {/* Spinner principal */}
+          <div className="relative">
+            <div className="w-16 h-16 border-4 border-[#303036] border-t-green-500 rounded-full animate-spin"></div>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-8 h-8 border-2 border-transparent border-t-green-400 rounded-full animate-spin animate-reverse"></div>
+            </div>
+          </div>
+          <div className="text-center">
+            <div className="text-neutral-400 text-base font-medium">Cargando datos</div>
+           
+          </div>
         </div>
       </div>
     );
@@ -58,9 +67,14 @@ const DonutChart: React.FC<DonutChartProps> = ({ monthlyData, loading, error }) 
 
   if (error) {
     return (
-      <div className="w-full h-full flex flex-col items-center justify-center gap-2">
-        <span className="text-red-400 text-sm">Error al cargar datos</span>
-        <span className="text-neutral-500 text-xs text-center">{error}</span>
+      <div className="w-full h-full flex flex-col items-center justify-center gap-3">
+        <div className="w-12 h-12 bg-red-500/20 rounded-full flex items-center justify-center">
+          <span className="text-red-400 text-xl">⚠</span>
+        </div>
+        <div className="text-center">
+          <span className="text-red-400 text-sm font-medium">Error al cargar datos</span>
+          <div className="text-neutral-500 text-xs mt-1 text-center max-w-48">{error}</div>
+        </div>
       </div>
     );
   }
