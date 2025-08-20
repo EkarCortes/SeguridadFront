@@ -1,7 +1,5 @@
 import api from '../../config/apiconfig';
 
-
-
 export interface Persona {
   nombre: string;
   foto_url: string;
@@ -14,15 +12,49 @@ export interface PersonsResponse {
   personas: Persona[];
 }
 
-export const agregadosService = {
- 
+export interface PersonFormData {
+  nombre: string;
+  cedula: string;
+  email: string;
+  telefono: string;
+  fotos: File[];
+}
 
+export const agregadosService = {
   getPersons: async (): Promise<PersonsResponse> => {
     try {
       const response = await api.get('/persons');
       return response.data;
     } catch (error) {
       console.error('Error fetching persons data:', error);
+      throw error;
+    }
+  },
+
+  registerPerson: async (personData: PersonFormData): Promise<any> => {
+    try {
+      const formData = new FormData();
+      
+      // Agregar campos de texto
+      formData.append('nombre', personData.nombre);
+      formData.append('cedula', personData.cedula);
+      formData.append('email', personData.email);
+      formData.append('telefono', personData.telefono);
+      
+      // Agregar archivos de fotos
+      personData.fotos.forEach((foto, index) => {
+        formData.append('fotos', foto);
+      });
+
+      const response = await api.post('/persons/register', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      
+      return response.data;
+    } catch (error) {
+      console.error('Error registering person:', error);
       throw error;
     }
   }

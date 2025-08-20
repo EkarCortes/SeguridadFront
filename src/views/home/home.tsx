@@ -2,53 +2,52 @@ import { useState } from "react";
 import AccessTable from "../../components/AccessTable";
 import AccessChart from "../../components/AccessChart";
 import DonutChart from "../../components/DonutChart";
-import CameraStream from "../../components/CameraStream";
 import { useHomeData } from "../../hooks/useHomeData";
 import { useMonthlyStats } from "../../hooks/useMonthlyStats";
 import { useVideoStream } from "../../hooks/useVideoStream";
 
 const CameraModal = ({ open, onClose }: { open: boolean; onClose: () => void }) => {
-  const { streamUrl, isStreamActive, error } = useVideoStream();
+  const { streamUrl } = useVideoStream();
 
   if (!open) return null;
   
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-      <div
-        className="
-          bg-[#23232a] rounded-xl p-4 md:p-6 shadow-lg flex flex-col items-center relative
-          w-full max-w-[95vw] max-h-[95vh]
-          min-w-[90vw] min-h-[60vh]
-          sm:min-w-[500px] sm:min-h-[400px]
-          md:min-w-[800px] md:min-h-[600px]
-          "
-        style={{ boxSizing: "border-box" }}
-      >
-        <button
-          className="absolute top-2 right-2 text-neutral-400 hover:text-white text-xl z-10"
-          onClick={onClose}
-          aria-label="Cerrar"
-        >
-          ×
-        </button>
-        
-        <div className="w-full h-full bg-[#18181b] rounded-lg flex items-center justify-center overflow-hidden">
-          {isStreamActive ? (
-            <img
-              src={streamUrl}
-              alt="Stream en vivo - Pantalla completa"
-              className="w-full h-full object-contain"
-              onError={() => console.error('Error al cargar stream en modal')}
-            />
-          ) : (
-            <div className="flex flex-col items-center gap-4">
-              <span className="text-neutral-400 text-lg">Cámara en vivo</span>
-              <span className="text-red-400 text-sm">
-                {error || 'Sin señal de cámara'}
-              </span>
-            </div>
-          )}
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4">
+      <div className="relative w-full h-full max-w-2xl max-h-[60vh] bg-[#23232a] rounded-xl overflow-hidden ">
+        {/* Header del modal */}
+        <div className="absolute top-0 left-0 right-0 bg-[#23232a] p-4 z-20 flex justify-between items-center border-b border-[#303036]">
+          <h2 className="text-white font-semibold text-lg">Cámara en Vivo</h2>
+          <button
+            className="text-neutral-400 hover:text-white text-2xl w-10 h-10 flex items-center justify-center rounded-full hover:bg-neutral-700 transition-colors"
+            onClick={onClose}
+            aria-label="Cerrar"
+          >
+            ×
+          </button>
         </div>
+        
+        {/* Contenido del video */}
+      <div className="pt-16 h-full bg-[#18181b] flex items-center justify-center">
+  {streamUrl ? (
+    <iframe
+      src={streamUrl}
+      className="w-full h-full border-0"
+      allow="camera; microphone; fullscreen"
+      sandbox="allow-same-origin allow-scripts allow-forms"
+      title="Stream en vivo - Pantalla completa"
+      referrerPolicy="no-referrer-when-downgrade"
+    />
+  ) : (
+    <div className="w-full h-full flex flex-col items-center justify-center">
+      <div className="text-center">
+        <div className="w-16 h-16 border-4 border-neutral-600 border-t-blue-500 rounded-full animate-spin mx-auto mb-4"></div>
+        <span className="text-neutral-400 text-lg block mb-2">Cámara en vivo</span>
+        <span className="text-neutral-500 text-sm">Cargando stream...</span>
+      </div>
+    </div>
+  )}
+</div>
+
       </div>
     </div>
   );
@@ -122,21 +121,31 @@ const Dashboard = () => {
             )}
           </div>
 
-          {/* Cámara en vivo */}
+          {/* Botón Ver Cámara en Vivo */}
           <div className="w-full md:w-[350px] rounded-lg shadow p-4 min-h-[370px] flex flex-col items-center justify-center"
             style={{
               background: `linear-gradient(180deg, #23232a 0%, #1a1a1f 100%)`,
             }}>
-            <div className="flex flex-col items-center gap-3 w-full h-full">
-              <h3 className="text-white font-semibold text-lg">Cámara en Vivo</h3>
-              <div className="flex-1 flex items-center justify-center w-full">
-                <CameraStream 
-                  size="large"
-                  onClick={() => setModalOpen(true)}
-                  className="w-full h-full max-w-[280px] max-h-[210px] cursor-pointer"
-                />
-              </div>
-              <span className="text-neutral-400 text-xs">Click para ampliar</span>
+            <div className="flex flex-col items-center gap-6 w-full h-full justify-center">
+              {/* Icono de cámara */}
+            
+              
+              {/* Título */}
+              <h3 className="text-white font-semibold text-lg text-center">Cámara de Seguridad</h3>
+              
+              {/* Botón principal */}
+              <button
+                onClick={() => setModalOpen(true)}
+                className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-3 rounded-lg transition-colors shadow-lg flex items-center gap-2"
+              >
+           
+                <span>Ver cámara en vivo</span>
+              </button>
+              
+              {/* Texto descriptivo */}
+              <p className="text-neutral-400 text-sm text-center max-w-60">
+                Visualiza el feed en tiempo real de la cámara de seguridad
+              </p>
             </div>
           </div>
         </div>

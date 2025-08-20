@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { videoService } from '../service/home/videoService';
 
 export const useVideoStream = () => {
@@ -6,21 +6,14 @@ export const useVideoStream = () => {
   const [isStreamActive, setIsStreamActive] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const imgRef = useRef<HTMLImageElement>(null);
 
-  const checkStreamStatus = async () => {
+  const initializeStream = async () => {
     try {
       setLoading(true);
       setError(null);
       const url = videoService.getStreamUrl();
       setStreamUrl(url);
-      
-      const isActive = await videoService.checkStreamStatus(url);
-      setIsStreamActive(isActive);
-      
-      if (!isActive) {
-        setError('Stream no disponible');
-      }
+      setIsStreamActive(true);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error al conectar con el stream');
       setIsStreamActive(false);
@@ -29,23 +22,16 @@ export const useVideoStream = () => {
     }
   };
 
-  const handleImageLoad = () => {
-    setIsStreamActive(true);
-    setError(null);
-  };
-
-  const handleImageError = () => {
-    setIsStreamActive(false);
-    setError('Error al cargar el stream');
+  const refetchStream = () => {
+    console.log('Recargando stream...');
+    // Agregar timestamp para forzar recarga
+    const baseUrl = 'https://067704a8ce6c.ngrok-free.app/video';
+    const urlWithTimestamp = `${baseUrl}?ngrok-skip-browser-warning=true&t=${Date.now()}`;
+    setStreamUrl(urlWithTimestamp);
   };
 
   useEffect(() => {
-    checkStreamStatus();
-    
-    // Verificar el estado del stream cada 30 segundos
-    const interval = setInterval(checkStreamStatus, 30000);
-    
-    return () => clearInterval(interval);
+    initializeStream();
   }, []);
 
   return {
@@ -53,9 +39,6 @@ export const useVideoStream = () => {
     isStreamActive,
     loading,
     error,
-    imgRef,
-    handleImageLoad,
-    handleImageError,
-    refetch: checkStreamStatus
+    refetch: refetchStream
   };
 };
