@@ -226,68 +226,117 @@ function EditForm({
   onCancel,
 }: {
   initial: ExtendedPersona;
-  onSave: (data: ExtendedPersona) => void;
+  onSave: (data: ExtendedPersona, updateData: any) => void;
   onCancel: () => void;
 }) {
-  const [form, setForm] = useState({ ...initial });
-  const [preview, setPreview] = useState(form.foto_url || "");
+  const [form, setForm] = useState({
+    nombre: initial.nombre,
+    cedula: initial.cedula || '',
+    email: initial.email || '',
+    telefono: initial.telefono || '',
+  });
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [previews, setPreviews] = useState<string[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
-    const { name, value, type, checked, files } = e.target as any;
-    if (name === "foto_url" && files && files[0]) {
-      const file = files[0];
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const { name, value } = e.target;
+    setForm((f) => ({
+      ...f,
+      [name]: value,
+    }));
+  }
+
+  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const files = Array.from(e.target.files || []);
+    
+    if (files.length > 5) {
+      alert('Máximo 5 fotos permitidas');
+      return;
+    }
+
+    setSelectedFiles(files);
+    
+    // Crear previews
+    const newPreviews: string[] = [];
+    files.forEach((file) => {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setPreview(reader.result as string);
-        setForm((f) => ({
-          ...f,
-          foto_url: reader.result as string,
-        }));
+        newPreviews.push(reader.result as string);
+        if (newPreviews.length === files.length) {
+          setPreviews(newPreviews);
+        }
       };
       reader.readAsDataURL(file);
-    } else {
-      setForm((f) => ({
-        ...f,
-        [name]: type === "checkbox" ? checked : value,
-      }));
+    });
+  }
+
+  function removeFile(index: number) {
+    const newFiles = selectedFiles.filter((_, i) => i !== index);
+    const newPreviews = previews.filter((_, i) => i !== index);
+    setSelectedFiles(newFiles);
+    setPreviews(newPreviews);
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setIsSubmitting(true);
+    
+    try {
+      const updateData = {
+        cedula: form.cedula !== initial.cedula ? form.cedula : undefined,
+        email: form.email !== initial.email ? form.email : undefined,
+        telefono: form.telefono !== initial.telefono ? form.telefono : undefined,
+        fotos_nuevas: selectedFiles.length > 0 ? selectedFiles : undefined,
+      };
+
+      // Filtrar campos undefined
+      const filteredUpdateData = Object.fromEntries(
+        Object.entries(updateData).filter(([_, value]) => value !== undefined)
+      );
+
+      await onSave({ ...initial, ...form }, filteredUpdateData);
+    } catch (error) {
+      console.error('Error al actualizar:', error);
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    onSave(form);
-  }
-
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <div className="flex gap-2">
         <div className="flex-1">
-          <label className="block text-neutral-400 text-sm mb-1">Nombre</label>
+          <label className="block text-neutral-400 text-sm mb-1">
+            Nombre
+          </label>
           <input
-            className="w-full rounded bg-[#18181b] text-white px-3 py-2"
+            className="w-full rounded bg-[#27272a] text-neutral-400 px-3 py-2 border border-[#303036] cursor-not-allowed"
             name="nombre"
-            value={form.nombre || ""}
-            onChange={handleChange}
-            required
+            value={form.nombre}
+            disabled
+            title="El nombre no se puede editar"
           />
+          <p className="text-xs text-neutral-500 mt-1">El nombre no se puede modificar</p>
         </div>
         <div className="flex-1">
           <label className="block text-neutral-400 text-sm mb-1">Cédula</label>
           <input
-            className="w-full rounded bg-[#18181b] text-white px-3 py-2"
+            className="w-full rounded bg-[#18181b] text-white px-3 py-2 border border-[#303036] focus:outline-none focus:ring-2 focus:ring-blue-700"
             name="cedula"
-            value={form.cedula || ""}
+            value={form.cedula}
             onChange={handleChange}
           />
         </div>
       </div>
+
       <div className="flex gap-2">
         <div className="flex-1">
           <label className="block text-neutral-400 text-sm mb-1">Email</label>
           <input
-            className="w-full rounded bg-[#18181b] text-white px-3 py-2"
+            className="w-full rounded bg-[#18181b] text-white px-3 py-2 border border-[#303036] focus:outline-none focus:ring-2 focus:ring-blue-700"
             name="email"
-            value={form.email || ""}
+            value={form.email}
             onChange={handleChange}
             type="email"
           />
@@ -295,49 +344,99 @@ function EditForm({
         <div className="flex-1">
           <label className="block text-neutral-400 text-sm mb-1">Teléfono</label>
           <input
-            className="w-full rounded bg-[#18181b] text-white px-3 py-2"
+            className="w-full rounded bg-[#18181b] text-white px-3 py-2 border border-[#303036] focus:outline-none focus:ring-2 focus:ring-blue-700"
             name="telefono"
-            value={form.telefono || ""}
+            value={form.telefono}
             onChange={handleChange}
           />
         </div>
       </div>
       
       <div>
-        <label className="block text-neutral-400 text-sm mb-1">Foto (subir imagen)</label>
-        <div className="flex items-center gap-4">
-          <input
-            type="file"
-            name="foto_url"
-            accept="image/*"
-            onChange={handleChange}
-            className="w-auto rounded bg-[#18181b] text-white px-3 py-2"
-          />
-          {preview && (
+        <label className="block text-neutral-400 text-sm mb-1">
+          Foto actual
+        </label>
+        <div className="mb-3">
+          {initial.foto_url && (
             <img
-              src={preview}
-              alt="preview"
-              className="w-16 h-16 rounded-lg object-cover border-2 border-[#303036]"
+              src={`http://20.3.129.141:8001/${initial.foto_url.replace(/^\/+/, "")}`}
+              alt={initial.nombre}
+              className="w-20 h-20 rounded-lg object-cover border-2 border-[#303036]"
               onError={(e) => {
-                (e.target as HTMLImageElement).src = "https://via.placeholder.com/64";
+                (e.target as HTMLImageElement).src = "https://via.placeholder.com/80";
               }}
             />
           )}
         </div>
+        
+        <label className="block text-neutral-400 text-sm mb-1">
+          Nuevas fotos (opcional)
+        </label>
+        <div className="space-y-3">
+          <input
+            type="file"
+            accept="image/*"
+            multiple
+            onChange={handleFileChange}
+            className="w-full rounded bg-[#18181b] text-white px-3 py-2 border border-[#303036] focus:outline-none focus:ring-2 focus:ring-blue-700 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:bg-blue-700 file:text-white hover:file:bg-blue-600"
+          />
+          <p className="text-neutral-500 text-xs">
+            Selecciona hasta 5 fotos nuevas para reemplazar las actuales. Si no seleccionas ninguna, se mantienen las fotos actuales.
+          </p>
+          
+          {/* Preview de nuevas imágenes */}
+          {previews.length > 0 && (
+            <div>
+              <p className="text-neutral-400 text-sm mb-2">Nuevas fotos seleccionadas:</p>
+              <div className="grid grid-cols-3 gap-3 max-h-60 overflow-y-auto">
+                {previews.map((preview, index) => (
+                  <div key={index} className="relative">
+                    <img
+                      src={preview}
+                      alt={`Nueva foto ${index + 1}`}
+                      className="w-full h-20 object-cover rounded border-2 border-[#303036]"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => removeFile(index)}
+                      className="absolute -top-2 -right-2 w-6 h-6 bg-red-600 text-white rounded-full text-xs hover:bg-red-700 flex items-center justify-center"
+                      title="Eliminar foto"
+                    >
+                      ×
+                    </button>
+                    <div className="text-center text-xs text-neutral-400 mt-1">
+                      Nueva foto {index + 1}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
       </div>
-      <div className="flex justify-end gap-2 mt-2">
+
+      <div className="flex justify-end gap-2 mt-4">
         <button
           type="button"
-          className="px-4 py-2 rounded bg-neutral-600 text-white hover:bg-neutral-500"
+          className="px-4 py-2 rounded bg-neutral-600 text-white hover:bg-neutral-500 transition"
           onClick={onCancel}
+          disabled={isSubmitting}
         >
           Cancelar
         </button>
         <button
           type="submit"
-          className="px-4 py-2 rounded bg-green-700 text-white hover:bg-blue-600"
+          className="px-4 py-2 rounded bg-blue-700 text-white hover:bg-blue-600 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+          disabled={isSubmitting}
         >
-          Guardar
+          {isSubmitting ? (
+            <>
+              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              Actualizando...
+            </>
+          ) : (
+            'Actualizar'
+          )}
         </button>
       </div>
     </form>
@@ -640,11 +739,16 @@ export default function ListaAgregados() {
     setEditUser(user);
   }
 
-  function handleSaveEdit(data: ExtendedPersona) {
-    // Aquí deberías hacer una llamada a la API para actualizar
-    console.log("Guardar edición:", data);
-    setEditUser(null);
-    refetch(); // Recargar datos
+  async function handleSaveEdit(data: ExtendedPersona, updateData: any) {
+    try {
+      await agregadosService.updatePerson(data.nombre, updateData);
+      console.log("Usuario actualizado exitosamente:", data);
+      setEditUser(null);
+      refetch(); // Recargar datos
+    } catch (error) {
+      console.error("Error al actualizar usuario:", error);
+      alert("Error al actualizar la persona. Por favor, intenta nuevamente.");
+    }
   }
 
   function handleDelete(user: ExtendedPersona) {
