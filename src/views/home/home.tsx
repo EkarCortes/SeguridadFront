@@ -41,11 +41,19 @@ const Dashboard = () => {
         {/* Fila superior: gráfica y cámara */}
         <div className="flex flex-col md:flex-row gap-4 w-full">
           {/* Gráfica */}
-          <div className="flex-1 bg-[#303036] rounded-lg shadow p-4 min-h-[370px] flex items-center justify-center">
+            <div
+            className="flex-1 rounded-lg shadow p-4 min-h-[370px] flex items-center justify-center"
+            style={{
+              background: `linear-gradient(180deg, #23232a 0%, #1a1a1f 100%)`,
+            }}
+            >
             <AccessChart />
-          </div>
+            </div>
           {/* Cámara en vivo */}
-          <div className="w-full md:w-[350px] bg-[#313136] rounded-lg shadow p-4 min-h-[220px] flex flex-col items-center justify-center">
+          <div className="w-full md:w-[350px]  rounded-lg shadow p-4 min-h-[220px] flex flex-col items-center justify-center"
+          style={{
+              background: `linear-gradient(180deg, #23232a 0%, #1a1a1f 100%)`,
+            }}>
             <button
               className="w-32 h-24 bg-[#23232a] rounded-lg flex items-center justify-center mb-2 border-2 border-dashed border-[#a3a3a3] outline-none focus:ring-2 focus:ring-[#a3a3a3] transition"
               onClick={() => setModalOpen(true)}
@@ -57,7 +65,10 @@ const Dashboard = () => {
           </div>
         </div>
         {/* Fila inferior: tabla de accesos */}
-        <div className="bg-white/5 rounded-lg shadow min-h-[220px] flex items-center justify-center w-full">
+        <div className="rounded-lg shadow min-h-[220px] flex items-center justify-center w-full" 
+        style={{
+              background: `linear-gradient(180deg, #0000ffff 0%, #0000ffff 100%)`,
+            }}>
           <AccessTable />
         </div>
       </div>

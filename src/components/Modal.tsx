@@ -26,6 +26,9 @@ const Modal: React.FC<ModalProps> = ({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
       <div
         className={`bg-[#23232a] rounded-xl shadow-2xl w-full ${sizeClass} p-6 relative`}
+style={{
+              background: `linear-gradient(180deg, #23232a 0%, #1a1a1f 100%)`,
+            }}
       >
         <button
           className="absolute top-3 right-3 text-neutral-400 hover:text-white text-xl"

@@ -106,7 +106,9 @@ const columns = [
 
 // Paginación personalizada
 const CustomPagination = (props: any) => (
-  <div className="flex justify-end items-center gap-2 p-2 bg-[#23232a] rounded-b">
+  <div className="flex justify-end items-center gap-2 p-2  rounded-b" style={{
+              background: `linear-gradient(180deg, #23232a 0%, #1a1a1f 100%)`,
+            }}>
     <button
       className="px-3 py-1 rounded bg-[#3f3f46] text-white font-bold hover:bg-[#18181b] transition"
       onClick={() => props.onChangePage(props.currentPage - 1)}
@@ -138,7 +140,8 @@ const customStyles: TableProps<any>["customStyles"] = {
   },
   headRow: {
     style: {
-      backgroundColor: "#23222A",
+      
+     background: `linear-gradient(180deg, #23232a 0%, #1a1a1f 100%)`,
       color: accentColor,
       fontWeight: 600,
       fontSize: 15,
@@ -159,12 +162,12 @@ const customStyles: TableProps<any>["customStyles"] = {
   },
   rows: {
     style: {
-      backgroundColor: "#313136",
+      backgroundColor: "#252730",
       color: "#fff",
       fontSize: "0.95rem",
       borderBottom: "1px solid #303036",
       '&:nth-of-type(odd)': {
-        backgroundColor: "#2B2B2E",
+        backgroundColor: "#2f313aff",
       },
       '&:hover': {
         backgroundColor: "#313136",

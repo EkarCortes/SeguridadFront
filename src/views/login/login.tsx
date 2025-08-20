@@ -18,8 +18,13 @@ export default function Login({ onLogin }: LoginProps) {
   }
 
   return (
-    <div className="min-h-screen bg-[#18181b] flex items-center justify-center px-4">
-      <div className="w-full max-w-md bg-[#23232a] rounded-2xl shadow-2xl p-8 sm:p-10 flex flex-col gap-6">
+    <div className="min-h-screen  flex items-center justify-center px-4"
+    
+    >
+      <div className="w-full max-w-md bg-[#23232a] rounded-2xl shadow-2xl p-8 sm:p-10 flex flex-col gap-6"
+      style={{
+              background: `linear-gradient(180deg, #23232a 0%, #1a1a1f 100%)`,
+            }}>
         <h2 className="text-2xl sm:text-3xl font-bold text-white text-center">Inicio de sesión</h2>
         <p className="text-neutral-400 mb-2 text-sm text-center">
           Ingresa tus credenciales para acceder a tu cuenta.

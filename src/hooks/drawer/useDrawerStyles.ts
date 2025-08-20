@@ -41,7 +41,7 @@ export const useDrawerStyles = (
     const drawerStyles = {
         display: "block",
         "& .MuiDrawer-paper": {
-            background: `linear-gradient(180deg, ${paperColor} 0%, #1a1a1f 100%)`,
+            background: "#23232a",
             color: accentColor,
             border: "none",
             boxShadow: open 

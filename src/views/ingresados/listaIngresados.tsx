@@ -93,7 +93,7 @@ const columns = (handleSelectPhoto: (row: any) => void): TableProps<any>["column
 const customStyles = {
   table: {
     style: {
-      backgroundColor: "#23232a",
+      background: `linear-gradient(180deg, #23232a 0%, #1a1a1f 100%)`,
       borderRadius: "0.75rem",
       color: "#a3a3a3",
       minHeight: "400px",
@@ -101,7 +101,7 @@ const customStyles = {
   },
   headRow: {
     style: {
-      backgroundColor: "#22222A",
+      background: `linear-gradient(180deg, #23232a 0%, #1a1a1f 100%)`,
       color: "#a3a3a3",
       fontWeight: "bold",
       fontSize: "1rem",
@@ -114,24 +114,24 @@ const customStyles = {
       fontSize: "1rem",
     },
   },
-  rows: {
+ rows: {
     style: {
-      backgroundColor: "#313136",
+      backgroundColor: "#252730",
       color: "#fff",
       fontSize: "0.95rem",
       borderBottom: "1px solid #303036",
-      minHeight: "36px",
       '&:nth-of-type(odd)': {
-        backgroundColor: "#2B2B2E",
+        backgroundColor: "#2f313aff",
       },
       '&:hover': {
         backgroundColor: "#313136",
       },
     },
+
   },
   pagination: {
     style: {
-      backgroundColor: "#23232a",
+      background: `linear-gradient(180deg, #23232a 0%, #1a1a1f 100%)`,
       color: "#a3a3a3",
       borderBottomLeftRadius: "0.75rem",
       borderBottomRightRadius: "0.75rem",
@@ -199,7 +199,7 @@ export default function ListaIngresados() {
             placeholder="Buscar..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="rounded bg-[#18181b] text-white px-3 py-2 w-64 border border-[#303036] focus:outline-none focus:ring-2 focus:ring-blue-700"
+            className="rounded bg-[#18181b] text-white px-3 py-2 w-80 border border-[#303036] focus:outline-none focus:ring-2 focus:ring-blue-700"
             style={{ minWidth: 0 }}
           />
         </div>
