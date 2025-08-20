@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://ruta/api',
+  baseURL: 'http://20.3.129.141:8001/',
   headers: {
     'Content-Type': 'application/json',
   },

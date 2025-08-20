@@ -4,39 +4,26 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import AddIcon from "@mui/icons-material/Add";
-import Modal from "../../components/Modal"; // Asegúrate de crear este archivo
+import Modal from "../../components/Modal";
+import { usePersons } from "../../hooks/usePersons";
+import { type Persona } from "../../service/agregados/agregadosService";
 
-// Ejemplo de datos de agregados
-const initialAgregados = [
-  {
-    id: 1,
-    nombre: "Juan Pérez",
-    cedula: "12345678",
-    email: "juan.perez@email.com",
-    activo: true,
-    foto: "https://randomuser.me/api/portraits/men/32.jpg",
-    telefono: "555-1234",
-  },
-  {
-    id: 2,
-    nombre: "Ana Gómez",
-    cedula: "87654321",
-    email: "ana.gomez@email.com",
-    activo: false,
-    foto: "https://randomuser.me/api/portraits/women/44.jpg",
-    telefono: "555-5678",
-  },
-
-];
+// Extender la interfaz Persona para incluir campos adicionales del formulario
+interface ExtendedPersona extends Persona {
+  id?: number;
+  cedula?: string;
+  email?: string;
+  telefono?: string;
+}
 
 const columns = (
-  handleEdit: (row: any) => void,
-  handleDelete: (row: any) => void,
-  handleSelectPhoto: (row: any) => void
-): TableProps<any>["columns"] => [
+  handleEdit: (row: ExtendedPersona) => void,
+  handleDelete: (row: ExtendedPersona) => void,
+  handleSelectPhoto: (row: ExtendedPersona) => void
+): TableProps<ExtendedPersona>["columns"] => [
   {
     name: "Foto",
-    selector: (row) => row.foto,
+    selector: (row) => row.foto_url,
     cell: (row) => (
       <button
         className="group relative focus:outline-none"
@@ -46,9 +33,16 @@ const columns = (
         type="button"
       >
         <img
-          src={row.foto}
+          src={
+        row.foto_url
+          ? `http://20.3.129.141:8001/${row.foto_url.replace(/^\/+/, "")}`
+          : "https://via.placeholder.com/40"
+          }
           alt={row.nombre}
           className="w-10 h-10 rounded-full object-cover border-2 border-[#303036] group-hover:opacity-70 transition"
+          onError={(e) => {
+        (e.target as HTMLImageElement).src = "https://via.placeholder.com/40";
+          }}
         />
         <span className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
           <PhotoCameraIcon className="text-white bg-black/60 rounded-full p-1" fontSize="small" />
@@ -64,36 +58,43 @@ const columns = (
     sortable: true,
     cell: (row) => <span className="font-semibold text-white">{row.nombre}</span>,
   },
+ 
   {
     name: "Cédula",
-    selector: (row) => row.cedula,
+    selector: (row) => row.cedula || 'N/A',
     sortable: true,
   },
   {
     name: "Email",
-    selector: (row) => row.email,
+    selector: (row) => row.email || 'N/A',
     sortable: true,
   },
   {
     name: "Teléfono",
-    selector: (row) => row.telefono,
+    selector: (row) => row.telefono || 'N/A',
     sortable: false,
   },
-  {
-    name: "Activo",
-    selector: (row) => row.activo,
+   {
+    name: "Primer Acceso",
+    selector: (row) => row.primer_acceso,
     sortable: true,
     cell: (row) => (
-      <span
-        className={`px-3 py-1 text-xs font-bold ${
-          row.activo ? "bg-green-700 text-green-100" : "bg-red-900 text-red-200"
-        }`}
-        style={{ borderRadius: "4px" }}
-      >
-        {row.activo ? "Sí" : "No"}
+      <span className="text-neutral-300">
+        {row.primer_acceso ? new Date(row.primer_acceso).toLocaleDateString('es-ES') : 'N/A'}
       </span>
     ),
   },
+  {
+    name: "Último Acceso",
+    selector: (row) => row.ultimo_acceso,
+    sortable: true,
+    cell: (row) => (
+      <span className="text-neutral-300">
+        {row.ultimo_acceso ? new Date(row.ultimo_acceso).toLocaleDateString('es-ES') : 'N/A'}
+      </span>
+    ),
+  },
+  
   {
     name: "Acciones",
     cell: (row) => (
@@ -124,8 +125,7 @@ const columns = (
 const customStyles = {
   table: {
     style: {
-           background: `linear-gradient(180deg, #23232a 0%, #1a1a1f 100%)`,
-
+      background: `linear-gradient(180deg, #23232a 0%, #1a1a1f 100%)`,
       borderRadius: "0.75rem",
       color: "#a3a3a3",
       minHeight: "400px",
@@ -133,8 +133,7 @@ const customStyles = {
   },
   headRow: {
     style: {
-           background: `linear-gradient(180deg, #23232a 0%, #1a1a1f 100%)`,
-
+      background: `linear-gradient(180deg, #23232a 0%, #1a1a1f 100%)`,
       color: "#a3a3a3",
       fontWeight: "bold",
       fontSize: "1rem",
@@ -147,7 +146,7 @@ const customStyles = {
       fontSize: "1rem",
     },
   },
-   rows: {
+  rows: {
     style: {
       backgroundColor: "#252730",
       color: "#fff",
@@ -163,8 +162,7 @@ const customStyles = {
   },
   pagination: {
     style: {
-           background: `linear-gradient(180deg, #23232a 0%, #1a1a1f 100%)`,
-
+      background: `linear-gradient(180deg, #23232a 0%, #1a1a1f 100%)`,
       color: "#a3a3a3",
       borderBottomLeftRadius: "0.75rem",
       borderBottomRightRadius: "0.75rem",
@@ -183,28 +181,28 @@ function EditForm({
   onSave,
   onCancel,
 }: {
-  initial: any;
-  onSave: (data: any) => void;
+  initial: ExtendedPersona;
+  onSave: (data: ExtendedPersona) => void;
   onCancel: () => void;
 }) {
   const [form, setForm] = useState({ ...initial });
-  const [preview, setPreview] = useState(form.foto);
+  const [preview, setPreview] = useState(form.foto_url || "");
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
     const { name, value, type, checked, files } = e.target as any;
-    if (name === "foto" && files && files[0]) {
+    if (name === "foto_url" && files && files[0]) {
       const file = files[0];
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreview(reader.result as string);
-        setForm((f: typeof form) => ({
+        setForm((f) => ({
           ...f,
-          foto: reader.result,
+          foto_url: reader.result as string,
         }));
       };
       reader.readAsDataURL(file);
     } else {
-      setForm((f: typeof form) => ({
+      setForm((f) => ({
         ...f,
         [name]: type === "checkbox" ? checked : value,
       }));
@@ -224,7 +222,7 @@ function EditForm({
           <input
             className="w-full rounded bg-[#18181b] text-white px-3 py-2"
             name="nombre"
-            value={form.nombre}
+            value={form.nombre || ""}
             onChange={handleChange}
             required
           />
@@ -234,9 +232,8 @@ function EditForm({
           <input
             className="w-full rounded bg-[#18181b] text-white px-3 py-2"
             name="cedula"
-            value={form.cedula}
+            value={form.cedula || ""}
             onChange={handleChange}
-            required
           />
         </div>
       </div>
@@ -246,9 +243,8 @@ function EditForm({
           <input
             className="w-full rounded bg-[#18181b] text-white px-3 py-2"
             name="email"
-            value={form.email}
+            value={form.email || ""}
             onChange={handleChange}
-            required
             type="email"
           />
         </div>
@@ -257,42 +253,30 @@ function EditForm({
           <input
             className="w-full rounded bg-[#18181b] text-white px-3 py-2"
             name="telefono"
-            value={form.telefono}
+            value={form.telefono || ""}
             onChange={handleChange}
-            required
           />
         </div>
       </div>
-      <div className="flex gap-2">
-        <div className="flex-1 flex items-center gap-2 mt-6">
-          <input
-            type="checkbox"
-            name="activo"
-            checked={form.activo}
-            onChange={handleChange}
-            id="activo"
-          />
-          <label htmlFor="activo" className="text-neutral-400 text-sm">
-            Activo
-          </label>
-        </div>
-      </div>
+      
       <div>
         <label className="block text-neutral-400 text-sm mb-1">Foto (subir imagen)</label>
         <div className="flex items-center gap-4">
           <input
             type="file"
-            name="foto"
+            name="foto_url"
             accept="image/*"
             onChange={handleChange}
             className="w-auto rounded bg-[#18181b] text-white px-3 py-2"
-
           />
           {preview && (
             <img
               src={preview}
               alt="preview"
               className="w-16 h-16 rounded-lg object-cover border-2 border-[#303036]"
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = "https://via.placeholder.com/64";
+              }}
             />
           )}
         </div>
@@ -316,7 +300,6 @@ function EditForm({
   );
 }
 
-// Modal para mostrar la foto en grande
 function PhotoModal({
   open,
   onClose,
@@ -324,88 +307,135 @@ function PhotoModal({
 }: {
   open: boolean;
   onClose: () => void;
-  user: any;
+  user: ExtendedPersona | null;
 }) {
   return (
     <Modal open={open} onClose={onClose} size="md" title="Foto de usuario">
       <div className="flex flex-col items-center gap-4">
-        {user?.foto && (
-          <img
-            src={user.foto}
-            alt={user.nombre}
-            className="w-64 h-64 rounded-xl object-cover border-2 border-[#303036] shadow-lg"
-          />
+      {user?.foto_url && (
+        <img
+        src={
+          user.foto_url
+          ? `http://20.3.129.141:8001/${user.foto_url.replace(/^\/+/, "")}`
+          : "https://via.placeholder.com/256"
+        }
+        alt={user.nombre}
+        className="w-64 h-64 rounded-xl object-cover border-2 border-[#303036] shadow-lg"
+        onError={(e) => {
+          (e.target as HTMLImageElement).src = "https://via.placeholder.com/256";
+        }}
+        />
+      )}
+      <div className="text-center text-white">
+        <h3 className="text-lg font-semibold">{user?.nombre}</h3>
+        {user?.ultimo_acceso && (
+        <p className="text-neutral-400 text-sm">
+          Último acceso: {new Date(user.ultimo_acceso).toLocaleString('es-ES')}
+        </p>
         )}
-      
+      </div>
       </div>
     </Modal>
   );
 }
 
 export default function ListaAgregados() {
-  const [agregados, setAgregados] = useState(initialAgregados);
-  const [editUser, setEditUser] = useState<any | null>(null);
-  const [deleteUser, setDeleteUser] = useState<any | null>(null);
-  const [photoUser, setPhotoUser] = useState<any | null>(null);
-  const [addModal, setAddModal] = useState(false); // Nuevo estado para modal de agregar
+  const { persons, totalPersonas, loading, error, refetch } = usePersons();
+  const [editUser, setEditUser] = useState<ExtendedPersona | null>(null);
+  const [deleteUser, setDeleteUser] = useState<ExtendedPersona | null>(null);
+  const [photoUser, setPhotoUser] = useState<ExtendedPersona | null>(null);
+  const [addModal, setAddModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState("");
   const rowsPerPage = 5;
 
+  // Convertir personas a formato extendido con IDs
+  const extendedPersons: ExtendedPersona[] = persons.map((person, index) => ({
+    ...person,
+    id: index + 1,
+    cedula: "",
+    email: "",
+    telefono: "",
+  }));
+
   // Filtrado por búsqueda
-  const filteredAgregados = agregados.filter((a) =>
+  const filteredAgregados = extendedPersons.filter((a) =>
     [a.nombre, a.cedula, a.email, a.telefono]
       .join(" ")
       .toLowerCase()
       .includes(search.toLowerCase())
   );
 
-  // Editar usuario
-  function handleEdit(user: any) {
+  // Función para manejar el cambio en el campo de búsqueda
+  function handleSearchChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setSearch(e.target.value);
+    setCurrentPage(1); // Resetear a la primera página cuando se filtra
+  }
+
+  function handleEdit(user: ExtendedPersona) {
     setEditUser(user);
   }
 
-  function handleSaveEdit(data: any) {
-    setAgregados((prev) =>
-      prev.map((a) => (a.id === data.id ? { ...a, ...data } : a))
-    );
+  function handleSaveEdit(data: ExtendedPersona) {
+    // Aquí deberías hacer una llamada a la API para actualizar
+    console.log("Guardar edición:", data);
     setEditUser(null);
+    refetch(); // Recargar datos
   }
 
-  // Eliminar usuario
-  function handleDelete(user: any) {
+  function handleDelete(user: ExtendedPersona) {
     setDeleteUser(user);
   }
 
   function confirmDelete() {
-    setAgregados((prev) => prev.filter((a) => a.id !== deleteUser.id));
+    // Aquí deberías hacer una llamada a la API para eliminar
+    console.log("Eliminar usuario:", deleteUser);
     setDeleteUser(null);
+    refetch(); // Recargar datos
   }
 
-  // Ver foto en grande
-  function handleSelectPhoto(user: any) {
+  function handleSelectPhoto(user: ExtendedPersona) {
     setPhotoUser(user);
   }
 
-  // Agregar usuario
-  function handleAddUser(data: any) {
-    setAgregados((prev) => [
-      ...prev,
-      { ...data, id: prev.length ? Math.max(...prev.map(a => a.id)) + 1 : 1 },
-    ]);
+  function handleAddUser(data: ExtendedPersona) {
+    // Aquí deberías hacer una llamada a la API para agregar
+    console.log("Agregar usuario:", data);
     setAddModal(false);
+    refetch(); // Recargar datos
+  }
+
+  if (loading) {
+    return (
+      <div className="w-full min-h-[600px] p-2 md:p-4 flex items-center justify-center">
+        <div className="text-white text-lg">Cargando personas...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="w-full min-h-[600px] p-2 md:p-4 flex items-center justify-center">
+        <div className="text-red-400 text-lg">Error: {error}</div>
+      </div>
+    );
   }
 
   return (
     <div className="w-full min-h-[600px] p-2 md:p-4">
       <div className="flex flex-col gap-4 w-full">
-        <h2 className="text-2xl font-bold text-white mb-2">Lista de Agregados</h2>
+        <div className="flex items-center justify-between">
+          <h2 className="text-2xl font-bold text-white mb-2">Lista de Personas</h2>
+          <div className="text-neutral-400 text-sm">
+            Total: {totalPersonas} persona{totalPersonas !== 1 ? 's' : ''}
+          </div>
+        </div>
         <div className="flex items-center justify-between mb-2">
           <input
             type="text"
             placeholder="Buscar..."
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={handleSearchChange} // Usar la nueva función
             className="rounded bg-[#18181b] text-white px-3 py-2 w-80 border border-[#303036] focus:outline-none focus:ring-2 focus:ring-blue-700"
             style={{ minWidth: 0 }}
           />
@@ -435,30 +465,30 @@ export default function ListaAgregados() {
           onChangePage={setCurrentPage}
           paginationDefaultPage={currentPage}
           noDataComponent={
-            
             <div className="py-6 text-center text-neutral-400">
-              No hay agregados registrados.
+              No hay personas registradas.
             </div>
           }
         />
       </div>
       {/* Modal agregar */}
-      <Modal open={addModal} onClose={() => setAddModal(false)} size="md" title="Agregar Agregado">
+      <Modal open={addModal} onClose={() => setAddModal(false)} size="md" title="Agregar Persona">
         <EditForm
           initial={{
             nombre: "",
+            foto_url: "",
+            ultimo_acceso: "",
+            primer_acceso: "",
             cedula: "",
             email: "",
             telefono: "",
-            activo: true,
-            foto: "",
           }}
           onSave={handleAddUser}
           onCancel={() => setAddModal(false)}
         />
       </Modal>
       {/* Modal editar */}
-      <Modal open={!!editUser} onClose={() => setEditUser(null)} size="md" title="Editar Agregado">
+      <Modal open={!!editUser} onClose={() => setEditUser(null)} size="md" title="Editar Persona">
         {editUser && (
           <EditForm
             initial={editUser}
@@ -468,7 +498,7 @@ export default function ListaAgregados() {
         )}
       </Modal>
       {/* Modal eliminar */}
-      <Modal open={!!deleteUser} onClose={() => setDeleteUser(null)} size="sm" title="Eliminar Agregado">
+      <Modal open={!!deleteUser} onClose={() => setDeleteUser(null)} size="sm" title="Eliminar Persona">
         <div className="text-white mb-4">
           ¿Seguro que deseas eliminar a <span className="font-bold">{deleteUser?.nombre}</span>?
         </div>
