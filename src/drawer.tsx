@@ -36,7 +36,7 @@ interface CustomDrawerProps {
 
 export default function CustomDrawer({ onLogout, children }: CustomDrawerProps) {
     const { open, isMobile, handleOpenDrawer, handleCloseDrawer, handleNavigation } = useDrawer();
-    const { drawerWidth, bgColor, accentColor, mutedText, selectedBg, paperColor, routeGroups } = useDrawerConfig();
+    const { drawerWidth,  accentColor, mutedText, selectedBg, routeGroups } = useDrawerConfig();
     const {
         hamburgerButtonStyles,
         drawerStyles,
@@ -44,7 +44,7 @@ export default function CustomDrawer({ onLogout, children }: CustomDrawerProps) 
         scrollBoxStyles,
         logoutButtonStyles,
         mainContentStyles,
-    } = useDrawerStyles(drawerWidth, paperColor, accentColor, selectedBg, open, isMobile);
+    } = useDrawerStyles(drawerWidth, accentColor, selectedBg, open, isMobile);
     
     const location = useLocation();
 

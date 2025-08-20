@@ -1,7 +1,6 @@
 import DataTable, { type TableProps } from "react-data-table-component";
 
 // Colores de la app
-const bgColor = "#18181b";
 const accentColor = "#fff";
 const mutedText = "#a3a3a3";
 const selectedBg = "#27272a";

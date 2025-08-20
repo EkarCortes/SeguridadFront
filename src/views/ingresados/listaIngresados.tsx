@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import DataTable, { type TableProps } from "react-data-table-component";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import Modal from "../../components/Modal";

@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 
 export const useDrawerStyles = (
     drawerWidth: number,
-    paperColor: string,
     accentColor: string,
     selectedBg: string,
     open: boolean,

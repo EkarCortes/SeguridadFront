@@ -4,7 +4,6 @@ import Login from './views/login/login'
 import Home from './views/home/home'
 import CustomDrawer from './drawer'
 import ListaAgregados from './views/agregados/listaAgregados';
-import FormuAgregados from './views/agregados/formAgregados';
 import ListaIngresados from './views/ingresados/listaIngresados';
 import { useState } from 'react';
 
@@ -24,7 +23,6 @@ function App() {
         <Route path="/listaAgregados" element={<ListaAgregados />} />
       
         <Route path="/listaIngresados" element={<ListaIngresados />} />
-        <Route path="/formAgregados" element={<FormuAgregados onSave={(data) => console.log('Saved data:', data)} />} />
       
         <Route path="*" element={<Navigate to="/home" replace />} />
       </Routes>

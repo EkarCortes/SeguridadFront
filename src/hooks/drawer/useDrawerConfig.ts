@@ -2,7 +2,6 @@ import HomeIcon from "@mui/icons-material/Home";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 
-
 export const useDrawerConfig = () => {
     const drawerWidth = 270;
     const bgColor = "#18181b";
