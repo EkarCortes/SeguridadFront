@@ -1,4 +1,8 @@
 import DataTable, { type TableProps } from "react-data-table-component";
+import { useDailyVerifications } from "../hooks/useDailyVerifications";
+import { type DetalleIntento } from "../service/home/homeService";
+import LoadingSpinner from "./Spinner";
+
 
 // Colores de la app
 const accentColor = "#fff";
@@ -6,50 +10,61 @@ const mutedText = "#a3a3a3";
 const selectedBg = "#27272a";
 const paperColor = "#303036";
 
-// Ejemplo de datos
-const data = [
-  {
-    id: 1,
-    nombre: "Juan Pérez",
-    fecha: "2025/08/19",
-    hora: "08:15",
-    acceso: "Permitido",
-    imagen: "https://randomuser.me/api/portraits/men/1.jpg",
-  },
-  {
-    id: 2,
-    nombre: "Desconocido",
-    fecha: "2025/08/19",
-    hora: "08:20",
-    acceso: "Denegado",
-    imagen: "https://randomuser.me/api/portraits/women/2.jpg",
-  },
-  {
-    id: 3,
-    nombre: "Carlos Ruiz",
-    fecha: "2025/08/19",
-    hora: "08:25",
-    acceso: "Permitido",
-    imagen: "https://randomuser.me/api/portraits/men/3.jpg",
-  },
-  {
-    id: 3,
-    nombre: "Carlos Ruiz",
-    fecha: "2025/08/19",
-    hora: "08:25",
-    acceso: "Permitido",
-    imagen: "https://randomuser.me/api/portraits/men/3.jpg",
-  },
-  {
-    id: 3,
-    nombre: "Carlos Ruiz",
-    fecha: "2025/08/19",
-    hora: "08:25",
-    acceso: "Permitido",
-    imagen: "https://randomuser.me/api/portraits/men/3.jpg",
-  },
-  // ...más datos
-];
+// Función para convertir UTC a zona horaria de Costa Rica (UTC-6)
+const convertToCostaRicaTime = (utcTimestamp: string) => {
+  const utcDate = new Date(utcTimestamp);
+  
+  // Costa Rica está en UTC-6 (CST) todo el año
+  const costaRicaOffset = -6 * 60; // -6 horas en minutos
+  const costaRicaTime = new Date(utcDate.getTime() + (costaRicaOffset * 60 * 1000));
+  
+  const fechaFormatted = costaRicaTime.toLocaleDateString('es-ES', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric'
+  });
+  
+  const horaFormatted = costaRicaTime.toLocaleTimeString('es-ES', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false
+  });
+  
+  console.log('UTC Original:', utcTimestamp);
+  console.log('UTC Date:', utcDate);
+  console.log('CR Date:', costaRicaTime);
+  console.log('Fecha formateada:', fechaFormatted);
+  console.log('Hora formateada:', horaFormatted);
+  
+  return { fechaFormatted, horaFormatted, localDate: costaRicaTime };
+};
+
+// Función para transformar los datos de la API al formato de la tabla
+const transformDataForTable = (data: any) => {
+  if (!data?.actividad_por_persona) return [];
+  
+  const tableData: any[] = [];
+  
+  data.actividad_por_persona.forEach((persona: any) => {
+    persona.detalle_intentos.forEach((intento: DetalleIntento) => {
+      const { fechaFormatted, horaFormatted, localDate } = convertToCostaRicaTime(intento.timestamp);
+      
+      tableData.push({
+        id: intento.id,
+        nombre: persona.nombre,
+        fecha: fechaFormatted,
+        hora: horaFormatted,
+        acceso: intento.authorized ? "Permitido" : "Denegado",
+        imagen: intento.image_source || persona.foto_perfil_url || "https://via.placeholder.com/50",
+        timestamp: intento.timestamp, // UTC original para ordenamiento
+        localTimestamp: localDate.getTime() // Timestamp local para ordenamiento alternativo
+      });
+    });
+  });
+  
+  // Ordenar por timestamp descendente (más reciente primero)
+  return tableData.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+};
 
 // Definición de columnas
 const columns = [
@@ -61,6 +76,9 @@ const columns = [
         src={row.imagen}
         alt={row.nombre}
         className="w-15 h-12 my-1 rounded-sm object-cover border border-neutral-700"
+        onError={(e: any) => {
+          e.target.src = "https://via.placeholder.com/50x48/374151/9ca3af?text=?";
+        }}
       />
     ),
     width: "90px",
@@ -77,11 +95,14 @@ const columns = [
     ),
   },
   {
-    name: "Fecha y hora",
-    selector: (row: any) => `${row.fecha} ${row.hora}`,
+    name: "Fecha y hora (CR)",
+    selector: (row: any) => row.timestamp,
     sortable: true,
     cell: (row: any) => (
-      <span className="text-neutral-400 text-sm">{`${row.fecha} ${row.hora}`}</span>
+      <div className="flex flex-col">
+        <span className="text-neutral-300 text-sm">{row.fecha}</span>
+        <span className="text-neutral-400 text-xs">{row.hora}</span>
+      </div>
     ),
   },
   {
@@ -105,11 +126,11 @@ const columns = [
 
 // Paginación personalizada
 const CustomPagination = (props: any) => (
-  <div className="flex justify-end items-center gap-2 p-2  rounded-b" style={{
-              background: `linear-gradient(180deg, #23232a 0%, #1a1a1f 100%)`,
-            }}>
+  <div className="flex justify-end items-center gap-2 p-2 rounded-b" style={{
+    background: `linear-gradient(180deg, #23232a 0%, #1a1a1f 100%)`,
+  }}>
     <button
-      className="px-3 py-1 rounded bg-[#3f3f46] text-white font-bold hover:bg-[#18181b] transition"
+      className="px-3 py-1 rounded bg-[#3f3f46] text-white font-bold hover:bg-[#18181b] transition disabled:opacity-50 disabled:cursor-not-allowed"
       onClick={() => props.onChangePage(props.currentPage - 1)}
       disabled={props.currentPage === 1}
     >
@@ -119,7 +140,7 @@ const CustomPagination = (props: any) => (
       Página {props.currentPage} de {props.totalPages}
     </span>
     <button
-      className="px-3 py-1 rounded bg-[#3f3f46] text-white font-bold hover:bg-[#18181b] transition"
+      className="px-3 py-1 rounded bg-[#3f3f46] text-white font-bold hover:bg-[#18181b] transition disabled:opacity-50 disabled:cursor-not-allowed"
       onClick={() => props.onChangePage(props.currentPage + 1)}
       disabled={props.currentPage === props.totalPages}
     >
@@ -139,8 +160,7 @@ const customStyles: TableProps<any>["customStyles"] = {
   },
   headRow: {
     style: {
-      
-     background: `linear-gradient(180deg, #23232a 0%, #1a1a1f 100%)`,
+      background: `linear-gradient(180deg, #23232a 0%, #1a1a1f 100%)`,
       color: accentColor,
       fontWeight: 600,
       fontSize: 15,
@@ -172,12 +192,11 @@ const customStyles: TableProps<any>["customStyles"] = {
         backgroundColor: "#313136",
       },
     },
-  
     highlightOnHoverStyle: {
       backgroundColor: "#45454a",
       color: accentColor,
       cursor: "pointer",
-      outline: "none", //none, 
+      outline: "none",
     },
   },
   pagination: {
@@ -190,20 +209,38 @@ const customStyles: TableProps<any>["customStyles"] = {
   },
 };
 
-const AccessTable = () => (
-  <div className="w-full">
-    <DataTable
-      columns={columns}
-      data={data}
-      pagination
-      paginationPerPage={5}
-      paginationRowsPerPageOptions={[5, 10, 15, 20]}
-      paginationComponent={CustomPagination}
-      highlightOnHover
-      customStyles={customStyles}
-      noDataComponent={<span className="text-neutral-400">Sin registros</span>}
-    />
-  </div>
-);
+const AccessTable = () => {
+  const { data, loading, error } = useDailyVerifications();
+  
+  const tableData = data ? transformDataForTable(data) : [];
+
+  if (loading) {
+    return <LoadingSpinner message="Cargando registros de acceso" size="md" />;
+  }
+
+  if (error) {
+    return (
+      <div className="w-full h-64 flex items-center justify-center">
+        <span className="text-red-400 text-sm">{error}</span>
+      </div>
+    );
+  }
+
+  return (
+    <div className="w-full">
+      <DataTable
+        columns={columns}
+        data={tableData}
+        pagination
+        paginationPerPage={6}
+        paginationRowsPerPageOptions={[6, 12, 18, 24]}
+        paginationComponent={CustomPagination}
+        highlightOnHover
+        customStyles={customStyles}
+        noDataComponent={<span className="text-neutral-400">Sin registros</span>}
+      />
+    </div>
+  );
+};
 
 export default AccessTable;

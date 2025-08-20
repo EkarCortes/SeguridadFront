@@ -5,15 +5,37 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import AddIcon from "@mui/icons-material/Add";
 import Modal from "../../components/Modal";
+
 import { usePersons } from "../../hooks/usePersons";
 import { agregadosService, type Persona, type PersonFormData } from "../../service/agregados/agregadosService";
+import LoadingSpinner from "../../components/Spinner";
 
-// Extender la interfaz Persona para incluir campos adicionales del formulario
+// Función para convertir UTC a zona horaria de Costa Rica (UTC-6)
+const convertToCostaRicaTime = (utcTimestamp: string) => {
+  const utcDate = new Date(utcTimestamp);
+  
+  // Costa Rica está en UTC-6 (CST) todo el año
+  const costaRicaOffset = -6 * 60; // -6 horas en minutos
+  const costaRicaTime = new Date(utcDate.getTime() + (costaRicaOffset * 60 * 1000));
+  
+  const fechaFormatted = costaRicaTime.toLocaleDateString('es-ES', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric'
+  });
+  
+  const horaFormatted = costaRicaTime.toLocaleTimeString('es-ES', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false
+  });
+  
+  return { fechaFormatted, horaFormatted, localDate: costaRicaTime };
+};
+
+// Extender la interfaz Persona para incluir un ID local
 interface ExtendedPersona extends Persona {
   id?: number;
-  cedula?: string;
-  email?: string;
-  telefono?: string;
 }
 
 const columns = (
@@ -34,14 +56,14 @@ const columns = (
       >
         <img
           src={
-        row.foto_url
-          ? `http://20.3.129.141:8001/${row.foto_url.replace(/^\/+/, "")}`
-          : "https://via.placeholder.com/40"
+            row.foto_url
+              ? `http://20.3.129.141:8001/${row.foto_url.replace(/^\/+/, "")}`
+              : "https://via.placeholder.com/40"
           }
           alt={row.nombre}
           className="w-10 h-10 rounded-full object-cover border-2 border-[#303036] group-hover:opacity-70 transition"
           onError={(e) => {
-        (e.target as HTMLImageElement).src = "https://via.placeholder.com/40";
+            (e.target as HTMLImageElement).src = "https://via.placeholder.com/40";
           }}
         />
         <span className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
@@ -58,43 +80,65 @@ const columns = (
     sortable: true,
     cell: (row) => <span className="font-semibold text-white">{row.nombre}</span>,
   },
- 
   {
     name: "Cédula",
     selector: (row) => row.cedula || 'N/A',
     sortable: true,
+    cell: (row) => (
+      <span className="text-neutral-200">{row.cedula || 'N/A'}</span>
+    ),
   },
   {
     name: "Email",
     selector: (row) => row.email || 'N/A',
     sortable: true,
+    cell: (row) => (
+      <span className="text-neutral-200">{row.email || 'N/A'}</span>
+    ),
   },
   {
     name: "Teléfono",
     selector: (row) => row.telefono || 'N/A',
     sortable: false,
-  },
-   {
-    name: "Primer Acceso",
-    selector: (row) => row.primer_acceso,
-    sortable: true,
     cell: (row) => (
-      <span className="text-neutral-300">
-        {row.primer_acceso ? new Date(row.primer_acceso).toLocaleDateString('es-ES') : 'N/A'}
-      </span>
-    ),
-  },
-  {
-    name: "Último Acceso",
-    selector: (row) => row.ultimo_acceso,
-    sortable: true,
-    cell: (row) => (
-      <span className="text-neutral-300">
-        {row.ultimo_acceso ? new Date(row.ultimo_acceso).toLocaleDateString('es-ES') : 'N/A'}
-      </span>
+      <span className="text-neutral-200">{row.telefono || 'N/A'}</span>
     ),
   },
   
+ 
+  {
+    name: "Primer Acceso",
+    selector: (row) => row.primer_acceso || '',
+    sortable: true,
+    cell: (row) => (
+      <span className="text-neutral-300">
+        {row.primer_acceso ? convertToCostaRicaTime(row.primer_acceso).fechaFormatted : 'N/A'}
+      </span>
+    ),
+    width: "120px",
+  },
+  {
+    name: "Último Acceso",
+    selector: (row) => row.ultimo_acceso || '',
+    sortable: true,
+    cell: (row) => (
+      <span className="text-neutral-300">
+        {row.ultimo_acceso ? convertToCostaRicaTime(row.ultimo_acceso).fechaFormatted : 'N/A'}
+      </span>
+    ),
+    width: "120px",
+  },
+  {
+    name: "Fecha Registro",
+    selector: (row) => row.fecha_registro,
+    sortable: true,
+    cell: (row) => (
+      <span className="text-neutral-300">
+        {convertToCostaRicaTime(row.fecha_registro).fechaFormatted}
+      </span>
+    ),
+    width: "120px",
+  },
   {
     name: "Acciones",
     cell: (row) => (
@@ -312,28 +356,41 @@ function PhotoModal({
   return (
     <Modal open={open} onClose={onClose} size="md" title="Foto de usuario">
       <div className="flex flex-col items-center gap-4">
-      {user?.foto_url && (
-        <img
-        src={
-          user.foto_url
-          ? `http://20.3.129.141:8001/${user.foto_url.replace(/^\/+/, "")}`
-          : "https://via.placeholder.com/256"
-        }
-        alt={user.nombre}
-        className="w-64 h-64 rounded-xl object-cover border-2 border-[#303036] shadow-lg"
-        onError={(e) => {
-          (e.target as HTMLImageElement).src = "https://via.placeholder.com/256";
-        }}
-        />
-      )}
-      <div className="text-center text-white">
-        <h3 className="text-lg font-semibold">{user?.nombre}</h3>
-        {user?.ultimo_acceso && (
-        <p className="text-neutral-400 text-sm">
-          Último acceso: {new Date(user.ultimo_acceso).toLocaleString('es-ES')}
-        </p>
+        {user?.foto_url && (
+          <img
+            src={
+              user.foto_url
+                ? `http://20.3.129.141:8001/${user.foto_url.replace(/^\/+/, "")}`
+                : "https://via.placeholder.com/256"
+            }
+            alt={user.nombre}
+            className="w-64 h-64 rounded-xl object-cover border-2 border-[#303036] shadow-lg"
+            onError={(e) => {
+              (e.target as HTMLImageElement).src = "https://via.placeholder.com/256";
+            }}
+          />
         )}
-      </div>
+        <div className="text-center text-white space-y-2">
+          <h3 className="text-lg font-semibold">{user?.nombre}</h3>
+          
+          <div className="grid grid-cols-2 gap-4 text-sm">
+            <div>
+              <p className="text-neutral-400">Cédula:</p>
+              <p className="text-white">{user?.cedula || 'N/A'}</p>
+            </div>
+            <div>
+              <p className="text-neutral-400">Email:</p>
+              <p className="text-white">{user?.email || 'N/A'}</p>
+            </div>
+            <div>
+              <p className="text-neutral-400">Teléfono:</p>
+              <p className="text-white">{user?.telefono || 'N/A'}</p>
+            </div>
+         
+          </div>
+
+       
+        </div>
       </div>
     </Modal>
   );
@@ -563,9 +620,6 @@ export default function ListaAgregados() {
   const extendedPersons: ExtendedPersona[] = persons.map((person, index) => ({
     ...person,
     id: index + 1,
-    cedula: "",
-    email: "",
-    telefono: "",
   }));
 
   // Filtrado por búsqueda
@@ -621,11 +675,7 @@ export default function ListaAgregados() {
   }
 
   if (loading) {
-    return (
-      <div className="w-full min-h-[600px] p-2 md:p-4 flex items-center justify-center">
-        <div className="text-white text-lg">Cargando personas...</div>
-      </div>
-    );
+    return <LoadingSpinner message="Cargando personas registradas" size="lg" />;
   }
 
   if (error) {
@@ -645,12 +695,14 @@ export default function ListaAgregados() {
             Total: {totalPersonas} persona{totalPersonas !== 1 ? 's' : ''}
           </div>
         </div>
+ 
+
         <div className="flex items-center justify-between mb-2">
           <input
             type="text"
-            placeholder="Buscar..."
+            placeholder="Buscar por nombre, cédula, email o teléfono..."
             value={search}
-            onChange={handleSearchChange} // Usar la nueva función
+            onChange={handleSearchChange}
             className="rounded bg-[#18181b] text-white px-3 py-2 w-80 border border-[#303036] focus:outline-none focus:ring-2 focus:ring-blue-700"
             style={{ minWidth: 0 }}
           />
@@ -664,6 +716,7 @@ export default function ListaAgregados() {
             Agregar
           </button>
         </div>
+        
         <DataTable
           columns={columns(handleEdit, handleDelete, handleSelectPhoto)}
           data={filteredAgregados}
@@ -686,6 +739,7 @@ export default function ListaAgregados() {
           }
         />
       </div>
+      
       {/* Modal agregar - actualizado */}
       <Modal open={addModal} onClose={() => setAddModal(false)} size="lg" title="Registrar Nueva Persona">
         <AddForm

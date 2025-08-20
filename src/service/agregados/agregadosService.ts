@@ -2,9 +2,18 @@ import api from '../../config/apiconfig';
 
 export interface Persona {
   nombre: string;
+  cedula: string | null;
+  email: string | null;
+  telefono: string | null;
   foto_url: string;
-  ultimo_acceso: string;
-  primer_acceso: string;
+  encodings_count: number;
+  total_intentos: number;
+  autorizados: number;
+  rechazados: number;
+  tasa_autorizacion: number;
+  ultimo_acceso: string | null;
+  primer_acceso: string | null;
+  fecha_registro: string;
 }
 
 export interface PersonsResponse {

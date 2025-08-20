@@ -2,11 +2,42 @@ import { useState } from "react";
 import DataTable, { type TableProps } from "react-data-table-component";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import Modal from "../../components/Modal";
+
 import { useVerifications } from "../../hooks/useVerifications";
 import { type Verificacion } from "../../service/ingresados/ingresadosService";
+import LoadingSpinner from "../../components/Spinner";
 
 // Usar la interfaz directamente ya que tiene ID
 interface ExtendedVerificacion extends Verificacion {}
+
+// Función para convertir UTC a zona horaria de Costa Rica (UTC-6)
+const convertToCostaRicaTime = (utcTimestamp: string) => {
+  const utcDate = new Date(utcTimestamp);
+  
+  // Costa Rica está en UTC-6 (CST) todo el año
+  const costaRicaOffset = -6 * 60; // -6 horas en minutos
+  const costaRicaTime = new Date(utcDate.getTime() + (costaRicaOffset * 60 * 1000));
+  
+  const fechaFormatted = costaRicaTime.toLocaleDateString('es-ES', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric'
+  });
+  
+  const horaFormatted = costaRicaTime.toLocaleTimeString('es-ES', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false
+  });
+  
+  console.log('UTC Original:', utcTimestamp);
+  console.log('UTC Date:', utcDate);
+  console.log('CR Date:', costaRicaTime);
+  console.log('Fecha formateada:', fechaFormatted);
+  console.log('Hora formateada:', horaFormatted);
+  
+  return { fechaFormatted, horaFormatted, localDate: costaRicaTime };
+};
 
 const columns = (handleSelectPhoto: (row: ExtendedVerificacion) => void): TableProps<ExtendedVerificacion>["columns"] => [
   {
@@ -52,7 +83,7 @@ const columns = (handleSelectPhoto: (row: ExtendedVerificacion) => void): TableP
     sortable: true,
     cell: (row) => (
       <span className="text-neutral-200">
-        {row.timestamp ? new Date(row.timestamp).toLocaleDateString('es-ES') : 'N/A'}
+        {row.timestamp ? convertToCostaRicaTime(row.timestamp).fechaFormatted : 'N/A'}
       </span>
     ),
     
@@ -63,7 +94,7 @@ const columns = (handleSelectPhoto: (row: ExtendedVerificacion) => void): TableP
     sortable: true,
     cell: (row) => (
       <span className="text-neutral-200">
-        {row.timestamp ? new Date(row.timestamp).toLocaleTimeString('es-ES') : 'N/A'}
+        {row.timestamp ? convertToCostaRicaTime(row.timestamp).horaFormatted : 'N/A'}
       </span>
     ),
   },
@@ -176,7 +207,7 @@ function PhotoModal({
           <h3 className="text-lg font-semibold">{user?.person_label}</h3>
          
           <p className="text-neutral-400 text-sm">
-            {user?.timestamp && `${new Date(user.timestamp).toLocaleString('es-ES')}`}
+            {user?.timestamp && `${convertToCostaRicaTime(user.timestamp).fechaFormatted} ${convertToCostaRicaTime(user.timestamp).horaFormatted}`}
           </p>
           <p className="text-neutral-400 text-sm">
             Caras detectadas: {user?.faces_detected}
@@ -215,7 +246,7 @@ export default function ListaIngresados() {
     const searchableText = [
       i.person_label ?? "Desconocido", // Usar "Desconocido" si person_label es null
       i.id.toString(),
-      new Date(i.timestamp).toLocaleDateString('es-ES')
+      i.timestamp ? convertToCostaRicaTime(i.timestamp).fechaFormatted : ''
     ]
       .join(" ")
       .toLowerCase();
@@ -224,11 +255,7 @@ export default function ListaIngresados() {
   });
 
   if (loading) {
-    return (
-      <div className="w-full min-h-[400px] p-2 md:p-4 flex items-center justify-center">
-        <div className="text-white text-lg">Cargando verificaciones...</div>
-      </div>
-    );
+    return <LoadingSpinner message="Cargando verificaciones" size="lg" />;
   }
 
   if (error) {

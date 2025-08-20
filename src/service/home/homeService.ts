@@ -24,6 +24,42 @@ export interface MonthlyStatsResponse {
   estadisticas_mensuales: MonthlyStats[];
 }
 
+export interface DetalleIntento {
+  id: number;
+  timestamp: string;
+  cam_id: string;
+  faces_detected: number;
+  authorized: boolean;
+  distance: number;
+  threshold: number;
+  image_source: string;
+}
+
+export interface ActividadPersona {
+  nombre: string;
+  cedula: string | null;
+  email: string | null;
+  telefono: string | null;
+  foto_perfil_url: string;
+  total_intentos: number;
+  intentos_autorizados: number;
+  intentos_rechazados: number;
+  tasa_autorizacion: number;
+  primer_intento: string;
+  ultimo_intento: string;
+  fotos_intentos: string[];
+  detalle_intentos: DetalleIntento[];
+}
+
+export interface DailyVerificationsResponse {
+  fecha: string;
+  total_personas_activas: number;
+  total_verificaciones: number;
+  total_autorizadas: number;
+  total_rechazadas: number;
+  actividad_por_persona: ActividadPersona[];
+}
+
 export const homeService = {
   getTimeSeries: async (): Promise<TimeSeriesData[]> => {
     try {
@@ -41,6 +77,17 @@ export const homeService = {
       return response.data;
     } catch (error) {
       console.error('Error fetching monthly stats:', error);
+      throw error;
+    }
+  },
+
+  getDailyVerifications: async (date?: string): Promise<DailyVerificationsResponse> => {
+    try {
+      const url = date ? `/verifications/daily?date=${date}` : '/verifications/daily';
+      const response = await api.get(url);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching daily verifications:', error);
       throw error;
     }
   }
