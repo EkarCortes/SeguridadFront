@@ -9,7 +9,7 @@ export const videoService = {
     return 'https://067704a8ce6c.ngrok-free.app/video?ngrok-skip-browser-warning=true';
   },
 
-  checkStreamStatus: async (url: string): Promise<boolean> => {
+  checkStreamStatus: async (_url: string): Promise<boolean> => {
     try {
       // Para iframe, es mejor asumir que funciona y dejar que maneje sus propios errores
       return true;

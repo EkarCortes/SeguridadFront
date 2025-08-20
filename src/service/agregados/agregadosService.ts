@@ -51,7 +51,7 @@ export const agregadosService = {
       formData.append('telefono', personData.telefono);
       
       // Agregar archivos de fotos
-      personData.fotos.forEach((foto, index) => {
+      personData.fotos.forEach((foto, _index) => {
         formData.append('fotos', foto);
       });
 
