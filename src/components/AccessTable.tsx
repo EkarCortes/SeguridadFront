@@ -95,7 +95,7 @@ const columns = [
     ),
   },
   {
-    name: "Fecha y hora (CR)",
+    name: "Fecha y hora",
     selector: (row: any) => row.timestamp,
     sortable: true,
     cell: (row: any) => (

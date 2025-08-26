@@ -6,7 +6,7 @@ export interface VideoStreamConfig {
 export const videoService = {
   getStreamUrl: (): string => {
     // Agregar el header ngrok-skip-browser-warning como parámetro de URL
-    return 'https://067704a8ce6c.ngrok-free.app/video?ngrok-skip-browser-warning=true';
+    return 'https://36e0093c4672.ngrok-free.app/video?ngrok-skip-browser-warning=true';
   },
 
   checkStreamStatus: async (_url: string): Promise<boolean> => {
