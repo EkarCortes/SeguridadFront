@@ -12,7 +12,7 @@ export const useVerifications = () => {
       setLoading(true);
       setError(null);
       const data: VerificationsResponse = await ingresadosService.getVerifications();
-      
+      console.log('Fetched verifications Kevin gay', data.registros);
       // Validar que la respuesta tenga la estructura esperada
       if (data && Array.isArray(data.registros)) {
         setVerifications(data.registros);

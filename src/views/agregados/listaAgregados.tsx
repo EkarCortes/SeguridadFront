@@ -57,13 +57,13 @@ const columns = (
         <img
           src={
             row.foto_url
-              ? `http://20.3.129.141:8001/${row.foto_url.replace(/^\/+/, "")}`
-              : "https://via.placeholder.com/40"
+              ? `http://20.3.129.141:8000/${row.foto_url.replace(/^\/+/, "")}`
+              : "https://gimgs2.nohat.cc/thumb/f/640/person-icons-person-icon--m2i8m2A0K9H7N4m2.jpg"
           }
           alt={row.nombre}
           className="w-10 h-10 rounded-full object-cover border-2 border-[#303036] group-hover:opacity-70 transition"
           onError={(e) => {
-            (e.target as HTMLImageElement).src = "https://via.placeholder.com/40";
+            (e.target as HTMLImageElement).src = "https://gimgs2.nohat.cc/thumb/f/640/person-icons-person-icon--m2i8m2A0K9H7N4m2.jpg";
           }}
         />
         <span className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
@@ -359,7 +359,7 @@ function EditForm({
         <div className="mb-3">
           {initial.foto_url && (
             <img
-              src={`http://20.3.129.141:8001/${initial.foto_url.replace(/^\/+/, "")}`}
+              src={`http://20.3.129.141:8000/${initial.foto_url.replace(/^\/+/, "")}`}
               alt={initial.nombre}
               className="w-20 h-20 rounded-lg object-cover border-2 border-[#303036]"
               onError={(e) => {
@@ -459,7 +459,7 @@ function PhotoModal({
           <img
             src={
               user.foto_url
-                ? `http://20.3.129.141:8001/${user.foto_url.replace(/^\/+/, "")}`
+                ? `http://20.3.129.141:8000/${user.foto_url.replace(/^\/+/, "")}`
                 : "https://via.placeholder.com/256"
             }
             alt={user.nombre}

@@ -30,11 +30,7 @@ const convertToCostaRicaTime = (utcTimestamp: string) => {
     hour12: false
   });
   
-  console.log('UTC Original:', utcTimestamp);
-  console.log('UTC Date:', utcDate);
-  console.log('CR Date:', costaRicaTime);
-  console.log('Fecha formateada:', fechaFormatted);
-  console.log('Hora formateada:', horaFormatted);
+
   
   return { fechaFormatted, horaFormatted, localDate: costaRicaTime };
 };

@@ -30,12 +30,7 @@ const convertToCostaRicaTime = (utcTimestamp: string) => {
     hour12: false
   });
   
-  console.log('UTC Original:', utcTimestamp);
-  console.log('UTC Date:', utcDate);
-  console.log('CR Date:', costaRicaTime);
-  console.log('Fecha formateada:', fechaFormatted);
-  console.log('Hora formateada:', horaFormatted);
-  
+
   return { fechaFormatted, horaFormatted, localDate: costaRicaTime };
 };
 
@@ -52,11 +47,11 @@ const columns = (handleSelectPhoto: (row: ExtendedVerificacion) => void): TableP
         type="button"
       >
         <img
-          src={row.image_source || "https://via.placeholder.com/40"}
+          src={row.image_source || "https://gimgs2.nohat.cc/thumb/f/640/person-icons-person-icon--m2i8m2A0K9H7N4m2.jpg"}
           alt={row.person_label ?? "Desconocido"}
           className="w-10 h-10 rounded-full object-cover border-2 border-[#303036] group-hover:opacity-70 transition"
           onError={(e) => {
-            (e.target as HTMLImageElement).src = "https://via.placeholder.com/40";
+            (e.target as HTMLImageElement).src = "https://gimgs2.nohat.cc/thumb/f/640/person-icons-person-icon--m2i8m2A0K9H7N4m2.jpg";
           }}
         />
         <span className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
@@ -199,7 +194,7 @@ function PhotoModal({
             alt={user.person_label ?? "Desconocido"}
             className="w-64 h-64 rounded-xl object-cover border-2 border-[#303036] shadow-lg"
             onError={(e) => {
-              (e.target as HTMLImageElement).src = "https://via.placeholder.com/256";
+              (e.target as HTMLImageElement).src = "https://gimgs2.nohat.cc/thumb/f/640/person-icons-person-icon--m2i8m2A0K9H7N4m2.jpg";
             }}
           />
         )}
