@@ -29,24 +29,24 @@ const PersonaPhotoModal: React.FC<PersonaPhotoModalProps> = ({ open, onClose, us
                 : `${imagen}` 
             }
             alt={user.nombre}
-            className="w-64 h-64 rounded-xl object-cover border-2 border-[#303036] shadow-lg"
+            className="w-48 h-48 sm:w-64 sm:h-64 rounded-xl object-cover border-2 border-[#303036] shadow-lg"
             onError={(e) => {
               (e.target as HTMLImageElement).src = `${imagen}`;
             }}
           />
         )}
-        <div className="text-center text-white space-y-2">
+        <div className="text-center text-white space-y-2 w-full">
           <h3 className="text-lg font-semibold">{user?.nombre}</h3>
-          <div className="grid grid-cols-2 gap-4 text-sm">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
             <div>
               <p className="text-neutral-400">Cédula:</p>
-              <p className="text-white">{user?.cedula || 'N/A'}</p>
+              <p className="text-white break-words">{user?.cedula || 'N/A'}</p>
             </div>
             <div>
               <p className="text-neutral-400">Email:</p>
-              <p className="text-white">{user?.email || 'N/A'}</p>
+              <p className="text-white break-words">{user?.email || 'N/A'}</p>
             </div>
-            <div>
+            <div className="sm:col-span-2">
               <p className="text-neutral-400">Teléfono:</p>
               <p className="text-white">{user?.telefono || 'N/A'}</p>
             </div>

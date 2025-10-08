@@ -1,4 +1,3 @@
-
 //Este componente es un campo de formulario reutilizable con estilos personalizados y soporte para deshabilitar el campo, se utiliza en el add form y edit form.
 interface FormFieldProps {
   label: string;
@@ -10,6 +9,7 @@ interface FormFieldProps {
   disabled?: boolean;
   placeholder?: string;
   helperText?: string;
+  className?: string;
 }
 
 export default function FormField({
@@ -21,14 +21,15 @@ export default function FormField({
   required = false,
   disabled = false,
   placeholder,
-  helperText
+  helperText,
+  className = ""
 }: FormFieldProps) {
   const baseClasses = "w-full rounded px-3 py-2 border border-[#303036] focus:outline-none focus:ring-2 focus:ring-blue-700";
   const enabledClasses = "bg-[#18181b] text-white";
   const disabledClasses = "bg-[#27272a] text-neutral-400 cursor-not-allowed";
 
   return (
-    <div className="flex-1">
+    <div className={`flex-1 ${className}`}>
       <label className="block text-neutral-400 text-sm mb-1">
         {label} {required && <span className="text-red-400">*</span>}
       </label>

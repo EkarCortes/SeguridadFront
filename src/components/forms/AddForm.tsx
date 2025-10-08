@@ -54,14 +54,15 @@ export default function AddForm({ onSave, onCancel }: AddFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-      <div className="flex gap-2">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full">
+      <div className="flex flex-col md:flex-row gap-2 w-full">
         <FormField
           label="Nombre"
           name="nombre"
           value={form.nombre}
           onChange={handleChange}
           required
+          className="w-full"
         />
         <FormField
           label="Cédula"
@@ -69,10 +70,11 @@ export default function AddForm({ onSave, onCancel }: AddFormProps) {
           value={form.cedula}
           onChange={handleChange}
           required
+          className="w-full"
         />
       </div>
 
-      <div className="flex gap-2">
+      <div className="flex flex-col md:flex-row gap-2 w-full">
         <FormField
           label="Email"
           name="email"
@@ -80,6 +82,7 @@ export default function AddForm({ onSave, onCancel }: AddFormProps) {
           onChange={handleChange}
           type="email"
           required
+          className="w-full"
         />
         <FormField
           label="Teléfono"
@@ -87,6 +90,7 @@ export default function AddForm({ onSave, onCancel }: AddFormProps) {
           value={form.telefono}
           onChange={handleChange}
           required
+          className="w-full"
         />
       </div>
 
@@ -100,10 +104,10 @@ export default function AddForm({ onSave, onCancel }: AddFormProps) {
         helperText="Selecciona entre 1 y 5 fotos. Formatos soportados: JPG, PNG, etc."
       />
 
-      <div className="flex justify-end gap-2 mt-4">
+      <div className="flex flex-col sm:flex-row justify-end gap-2 mt-4 w-full">
         <button
           type="button"
-          className="px-4 py-2 rounded bg-neutral-600 text-white hover:bg-neutral-500 transition"
+          className="px-4 py-2 rounded bg-neutral-600 text-white hover:bg-neutral-500 transition w-full sm:w-auto"
           onClick={onCancel}
           disabled={isSubmitting}
         >
@@ -111,7 +115,7 @@ export default function AddForm({ onSave, onCancel }: AddFormProps) {
         </button>
         <button
           type="submit"
-          className="px-4 py-2 rounded bg-green-700 text-white hover:bg-green-600 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+          className="px-4 py-2 rounded bg-green-700 text-white hover:bg-green-600 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 w-full sm:w-auto"
           disabled={isSubmitting}
         >
           {isSubmitting ? (

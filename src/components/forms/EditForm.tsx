@@ -56,8 +56,8 @@ export default function EditForm({ initial, onSave, onCancel }: EditFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-      <div className="flex gap-2">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full">
+      <div className="flex flex-col md:flex-row gap-2 w-full">
         <FormField
           label="Nombre"
           name="nombre"
@@ -65,28 +65,32 @@ export default function EditForm({ initial, onSave, onCancel }: EditFormProps) {
           onChange={handleChange}
           disabled
           helperText="El nombre no se puede modificar"
+          className="w-full"
         />
         <FormField
           label="Cédula"
           name="cedula"
           value={form.cedula}
           onChange={handleChange}
+          className="w-full"
         />
       </div>
 
-      <div className="flex gap-2">
+      <div className="flex flex-col md:flex-row gap-2 w-full">
         <FormField
           label="Email"
           name="email"
           value={form.email}
           onChange={handleChange}
           type="email"
+          className="w-full"
         />
         <FormField
           label="Teléfono"
           name="telefono"
           value={form.telefono}
           onChange={handleChange}
+          className="w-full"
         />
       </div>
 
@@ -117,10 +121,10 @@ export default function EditForm({ initial, onSave, onCancel }: EditFormProps) {
         />
       </div>
 
-      <div className="flex justify-end gap-2 mt-4">
+      <div className="flex flex-col sm:flex-row justify-end gap-2 mt-4 w-full">
         <button
           type="button"
-          className="px-4 py-2 rounded bg-neutral-600 text-white hover:bg-neutral-500 transition"
+          className="px-4 py-2 rounded bg-neutral-600 text-white hover:bg-neutral-500 transition w-full sm:w-auto"
           onClick={onCancel}
           disabled={isSubmitting}
         >
@@ -128,7 +132,7 @@ export default function EditForm({ initial, onSave, onCancel }: EditFormProps) {
         </button>
         <button
           type="submit"
-          className="px-4 py-2 rounded bg-blue-700 text-white hover:bg-blue-600 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+          className="px-4 py-2 rounded bg-blue-700 text-white hover:bg-blue-600 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 w-full sm:w-auto"
           disabled={isSubmitting}
         >
           {isSubmitting ? (
