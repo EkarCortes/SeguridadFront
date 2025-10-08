@@ -4,34 +4,16 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import AddIcon from "@mui/icons-material/Add";
-import Modal from "../../components/Modal";
-
 import { usePersons } from "../../hooks/usePersons";
-import { agregadosService, type Persona, type PersonFormData } from "../../service/agregados/agregadosService";
 import LoadingSpinner from "../../components/Spinner";
+import PersonaPhotoModal from "../../components/ModalPhoto";
+import Modal from "../../components/Modal";
+import { convertToCostaRicaTime } from "../../utils/dateUtils";
+import api from "../../config/apiconfig";
+//eLIMINAR
+import { agregadosService, type Persona, type PersonFormData } from "../../service/agregados/agregadosService";
 
-// Función para convertir UTC a zona horaria de Costa Rica (UTC-6)
-const convertToCostaRicaTime = (utcTimestamp: string) => {
-  const utcDate = new Date(utcTimestamp);
-  
-  // Costa Rica está en UTC-6 (CST) todo el año
-  const costaRicaOffset = -6 * 60; // -6 horas en minutos
-  const costaRicaTime = new Date(utcDate.getTime() + (costaRicaOffset * 60 * 1000));
-  
-  const fechaFormatted = costaRicaTime.toLocaleDateString('es-ES', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric'
-  });
-  
-  const horaFormatted = costaRicaTime.toLocaleTimeString('es-ES', {
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false
-  });
-  
-  return { fechaFormatted, horaFormatted, localDate: costaRicaTime };
-};
+
 
 // Extender la interfaz Persona para incluir un ID local
 interface ExtendedPersona extends Persona {
@@ -43,128 +25,128 @@ const columns = (
   handleDelete: (row: ExtendedPersona) => void,
   handleSelectPhoto: (row: ExtendedPersona) => void
 ): TableProps<ExtendedPersona>["columns"] => [
-  {
-    name: "Foto",
-    selector: (row) => row.foto_url,
-    cell: (row) => (
-      <button
-        className="group relative focus:outline-none"
-        onClick={() => handleSelectPhoto(row)}
-        title="Ver foto"
-        style={{ background: "none", border: "none", padding: 0, margin: 0, cursor: "pointer" }}
-        type="button"
-      >
-        <img
-          src={
-            row.foto_url
-              ? `http://20.3.129.141:8000/${row.foto_url.replace(/^\/+/, "")}`
-              : "https://gimgs2.nohat.cc/thumb/f/640/person-icons-person-icon--m2i8m2A0K9H7N4m2.jpg"
-          }
-          alt={row.nombre}
-          className="w-10 h-10 rounded-full object-cover border-2 border-[#303036] group-hover:opacity-70 transition"
-          onError={(e) => {
-            (e.target as HTMLImageElement).src = "https://gimgs2.nohat.cc/thumb/f/640/person-icons-person-icon--m2i8m2A0K9H7N4m2.jpg";
-          }}
-        />
-        <span className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
-          <PhotoCameraIcon className="text-white bg-black/60 rounded-full p-1" fontSize="small" />
+    {
+      name: "Foto",
+      selector: (row) => row.foto_url,
+      cell: (row) => (
+        <button
+          className="group relative focus:outline-none"
+          onClick={() => handleSelectPhoto(row)}
+          title="Ver foto"
+          style={{ background: "none", border: "none", padding: 0, margin: 0, cursor: "pointer" }}
+          type="button"
+        >
+          <img
+            src={
+              row.foto_url
+                ? `${api}/${row.foto_url.replace(/^\/+/, "")}`
+                : "https://www.pngfind.com/pngs/m/93-938050_png-file-transparent-white-user-icon-png-download.png"
+            }
+            alt={row.nombre}
+            className="w-10 h-10 rounded-full object-cover border-2 border-[#303036] group-hover:opacity-70 transition"
+            onError={(e) => {
+              (e.target as HTMLImageElement).src = "https://gimgs2.nohat.cc/thumb/f/640/person-icons-person-icon--m2i8m2A0K9H7N4m2.jpg";
+            }}
+          />
+          <span className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
+            <PhotoCameraIcon className="text-white bg-black/60 rounded-full p-1" fontSize="small" />
+          </span>
+        </button>
+      ),
+      width: "70px",
+      sortable: false,
+    },
+    {
+      name: "Nombre",
+      selector: (row) => row.nombre,
+      sortable: true,
+      cell: (row) => <span className="font-semibold text-white">{row.nombre}</span>,
+    },
+    {
+      name: "Cédula",
+      selector: (row) => row.cedula || 'N/A',
+      sortable: true,
+      cell: (row) => (
+        <span className="text-neutral-200">{row.cedula || 'N/A'}</span>
+      ),
+    },
+    {
+      name: "Email",
+      selector: (row) => row.email || 'N/A',
+      sortable: true,
+      cell: (row) => (
+        <span className="text-neutral-200">{row.email || 'N/A'}</span>
+      ),
+    },
+    {
+      name: "Teléfono",
+      selector: (row) => row.telefono || 'N/A',
+      sortable: false,
+      cell: (row) => (
+        <span className="text-neutral-200">{row.telefono || 'N/A'}</span>
+      ),
+    },
+
+
+    {
+      name: "Primer Acceso",
+      selector: (row) => row.primer_acceso || '',
+      sortable: true,
+      cell: (row) => (
+        <span className="text-neutral-300">
+          {row.primer_acceso ? convertToCostaRicaTime(row.primer_acceso).fechaFormatted : 'N/A'}
         </span>
-      </button>
-    ),
-    width: "70px",
-    sortable: false,
-  },
-  {
-    name: "Nombre",
-    selector: (row) => row.nombre,
-    sortable: true,
-    cell: (row) => <span className="font-semibold text-white">{row.nombre}</span>,
-  },
-  {
-    name: "Cédula",
-    selector: (row) => row.cedula || 'N/A',
-    sortable: true,
-    cell: (row) => (
-      <span className="text-neutral-200">{row.cedula || 'N/A'}</span>
-    ),
-  },
-  {
-    name: "Email",
-    selector: (row) => row.email || 'N/A',
-    sortable: true,
-    cell: (row) => (
-      <span className="text-neutral-200">{row.email || 'N/A'}</span>
-    ),
-  },
-  {
-    name: "Teléfono",
-    selector: (row) => row.telefono || 'N/A',
-    sortable: false,
-    cell: (row) => (
-      <span className="text-neutral-200">{row.telefono || 'N/A'}</span>
-    ),
-  },
-  
- 
-  {
-    name: "Primer Acceso",
-    selector: (row) => row.primer_acceso || '',
-    sortable: true,
-    cell: (row) => (
-      <span className="text-neutral-300">
-        {row.primer_acceso ? convertToCostaRicaTime(row.primer_acceso).fechaFormatted : 'N/A'}
-      </span>
-    ),
-    width: "120px",
-  },
-  {
-    name: "Último Acceso",
-    selector: (row) => row.ultimo_acceso || '',
-    sortable: true,
-    cell: (row) => (
-      <span className="text-neutral-300">
-        {row.ultimo_acceso ? convertToCostaRicaTime(row.ultimo_acceso).fechaFormatted : 'N/A'}
-      </span>
-    ),
-    width: "120px",
-  },
-  {
-    name: "Fecha Registro",
-    selector: (row) => row.fecha_registro,
-    sortable: true,
-    cell: (row) => (
-      <span className="text-neutral-300">
-        {convertToCostaRicaTime(row.fecha_registro).fechaFormatted}
-      </span>
-    ),
-    width: "120px",
-  },
-  {
-    name: "Acciones",
-    cell: (row) => (
-      <div className="flex gap-2">
-        <button
-          className="p-1 rounded hover:bg-blue-700 transition"
-          onClick={() => handleEdit(row)}
-          title="Editar"
-        >
-          <EditIcon className="text-blue-400" fontSize="small" />
-        </button>
-        <button
-          className="p-1 rounded hover:bg-red-700 transition"
-          onClick={() => handleDelete(row)}
-          title="Eliminar"
-        >
-          <DeleteIcon className="text-red-400" fontSize="small" />
-        </button>
-      </div>
-    ),
-    ignoreRowClick: true,
-    allowOverflow: true,
-    button: true,
-    width: "90px",
-  },
-];
+      ),
+      width: "120px",
+    },
+    {
+      name: "Último Acceso",
+      selector: (row) => row.ultimo_acceso || '',
+      sortable: true,
+      cell: (row) => (
+        <span className="text-neutral-300">
+          {row.ultimo_acceso ? convertToCostaRicaTime(row.ultimo_acceso).fechaFormatted : 'N/A'}
+        </span>
+      ),
+      width: "120px",
+    },
+    {
+      name: "Fecha Registro",
+      selector: (row) => row.fecha_registro,
+      sortable: true,
+      cell: (row) => (
+        <span className="text-neutral-300">
+          {convertToCostaRicaTime(row.fecha_registro).fechaFormatted}
+        </span>
+      ),
+      width: "120px",
+    },
+    {
+      name: "Acciones",
+      cell: (row) => (
+        <div className="flex gap-2">
+          <button
+            className="p-1 rounded hover:bg-blue-700 transition"
+            onClick={() => handleEdit(row)}
+            title="Editar"
+          >
+            <EditIcon className="text-blue-400" fontSize="small" />
+          </button>
+          <button
+            className="p-1 rounded hover:bg-red-700 transition"
+            onClick={() => handleDelete(row)}
+            title="Eliminar"
+          >
+            <DeleteIcon className="text-red-400" fontSize="small" />
+          </button>
+        </div>
+      ),
+      ignoreRowClick: true,
+      allowOverflow: true,
+      button: true,
+      width: "90px",
+    },
+  ];
 
 const customStyles = {
   table: {
@@ -249,14 +231,14 @@ function EditForm({
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const files = Array.from(e.target.files || []);
-    
+
     if (files.length > 5) {
       alert('Máximo 5 fotos permitidas');
       return;
     }
 
     setSelectedFiles(files);
-    
+
     // Crear previews
     const newPreviews: string[] = [];
     files.forEach((file) => {
@@ -281,7 +263,7 @@ function EditForm({
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setIsSubmitting(true);
-    
+
     try {
       const updateData = {
         cedula: form.cedula !== initial.cedula ? form.cedula : undefined,
@@ -351,7 +333,7 @@ function EditForm({
           />
         </div>
       </div>
-      
+
       <div>
         <label className="block text-neutral-400 text-sm mb-1">
           Foto actual
@@ -368,7 +350,7 @@ function EditForm({
             />
           )}
         </div>
-        
+
         <label className="block text-neutral-400 text-sm mb-1">
           Nuevas fotos (opcional)
         </label>
@@ -383,7 +365,7 @@ function EditForm({
           <p className="text-neutral-500 text-xs">
             Selecciona hasta 5 fotos nuevas para reemplazar las actuales. Si no seleccionas ninguna, se mantienen las fotos actuales.
           </p>
-          
+
           {/* Preview de nuevas imágenes */}
           {previews.length > 0 && (
             <div>
@@ -443,57 +425,6 @@ function EditForm({
   );
 }
 
-function PhotoModal({
-  open,
-  onClose,
-  user,
-}: {
-  open: boolean;
-  onClose: () => void;
-  user: ExtendedPersona | null;
-}) {
-  return (
-    <Modal open={open} onClose={onClose} size="md" title="Foto de usuario">
-      <div className="flex flex-col items-center gap-4">
-        {user?.foto_url && (
-          <img
-            src={
-              user.foto_url
-                ? `http://20.3.129.141:8000/${user.foto_url.replace(/^\/+/, "")}`
-                : "https://via.placeholder.com/256"
-            }
-            alt={user.nombre}
-            className="w-64 h-64 rounded-xl object-cover border-2 border-[#303036] shadow-lg"
-            onError={(e) => {
-              (e.target as HTMLImageElement).src = "https://via.placeholder.com/256";
-            }}
-          />
-        )}
-        <div className="text-center text-white space-y-2">
-          <h3 className="text-lg font-semibold">{user?.nombre}</h3>
-          
-          <div className="grid grid-cols-2 gap-4 text-sm">
-            <div>
-              <p className="text-neutral-400">Cédula:</p>
-              <p className="text-white">{user?.cedula || 'N/A'}</p>
-            </div>
-            <div>
-              <p className="text-neutral-400">Email:</p>
-              <p className="text-white">{user?.email || 'N/A'}</p>
-            </div>
-            <div>
-              <p className="text-neutral-400">Teléfono:</p>
-              <p className="text-white">{user?.telefono || 'N/A'}</p>
-            </div>
-         
-          </div>
-
-       
-        </div>
-      </div>
-    </Modal>
-  );
-}
 
 function AddForm({
   onSave,
@@ -522,14 +453,14 @@ function AddForm({
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const files = Array.from(e.target.files || []);
-    
+
     if (files.length > 5) {
       alert('Máximo 5 fotos permitidas');
       return;
     }
 
     setSelectedFiles(files);
-    
+
     // Crear previews
     const newPreviews: string[] = [];
     files.forEach((file) => {
@@ -553,20 +484,20 @@ function AddForm({
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    
+
     if (selectedFiles.length === 0) {
       alert('Debe seleccionar al menos una foto');
       return;
     }
 
     setIsSubmitting(true);
-    
+
     try {
       const personData: PersonFormData = {
         ...form,
         fotos: selectedFiles,
       };
-      
+
       await onSave(personData);
     } catch (error) {
       console.error('Error al guardar:', error);
@@ -631,7 +562,7 @@ function AddForm({
           />
         </div>
       </div>
-      
+
       <div>
         <label className="block text-neutral-400 text-sm mb-1">
           Fotos <span className="text-red-400">*</span>
@@ -647,7 +578,7 @@ function AddForm({
           <p className="text-neutral-500 text-xs">
             Selecciona entre 1 y 5 fotos. Formatos soportados: JPG, PNG, etc.
           </p>
-          
+
           {/* Preview de imágenes seleccionadas */}
           {previews.length > 0 && (
             <div className="grid grid-cols-3 gap-3 max-h-60 overflow-y-auto">
@@ -791,23 +722,23 @@ export default function ListaAgregados() {
   }
 
   return (
-    <div className="w-full min-h-[600px] p-2 md:p-4">
-      <div className="flex flex-col gap-4 w-full">
+    <div className="w-full min-h-[600px] p-2 md:p-4 flex items-center justify-center">
+      <div className="w-full max-w-6xl bg-[#f9faff] rounded-xl shadow-2xl p-6 flex flex-col gap-6" style={{ color: "#1f364a" }}>
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-bold text-white mb-2">Lista de Personas</h2>
-          <div className="text-neutral-400 text-sm">
+          <h2 className="text-2xl font-bold" style={{ color: "#1f364a" }}>
+            Lista de Personas
+          </h2>
+          <div className="text-sm" style={{ color: "#1f364a" }}>
             Total: {totalPersonas} persona{totalPersonas !== 1 ? 's' : ''}
           </div>
         </div>
- 
-
         <div className="flex items-center justify-between mb-2">
           <input
             type="text"
             placeholder="Buscar por nombre, cédula, email o teléfono..."
             value={search}
             onChange={handleSearchChange}
-            className="rounded bg-[#18181b] text-white px-3 py-2 w-80 border border-[#303036] focus:outline-none focus:ring-2 focus:ring-blue-700"
+            className="rounded bg-[#f3f6fa] text-[#1f364a] px-3 py-2 w-80 border border-[#dbeafe] focus:outline-none focus:ring-2 focus:ring-blue-700"
             style={{ minWidth: 0 }}
           />
           <button
@@ -820,73 +751,124 @@ export default function ListaAgregados() {
             Agregar
           </button>
         </div>
-        
-        <DataTable
-          columns={columns(handleEdit, handleDelete, handleSelectPhoto)}
-          data={filteredAgregados}
-          customStyles={customStyles}
-          pagination
-          paginationPerPage={rowsPerPage}
-          paginationRowsPerPageOptions={[rowsPerPage]}
-          paginationComponentOptions={{
-            rowsPerPageText: "Filas por página",
-            rangeSeparatorText: "de",
-            noRowsPerPage: true,
-            selectAllRowsItem: false,
-          }}
-          onChangePage={setCurrentPage}
-          paginationDefaultPage={currentPage}
-          noDataComponent={
-            <div className="py-6 text-center text-neutral-400">
-              No hay personas registradas.
-            </div>
-          }
+        <div className="rounded-lg shadow-lg bg-white p-2">
+          <DataTable
+            columns={columns(handleEdit, handleDelete, handleSelectPhoto)}
+            data={filteredAgregados}
+            customStyles={{
+              ...customStyles,
+              table: {
+                style: {
+                  background: "#fff",
+                  borderRadius: "0.75rem",
+                  color: "#1f364a",
+                  minHeight: "400px",
+                },
+              },
+              headRow: {
+                style: {
+                  background: "#f3f6fa",
+                  color: "#1f364a",
+                  fontWeight: "bold",
+                  fontSize: "1rem",
+                },
+              },
+              headCells: {
+                style: {
+                  color: "#1f364a",
+                  fontWeight: "bold",
+                  fontSize: "1rem",
+                },
+              },
+              rows: {
+                style: {
+                  backgroundColor: "#fff",
+                  color: "#1f364a",
+                  fontSize: "0.95rem",
+                  borderBottom: "1px solid #e5e7eb",
+                  '&:nth-of-type(odd)': {
+                    backgroundColor: "#f3f6fa",
+                  },
+                  '&:hover': {
+                    backgroundColor: "#e0e7ef",
+                  },
+                },
+              },
+              pagination: {
+                style: {
+                  background: "#f3f6fa",
+                  color: "#1f364a",
+                  borderBottomLeftRadius: "0.75rem",
+                  borderBottomRightRadius: "0.75rem",
+                },
+                pageButtonsStyle: {
+                  fill: "#1f364a",
+                  '&:disabled': {
+                    fill: "#a3a3a3",
+                  },
+                },
+              },
+            }}
+            pagination
+            paginationPerPage={rowsPerPage}
+            paginationRowsPerPageOptions={[rowsPerPage]}
+            paginationComponentOptions={{
+              rowsPerPageText: "Filas por página",
+              rangeSeparatorText: "de",
+              noRowsPerPage: true,
+              selectAllRowsItem: false,
+            }}
+            onChangePage={setCurrentPage}
+            paginationDefaultPage={currentPage}
+            noDataComponent={
+              <div className="py-6 text-center" style={{ color: "#1f364a" }}>
+                No hay personas registradas.
+              </div>
+            }
+          />
+        </div>
+        {/* Modal agregar */}
+        <Modal open={addModal} onClose={() => setAddModal(false)} size="lg" title="Registrar Nueva Persona">
+          <AddForm
+            onSave={handleAddUser}
+            onCancel={() => setAddModal(false)}
+          />
+        </Modal>
+        {/* Modal editar */}
+        <Modal open={!!editUser} onClose={() => setEditUser(null)} size="md" title="Editar Persona">
+          {editUser && (
+            <EditForm
+              initial={editUser}
+              onSave={handleSaveEdit}
+              onCancel={() => setEditUser(null)}
+            />
+          )}
+        </Modal>
+        <Modal open={!!deleteUser} onClose={() => setDeleteUser(null)} size="sm" title="Eliminar Persona">
+          <div className="mb-4" style={{ color: "#1f364a" }}>
+            ¿Seguro que deseas eliminar a <span className="font-bold">{deleteUser?.nombre}</span>?
+          </div>
+          <div className="flex justify-end gap-2">
+            <button
+              className="px-4 py-2 rounded bg-neutral-600 text-white hover:bg-neutral-500"
+              onClick={() => setDeleteUser(null)}
+            >
+              Cancelar
+            </button>
+            <button
+              className="px-4 py-2 rounded bg-red-700 text-white hover:bg-red-600"
+              onClick={confirmDelete}
+            >
+              Eliminar
+            </button>
+          </div>
+        </Modal>
+        <PersonaPhotoModal
+          open={!!photoUser}
+          onClose={() => setPhotoUser(null)}
+          user={photoUser}
         />
       </div>
-      
-      {/* Modal agregar - actualizado */}
-      <Modal open={addModal} onClose={() => setAddModal(false)} size="lg" title="Registrar Nueva Persona">
-        <AddForm
-          onSave={handleAddUser}
-          onCancel={() => setAddModal(false)}
-        />
-      </Modal>
-      {/* Modal editar */}
-      <Modal open={!!editUser} onClose={() => setEditUser(null)} size="md" title="Editar Persona">
-        {editUser && (
-          <EditForm
-            initial={editUser}
-            onSave={handleSaveEdit}
-            onCancel={() => setEditUser(null)}
-          />
-        )}
-      </Modal>
-      {/* Modal eliminar */}
-      <Modal open={!!deleteUser} onClose={() => setDeleteUser(null)} size="sm" title="Eliminar Persona">
-        <div className="text-white mb-4">
-          ¿Seguro que deseas eliminar a <span className="font-bold">{deleteUser?.nombre}</span>?
-        </div>
-        <div className="flex justify-end gap-2">
-          <button
-            className="px-4 py-2 rounded bg-neutral-600 text-white hover:bg-neutral-500"
-            onClick={() => setDeleteUser(null)}
-          >
-            Cancelar
-          </button>
-          <button
-            className="px-4 py-2 rounded bg-red-700 text-white hover:bg-red-600"
-            onClick={confirmDelete}
-          >
-            Eliminar
-          </button>
-        </div>
-      </Modal>
-      {/* Modal ver foto */}
-      <PhotoModal
-        open={!!photoUser}
-        onClose={() => setPhotoUser(null)}
-        user={photoUser}
-      />
     </div>
   );
 }

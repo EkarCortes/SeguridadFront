@@ -1,10 +1,9 @@
 import DataTable, { type TableProps } from "react-data-table-component";
-import { useDailyVerifications } from "../hooks/useDailyVerifications";
-import { type DetalleIntento } from "../service/home/homeService";
-import LoadingSpinner from "./Spinner";
+import { useDailyVerifications } from "../../hooks/useDailyVerifications";
+import { type DetalleIntento } from "../../service/home/homeService";
+import LoadingSpinner from "../Spinner";
 
 
-// Colores de la app
 const accentColor = "#fff";
 const mutedText = "#a3a3a3";
 const selectedBg = "#27272a";

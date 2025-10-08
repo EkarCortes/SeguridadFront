@@ -10,6 +10,8 @@ import {
   Cell,
 } from "recharts";
 
+//Componente usado en Home para mostrar un grafico de barras con los accesos totales
+
 interface AccessChartProps {
   totalData: {
     aceptados: number;

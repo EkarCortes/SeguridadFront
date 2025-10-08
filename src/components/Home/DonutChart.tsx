@@ -49,7 +49,6 @@ const DonutChart: React.FC<DonutChartProps> = ({ monthlyData, loading, error }) 
     return (
       <div className="w-full h-full flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
-          {/* Spinner principal */}
           <div className="relative">
             <div className="w-16 h-16 border-4 border-[#303036] border-t-green-500 rounded-full animate-spin"></div>
             <div className="absolute inset-0 flex items-center justify-center">
@@ -96,13 +95,11 @@ const DonutChart: React.FC<DonutChartProps> = ({ monthlyData, loading, error }) 
 
   return (
     <div className="w-full h-full flex flex-col">
-      {/* Header */}
       <div className="text-center mb-3">
         <h3 className="text-white font-semibold text-base">{mes_nombre} 2025</h3>
         <p className="text-neutral-400 text-xs">Estadísticas del mes</p>
       </div>
 
-      {/* Donut Chart */}
       <div className="relative flex-1 min-h-[140px]">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
@@ -127,16 +124,13 @@ const DonutChart: React.FC<DonutChartProps> = ({ monthlyData, loading, error }) 
           </PieChart>
         </ResponsiveContainer>
         
-        {/* Información central del donut */}
         <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
           <div className="text-white font-bold text-lg">{total_verificaciones}</div>
           <div className="text-neutral-400 text-xs">Total</div>
         </div>
       </div>
 
-      {/* Stats compactas */}
       <div className="mt-3 space-y-2">
-        {/* Leyenda con valores */}
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 rounded-full bg-green-500"></div>
@@ -153,10 +147,8 @@ const DonutChart: React.FC<DonutChartProps> = ({ monthlyData, loading, error }) 
           <span className="text-white text-xs font-semibold">{rechazados}</span>
         </div>
 
-        {/* Separador */}
         <div className="border-t border-[#303036] my-2"></div>
 
-        {/* Métricas adicionales */}
         <div className="grid grid-cols-2 gap-3 text-xs">
           <div className="text-center">
             <div className="text-blue-400 font-semibold">{(tasa_autorizacion * 100).toFixed(0)}%</div>

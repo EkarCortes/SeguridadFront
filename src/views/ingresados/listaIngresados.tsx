@@ -262,11 +262,16 @@ export default function ListaIngresados() {
   }
 
   return (
-    <div className="w-full min-h-[400px] p-2 md:p-4">
-      <div className="flex flex-col gap-4 w-full">
+    <div className="w-full min-h-[400px] p-2 md:p-4 flex items-center justify-center">
+      <div
+        className="w-full max-w-6xl bg-white rounded-xl shadow-2xl p-6 flex flex-col gap-6"
+        style={{ color: "#1f364a" }}
+      >
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-bold text-white mb-2">Lista de Verificaciones</h2>
-          <div className="text-neutral-400 text-sm">
+          <h2 className="text-2xl font-bold" style={{ color: "#1f364a" }}>
+            Lista de Verificaciones
+          </h2>
+          <div className="text-sm" style={{ color: "#1f364a" }}>
             Total: {totalVerificaciones} verificacion{totalVerificaciones !== 1 ? 'es' : ''}
           </div>
         </div>
@@ -275,8 +280,8 @@ export default function ListaIngresados() {
             type="text"
             placeholder="Buscar por nombre, ID o fecha..."
             value={search}
-            onChange={handleSearchChange} // Usar la nueva función
-            className="rounded bg-[#18181b] text-white px-3 py-2 w-80 border border-[#303036] focus:outline-none focus:ring-2 focus:ring-blue-700"
+            onChange={handleSearchChange}
+            className="rounded bg-[#f3f6fa] text-[#1f364a] px-3 py-2 w-80 border border-[#dbeafe] focus:outline-none focus:ring-2 focus:ring-blue-700"
             style={{ minWidth: 0 }}
           />
           <button
@@ -288,35 +293,89 @@ export default function ListaIngresados() {
             Actualizar
           </button>
         </div>
-        <DataTable
-          columns={columns(handleSelectPhoto)}
-          data={filteredIngresados}
-          customStyles={customStyles}
-          pagination
-          paginationPerPage={rowsPerPage}
-          paginationRowsPerPageOptions={[rowsPerPage]}
-          
-          paginationComponentOptions={{
-            rowsPerPageText: "Filas por página",
-            rangeSeparatorText: "de",
-            noRowsPerPage: true,
-            selectAllRowsItem: false,
-          }}
-          onChangePage={setCurrentPage}
-          paginationDefaultPage={currentPage}
-          noDataComponent={
-            <div className="py-6 text-center text-neutral-400">
-              No hay registros de verificaciones.
-            </div>
-          }
+        <div className="rounded-lg shadow-lg bg-white p-2">
+          <DataTable
+            columns={columns(handleSelectPhoto)}
+            data={filteredIngresados}
+            customStyles={{
+              ...customStyles,
+              table: {
+                style: {
+                  background: "#fff",
+                  borderRadius: "0.75rem",
+                  color: "#1f364a",
+                  minHeight: "400px",
+                },
+              },
+              headRow: {
+                style: {
+                  background: "#f3f6fa",
+                  color: "#1f364a",
+                  fontWeight: "bold",
+                  fontSize: "1rem",
+                },
+              },
+              headCells: {
+                style: {
+                  color: "#1f364a",
+                  fontWeight: "bold",
+                  fontSize: "1rem",
+                },
+              },
+              rows: {
+                style: {
+                  backgroundColor: "#fff",
+                  color: "#1f364a",
+                  fontSize: "0.95rem",
+                  borderBottom: "1px solid #e5e7eb",
+                  '&:nth-of-type(odd)': {
+                    backgroundColor: "#f3f6fa",
+                  },
+                  '&:hover': {
+                    backgroundColor: "#e0e7ef",
+                  },
+                },
+              },
+              pagination: {
+                style: {
+                  background: "#f3f6fa",
+                  color: "#1f364a",
+                  borderBottomLeftRadius: "0.75rem",
+                  borderBottomRightRadius: "0.75rem",
+                },
+                pageButtonsStyle: {
+                  fill: "#1f364a",
+                  '&:disabled': {
+                    fill: "#a3a3a3",
+                  },
+                },
+              },
+            }}
+            pagination
+            paginationPerPage={rowsPerPage}
+            paginationRowsPerPageOptions={[rowsPerPage]}
+            paginationComponentOptions={{
+              rowsPerPageText: "Filas por página",
+              rangeSeparatorText: "de",
+              noRowsPerPage: true,
+              selectAllRowsItem: false,
+            }}
+            onChangePage={setCurrentPage}
+            paginationDefaultPage={currentPage}
+            noDataComponent={
+              <div className="py-6 text-center" style={{ color: "#1f364a" }}>
+                No hay registros de verificaciones.
+              </div>
+            }
+          />
+        </div>
+        {/* Modal ver foto */}
+        <PhotoModal
+          open={!!photoUser}
+          onClose={() => setPhotoUser(null)}
+          user={photoUser}
         />
       </div>
-      {/* Modal ver foto */}
-      <PhotoModal
-        open={!!photoUser}
-        onClose={() => setPhotoUser(null)}
-        user={photoUser}
-      />
     </div>
   );
 }

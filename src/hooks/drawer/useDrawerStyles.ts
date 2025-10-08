@@ -141,7 +141,7 @@ export const useDrawerStyles = (
         flexDirection: "column" as const,
         ml: { xs: 0, sm: open ? `${drawerWidth}px` : "72px" },
         transition: "margin-left 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
-        background: "#F1F5F9",
+        background: "#e4e7f7",
         p: { xs: 2, sm: 4 },
        
     };
