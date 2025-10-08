@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { homeService, type MonthlyStatsResponse, type MonthlyStats } from '../service/home/homeService';
+import { homeService, type MonthlyStatsResponse, type MonthlyStats } from '../../service/home/homeService';
 
 export const useMonthlyStats = () => {
   const [monthlyStats, setMonthlyStats] = useState<MonthlyStats[]>([]);

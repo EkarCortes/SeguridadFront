@@ -2,6 +2,8 @@ import React from "react";
 import Modal from "./Modal";
 import api from "../config/apiconfig";
 
+//Este componente Modal se utiliza para mostrar la foto y detalles de un usuario en una ventana emergente centrada en la pantalla.
+
 interface PersonaPhotoModalProps {
   open: boolean;
   onClose: () => void;
@@ -28,7 +30,7 @@ const PersonaPhotoModal: React.FC<PersonaPhotoModalProps> = ({ open, onClose, us
             alt={user.nombre}
             className="w-64 h-64 rounded-xl object-cover border-2 border-[#303036] shadow-lg"
             onError={(e) => {
-              (e.target as HTMLImageElement).src = "https://via.placeholder.com/256";
+              (e.target as HTMLImageElement).src = "https://www.pngfind.com/pngs/m/93-938050_png-file-transparent-white-user-icon-png-download.png";
             }}
           />
         )}

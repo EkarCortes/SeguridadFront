@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { homeService, type TimeSeriesData } from '../service/home/homeService';
+import { homeService, type TimeSeriesData } from '../../service/home/homeService';
 
 export const useHomeData = () => {
   const [timeSeriesData, setTimeSeriesData] = useState<TimeSeriesData[]>([]);

@@ -10,8 +10,8 @@ export interface Verificacion {
 }
 
 export interface VerificationsResponse {
-  total_registros: number;
-  registros: Verificacion[];
+  total_personas: number;
+  personas: Verificacion[];
 }
 
 export const ingresadosService = {

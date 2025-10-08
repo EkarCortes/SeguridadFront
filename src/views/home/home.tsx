@@ -1,8 +1,8 @@
 import AccessTable from "../../components/Home/AccessTable";
 import AccessChart from "../../components/Home/AccessChart";
 import DonutChart from "../../components/Home/DonutChart";
-import { useHomeData } from "../../hooks/useHomeData";
-import { useMonthlyStats } from "../../hooks/useMonthlyStats";
+import { useHomeData } from "../../hooks/home/useHomeData";
+import { useMonthlyStats } from "../../hooks/home/useMonthlyStats";
 
 
 const Dashboard = () => {

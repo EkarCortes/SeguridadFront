@@ -1,5 +1,7 @@
 import React from "react";
 
+//Este componente Modal se utiliza para mostrar contenido en una ventana emergente centrada en la pantalla, con opciones para cerrar y personalizar el tamaño y título.
+
 interface ModalProps {
   open: boolean;
   onClose: () => void;
