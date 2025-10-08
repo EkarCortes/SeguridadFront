@@ -11,7 +11,7 @@ export const useDailyVerifications = (date?: string) => {
       try {
         setLoading(true);
         setError(null);
-        const result = await homeService.getDailyVerifications(date);
+        const result = await homeService.getDailyVerifications();
         setData(result);
       } catch (err) {
         setError('Error al cargar los datos diarios');
