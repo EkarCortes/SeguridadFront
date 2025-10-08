@@ -3,6 +3,7 @@ import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import { type Verificacion } from "../../service/ingresados/ingresadosService";
 import { convertToCostaRicaTime } from "../../utils/dateUtils";
 interface ExtendedVerificacion extends Verificacion {}
+import imagen from "../../assets/noUser.jpg";
 
 // Este componente se utiliza para definir las columnas de la tabla de personas, utilizado en las paginas lista de verificaciones.
 
@@ -22,11 +23,11 @@ export const getVerificacionesColumns = (
         type="button"
       >
         <img
-          src={row.image_source || "https://gimgs2.nohat.cc/thumb/f/640/person-icons-person-icon--m2i8m2A0K9H7N4m2.jpg"}
+          src={row.image_source || `${imagen}`}
           alt={row.person_label ?? "Desconocido"}
           className="w-10 h-10 rounded-full object-cover border-2 border-[#303036] group-hover:opacity-70 transition"
           onError={(e) => {
-            (e.target as HTMLImageElement).src = "https://gimgs2.nohat.cc/thumb/f/640/person-icons-person-icon--m2i8m2A0K9H7N4m2.jpg";
+            (e.target as HTMLImageElement).src = `${imagen}`;
           }}
         />
         <span className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">

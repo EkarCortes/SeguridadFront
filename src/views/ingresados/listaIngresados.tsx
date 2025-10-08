@@ -4,6 +4,7 @@ import DataTableGeneric from "../../components/table/DataTableGeneric";
 import { getVerificacionesColumns, convertToCostaRicaTime, type ExtendedVerificacion } from "../../components/table/verificacionesColumns";
 import { getTableStyles } from "../../styles/tableStyles";
 import { useVerifications } from "../../hooks/useVerifications";
+import imagen from "../../assets/noUser.jpg";
 
 // Modal para mostrar la foto en grande
 
@@ -21,11 +22,11 @@ function PhotoModal({
       <div className="flex flex-col items-center gap-4">
         {user?.image_source && (
           <img
-            src={user.image_source}
+            src={user.image_source || `${imagen}`}
             alt={user.person_label ?? "Desconocido"}
             className="w-64 h-64 rounded-xl object-cover border-2 border-[#303036] shadow-lg"
             onError={(e) => {
-              (e.target as HTMLImageElement).src = "https://gimgs2.nohat.cc/thumb/f/640/person-icons-person-icon--m2i8m2A0K9H7N4m2.jpg";
+              (e.target as HTMLImageElement).src = `${imagen}`;
             }}
           />
         )}
