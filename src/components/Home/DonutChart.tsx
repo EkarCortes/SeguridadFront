@@ -20,8 +20,8 @@ interface DonutChartProps {
 }
 
 const COLORS = {
-  Autorizados: "#10b981",
-  Rechazados: "#ef4444",
+  Autorizados: "#6FBF73",
+  Rechazados: "#B85C5C",
 };
 
 const CustomTooltip = ({ active, payload }: any) => {
@@ -96,7 +96,7 @@ const DonutChart: React.FC<DonutChartProps> = ({ monthlyData, loading, error }) 
   return (
     <div className="w-full h-full flex flex-col">
       <div className="text-center mb-3">
-        <h3 className="text-white font-semibold text-base">{mes_nombre} 2025</h3>
+        <h3 className="text-[#262c3e] font-semibold text-base">{mes_nombre} 2025</h3>
         <p className="text-neutral-400 text-xs">Estadísticas del mes</p>
       </div>
 
@@ -133,16 +133,16 @@ const DonutChart: React.FC<DonutChartProps> = ({ monthlyData, loading, error }) 
       <div className="mt-3 space-y-2">
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-green-500"></div>
-            <span className="text-neutral-300 text-xs">Autorizados</span>
+            <div className="w-2 h-2 rounded-full bg-[#6FBF73]"></div>
+            <span className="text-neutral-500 text-xs">Autorizados</span>
           </div>
           <span className="text-white text-xs font-semibold">{autorizados}</span>
         </div>
         
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-red-500"></div>
-            <span className="text-neutral-300 text-xs">Rechazados</span>
+            <div className="w-2 h-2 rounded-full bg-[#B85C5C]"></div>
+            <span className="text-neutral-500 text-xs">Rechazados</span>
           </div>
           <span className="text-white text-xs font-semibold">{rechazados}</span>
         </div>
@@ -151,11 +151,11 @@ const DonutChart: React.FC<DonutChartProps> = ({ monthlyData, loading, error }) 
 
         <div className="grid grid-cols-2 gap-3 text-xs">
           <div className="text-center">
-            <div className="text-blue-400 font-semibold">{(tasa_autorizacion * 100).toFixed(0)}%</div>
+            <div className="text-[#262c3e] font-semibold">{(tasa_autorizacion * 100).toFixed(0)}%</div>
             <div className="text-neutral-400">Tasa éxito</div>
           </div>
           <div className="text-center">
-            <div className="text-purple-400 font-semibold">{personas_unicas}</div>
+            <div className="text-[#262c3e] font-semibold">{personas_unicas}</div>
             <div className="text-neutral-400">Personas</div>
           </div>
         </div>

@@ -68,13 +68,10 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <div className="w-full">
-          <div
-            className="rounded-lg shadow-lg p-4 min-h-[370px] flex items-center justify-center bg-[#f9faff]"
-            style={{ color: "#1f364a" }}
-          >
+        <div  className="rounded-lg shadow-lg bg-[#f9faff]" >
+         
             <AccessTable />
-          </div>
+       
         </div>
       </div>
     </div>

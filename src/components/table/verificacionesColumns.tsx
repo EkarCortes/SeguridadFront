@@ -76,8 +76,8 @@ export const getVerificacionesColumns = (
       <span
         className={`px-3 py-1 text-xs font-bold ${
           row.authorized
-            ? "bg-green-700 text-green-100"
-            : "bg-red-900 text-red-200"
+            ? "bg-[#6FBF73] text-green-100"
+            : "bg-[#B85C5C] text-red-100"
         }`}
         style={{ borderRadius: "4px" }}
       >

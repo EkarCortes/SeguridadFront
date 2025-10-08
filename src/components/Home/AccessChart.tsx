@@ -22,8 +22,8 @@ interface AccessChartProps {
 }
 
 const COLORS: Record<string, string> = {
-  Permitido: "#10b981",
-  Denegado: "#ef4444",
+  Permitido: "#6FBF73",
+  Denegado: "#B85C5C",
 };
 
 const CustomTooltip = ({ active, payload, label }: any) => {
