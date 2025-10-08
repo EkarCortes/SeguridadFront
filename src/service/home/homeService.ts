@@ -71,9 +71,13 @@ export const homeService = {
     }
   },
 
-  getMonthlyStats: async (): Promise<MonthlyStatsResponse> => {
+  getMonthlyStats: async (year_from?: number, year_to?: number): Promise<MonthlyStatsResponse> => {
     try {
-      const response = await api.get('/verifications/monthly');
+      let url = '/verifications/monthly';
+      if (year_from && year_to) {
+        url += `?year_from=${year_from}&year_to=${year_to}`;
+      }
+      const response = await api.get(url);
       return response.data;
     } catch (error) {
       console.error('Error fetching monthly stats:', error);

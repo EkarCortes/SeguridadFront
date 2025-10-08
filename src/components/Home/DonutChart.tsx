@@ -96,11 +96,11 @@ const DonutChart: React.FC<DonutChartProps> = ({ monthlyData, loading, error }) 
   return (
     <div className="w-full h-full flex flex-col">
       <div className="text-center mb-3">
-        <h3 className="text-[#262c3e] font-semibold text-base">{mes_nombre} 2025</h3>
+        <h3 className="text-[#262c3e] font-semibold text-base">{mes_nombre} {}</h3>
         <p className="text-neutral-400 text-xs">Estadísticas del mes</p>
       </div>
 
-      <div className="relative flex-1 min-h-[140px]">
+      <div className="relative flex-1 min-h-[140px]" style={{ height: "180px" }}>
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie
@@ -125,7 +125,7 @@ const DonutChart: React.FC<DonutChartProps> = ({ monthlyData, loading, error }) 
         </ResponsiveContainer>
         
         <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-          <div className="text-white font-bold text-lg">{total_verificaciones}</div>
+          <div className="text-black font-bold text-lg">{total_verificaciones}</div>
           <div className="text-neutral-400 text-xs">Total</div>
         </div>
       </div>

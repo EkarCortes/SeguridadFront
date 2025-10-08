@@ -24,13 +24,13 @@ export default function FormField({
   helperText,
   className = ""
 }: FormFieldProps) {
-  const baseClasses = "w-full rounded px-3 py-2 border border-[#303036] focus:outline-none focus:ring-2 focus:ring-blue-700";
-  const enabledClasses = "bg-[#18181b] text-white";
-  const disabledClasses = "bg-[#27272a] text-neutral-400 cursor-not-allowed";
+  const baseClasses = "w-full rounded px-3 py-2 border border-[#ccc] focus:outline-none focus:ring-2 focus:ring-gray-500";
+  const enabledClasses = "bg-white text-neutral-700";
+  const disabledClasses = "bg-white text-neutral-700 cursor-not-allowed";
 
   return (
     <div className={`flex-1 ${className}`}>
-      <label className="block text-neutral-400 text-sm mb-1">
+      <label className="block text-neutral-200 text-sm mb-1">
         {label} {required && <span className="text-red-400">*</span>}
       </label>
       <input
@@ -45,7 +45,7 @@ export default function FormField({
         title={disabled ? `${label} no se puede editar` : undefined}
       />
       {helperText && (
-        <p className="text-xs text-neutral-500 mt-1">{helperText}</p>
+        <p className="text-xs text-neutral-200 mt-1">{helperText}</p>
       )}
     </div>
   );

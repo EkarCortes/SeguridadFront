@@ -61,7 +61,7 @@ export default function ListaAgregados() {
       }
       />
 
-      <Modal open={addModal} onClose={() => setAddModal(false)} size="lg" title="Registrar Nueva Persona">
+      <Modal open={addModal} onClose={() => setAddModal(false)} size="md" title="Registrar Nueva Persona">
       <AddForm
         onSave={handleAddUser}
         onCancel={() => setAddModal(false)}

@@ -3,6 +3,8 @@ import FormField from "../FormField";
 import FileUpload from "../FileUpload";
 import { useFileUpload } from "../../hooks/useFileUpload";
 import { type ExtendedPersona } from "../table/personasColumns";
+import api from "../../config/apiconfig";
+import image from "../../assets/noUser.jpg";
 
 // Este componente se utiliza para editar la información de una persona existente, permitiendo modificar campos como cédula, email, teléfono y cargar nuevas fotos.
 
@@ -95,17 +97,17 @@ export default function EditForm({ initial, onSave, onCancel }: EditFormProps) {
       </div>
 
       <div>
-        <label className="block text-neutral-400 text-sm mb-1">
+        <label className="block text-neutral-200 text-sm mb-1">
           Foto actual
         </label>
         <div className="mb-3">
           {initial.foto_url && (
             <img
-              src={`http://20.3.129.141:8000/${initial.foto_url.replace(/^\/+/, "")}`}
+              src={`${api}/${initial.foto_url.replace(/^\/+/, "")}`}
               alt={initial.nombre}
               className="w-20 h-20 rounded-lg object-cover border-2 border-[#303036]"
               onError={(e) => {
-                (e.target as HTMLImageElement).src = "https://via.placeholder.com/80";
+                (e.target as HTMLImageElement).src = image;
               }}
             />
           )}

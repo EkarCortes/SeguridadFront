@@ -7,11 +7,11 @@ export const useMonthlyStats = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchMonthlyStats = async () => {
+  const fetchMonthlyStats = async (year_from?: number, year_to?: number) => {
     try {
       setLoading(true);
       setError(null);
-      const data: MonthlyStatsResponse = await homeService.getMonthlyStats();
+      const data: MonthlyStatsResponse = await homeService.getMonthlyStats(year_from, year_to);
       setMonthlyStats(data.estadisticas_mensuales);
       setTotalMeses(data.total_meses);
     } catch (err) {
