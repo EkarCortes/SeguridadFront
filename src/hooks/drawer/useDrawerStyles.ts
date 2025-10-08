@@ -24,15 +24,12 @@ export const useDrawerStyles = (
         top: 20,
         left: 15,
         zIndex: 1401,
-        background: "linear-gradient(135deg, #313136 0%, #1e1e24 100%)",
+        background: "rgb(117, 116, 116)",
         borderRadius: "50%",
-        boxShadow: "0 8px 25px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.15)",
         display: "block",
-        border: "1px solid rgba(255, 255, 255, 0.1)",
-        backdropFilter: "blur(10px)",
         "&:hover": {
             transform: "scale(1.05)",
-            boxShadow: "0 12px 35px rgba(0, 0, 0, 0.4), 0 6px 16px rgba(0, 0, 0, 0.2)",
+            
         },
         transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
     };
@@ -40,17 +37,13 @@ export const useDrawerStyles = (
     const drawerStyles = {
         display: "block",
         "& .MuiDrawer-paper": {
-            background: "#23232a",
+            background: "#262c3e",
             color: accentColor,
             border: "none",
-            boxShadow: open 
-                ? "8px 0 32px rgba(0, 0, 0, 0.3), 4px 0 16px rgba(0, 0, 0, 0.15)" 
-                : "4px 0 20px rgba(0, 0, 0, 0.25)",
             overflowX: "hidden",
-            borderRight: "1px solid rgba(255, 255, 255, 0.08)",
+            borderRight: "1px solid #0F172A",
             ...(isMobile && {
                 width: drawerWidth,
-                borderRadius: "0 20px 20px 0",
             }),
             ...(!isMobile && {
                 width: open ? drawerWidth : 72,
@@ -60,7 +53,6 @@ export const useDrawerStyles = (
                 left: 0,
                 height: "100vh",
                 zIndex: 1300,
-                borderRadius: open ? "0 16px 16px 0" : "0 20px 20px 0",
             }),
         },
     };
@@ -70,16 +62,14 @@ export const useDrawerStyles = (
         position: "absolute" as const,
         top: 20,
         right: 20,
-        background: "rgba(79, 79, 89, 0.7)",
+        background: "rgb(184, 184, 184)",
         color: accentColor,
         borderRadius: "50%",
         backdropFilter: "blur(8px)",
-        border: "1px solid rgba(255, 255, 255, 0.08)",
         "&:hover": { 
-            background: `linear-gradient(135deg, ${selectedBg} 0%, #23232a 100%)`,
+            background: selectedBg,
             color: accentColor,
             transform: "scale(1.06)",
-            boxShadow: "0 2px 8px rgba(0,0,0,0.18)",
         },
         transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
         width: 38,
@@ -98,7 +88,7 @@ export const useDrawerStyles = (
             borderRadius: "3px",
         },
         "&::-webkit-scrollbar-track": {
-            background: "rgba(255, 255, 255, 0.05)",
+            background: "rgb(0, 255, 179)",
             borderRadius: "3px",
             margin: "8px 0",
         },
@@ -114,24 +104,17 @@ export const useDrawerStyles = (
     };
 
     const logoutButtonStyles = {
-        background: open 
-            ? "linear-gradient(135deg, #dc2626 0%, #b91c1c 100%)" 
-            : "rgba(220, 38, 38, 0.8)",
+        background: "rgb(223, 67, 67)",
         color: "#ffffff",
-        border: "1px solid rgba(255, 255, 255, 0.1)",
         borderRadius: open ? 12 : "50%",
         px: open ? 3 : 0,
         py: open ? 1.5 : 0,
         fontWeight: 600,
         fontSize: open ? 14 : 12,
         cursor: "pointer",
-        boxShadow: "0 4px 15px rgba(220, 38, 38, 0.3), 0 2px 8px rgba(220, 38, 38, 0.15)",
         "&:hover": { 
-            background: open 
-                ? "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)" 
-                : "linear-gradient(135deg, #dc2626 0%, #b91c1c 100%)",
+            background:"linear-gradient(135deg, #ef4444 0%, #dc2626 100%)",
             transform: "translateY(-2px) scale(1.02)",
-            boxShadow: "0 8px 25px rgba(220, 38, 38, 0.4), 0 4px 12px rgba(220, 38, 38, 0.2)",
         },
         width: open ? "auto" : 48,
         height: 48, // Altura fija igual que los otros botones
@@ -158,19 +141,9 @@ export const useDrawerStyles = (
         flexDirection: "column" as const,
         ml: { xs: 0, sm: open ? `${drawerWidth}px` : "72px" },
         transition: "margin-left 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
-        background: "linear-gradient(135deg, #18181b 0%, #0f0f12 100%)",
+        background: "#F1F5F9",
         p: { xs: 2, sm: 4 },
-        position: "relative",
-        "&::before": {
-            content: '""',
-            position: "absolute",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: "radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.05) 0%, transparent 50%)",
-            pointerEvents: "none",
-        }
+       
     };
 
     // Estilos específicos para los iconos cuando está cerrado
@@ -187,51 +160,7 @@ export const useDrawerStyles = (
     };
 
     // Estilos para los botones de navegación - TODOS con el mismo tamaño
-    const navigationButtonStyles = (isActive: boolean) => ({
-        minHeight: 48, // Altura fija igual para todos
-        maxHeight: 48, // Máxima altura fija para evitar que se estiren
-        borderRadius: open ? 12 : "50%",
-        mb: open ? 1 : 1.5,
-        mx: open ? 0 : "auto",
-        justifyContent: open ? "initial" : "center",
-        px: open ? 2.5 : 0,
-        width: open ? "100%" : 48,
-        height: 48, // Altura fija exacta
-        color: isActive ? "#ffffff" : accentColor,
-        background: isActive 
-            ? "linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)"
-            : "transparent",
-        border: isActive 
-            ? "1px solid rgba(59, 130, 246, 0.3)" 
-            : "1px solid transparent",
-        backdropFilter: isActive ? "blur(10px)" : "none",
-        boxShadow: isActive 
-            ? "0 4px 15px rgba(59, 130, 246, 0.3), 0 2px 8px rgba(59, 130, 246, 0.15)"
-            : "none",
-        "&:hover": {
-            background: isActive 
-                ? "linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%)"
-                : "linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%)",
-            color: "#ffffff",
-            transform: "translateY(-1px) scale(1.02)",
-            boxShadow: isActive 
-                ? "0 8px 25px rgba(59, 130, 246, 0.4), 0 4px 12px rgba(59, 130, 246, 0.2)"
-                : "0 4px 15px rgba(255, 255, 255, 0.1)",
-            border: "1px solid rgba(255, 255, 255, 0.2)",
-        },
-        transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-        // Forzar que los elementos internos no cambien la altura
-        "& .MuiListItemText-root": {
-            margin: 0,
-            "& .MuiTypography-root": {
-                lineHeight: 1,
-            }
-        },
-        "& .MuiListItemIcon-root": {
-            minWidth: open ? "auto" : 0,
-            margin: 0,
-        }
-    });
+    
 
     return {
         hamburgerButtonStyles,
@@ -241,6 +170,5 @@ export const useDrawerStyles = (
         logoutButtonStyles,
         mainContentStyles,
         iconStyles,
-        navigationButtonStyles,
     };
 };

@@ -27,7 +27,7 @@ const COLORS: Record<string, string> = {
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-[#23222A] rounded-lg px-3 py-2 text-sm text-white shadow">
+      <div className="bg-[#262c3e] rounded-lg px-3 py-2 text-sm text-white shadow">
         <div className="font-semibold">{label}</div>
         <div>
           <span className="mr-2" style={{ color: COLORS[label] }}>
@@ -46,7 +46,6 @@ const AccessChart: React.FC<AccessChartProps> = ({ totalData, loading, error }) 
     return (
       <div className="w-full h-full flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
-          {/* Spinner principal */}
           <div className="relative">
             <div className="w-16 h-16 border-4 border-[#303036] border-t-green-500 rounded-full animate-spin"></div>
             <div className="absolute inset-0 flex items-center justify-center">

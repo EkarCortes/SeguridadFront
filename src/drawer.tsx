@@ -116,7 +116,7 @@ export default function CustomDrawer({ onLogout, children }: CustomDrawerProps) 
                     )}
                 </DrawerHeader>
 
-                <Divider sx={{ background: "#27272a", mx: 2 }} />
+                <Divider sx={{ background: "#9ec5f1", mx: 2 }} />
 
                 <Box sx={scrollBoxStyles}>
                     <List>
@@ -144,7 +144,7 @@ export default function CustomDrawer({ onLogout, children }: CustomDrawerProps) 
                     </List>
                 </Box>
 
-                <Divider sx={{ background: "#27272a", mx: 2 }} />
+                <Divider sx={{ background: "#9ec5f1", mx: 2 }} />
 
                 <Box
                     sx={{
