@@ -1,5 +1,6 @@
 import { useState } from "react";
 import DataTable, { type TableProps } from "react-data-table-component";
+import RefreshIcon from "@mui/icons-material/Refresh";
 
 // Este componente es una tabla genérica reutilizable con funcionalidades comunes como búsqueda, paginación y manejo de estados de carga y error, utilizado en las paginas de listaAgregados y listaVerificaciones.
 
@@ -91,12 +92,12 @@ export default function DataTableGeneric<T>({
             {additionalActions}
             {onRefresh && (
               <button
-                className="flex items-center gap-2 px-4 py-2 rounded bg-blue-700 text-white hover:bg-blue-600 transition"
+                className="flex items-center gap-2 px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-800 transition"
                 onClick={onRefresh}
-                title="Actualizar datos"
+                title=""
                 type="button"
               >
-                Actualizar
+             <RefreshIcon fontSize="small" />
               </button>
             )}
           </div>

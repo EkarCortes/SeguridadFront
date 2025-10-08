@@ -2,16 +2,16 @@ import api from '../../config/apiconfig';
 
 export interface Verificacion {
   id: number;
-  timestamp: string;
+  ts: string;
   image_source: string;
   faces_detected: number;
-  authorized: boolean;
+  authorized: boolean
   person_label: string | null; 
 }
 
 export interface VerificationsResponse {
-  total_personas: number;
-  personas: Verificacion[];
+  total_registros: number;
+  registros: Verificacion[];
 }
 
 export const ingresadosService = {

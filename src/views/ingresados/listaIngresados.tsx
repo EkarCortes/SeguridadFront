@@ -33,7 +33,7 @@ function PhotoModal({
         <div className="text-center text-white">
           <h3 className="text-lg font-semibold">{user?.person_label}</h3>
           <p className="text-neutral-400 text-sm">
-            {user?.timestamp && `${convertToCostaRicaTime(user.timestamp).fechaFormatted} ${convertToCostaRicaTime(user.timestamp).horaFormatted}`}
+            {user?.ts && `${convertToCostaRicaTime(user.ts).fechaFormatted} ${convertToCostaRicaTime(user.ts).horaFormatted}`}
           </p>
           <p className="text-neutral-400 text-sm">
             Caras detectadas: {user?.faces_detected}
@@ -63,7 +63,7 @@ export default function ListaIngresados() {
     const searchableText = [
       i.person_label ?? "Desconocido",
       i.id,
-      i.timestamp ? convertToCostaRicaTime(i.timestamp).fechaFormatted : ''
+      i.ts ? convertToCostaRicaTime(i.ts).fechaFormatted : ''
     ]
       .join(" ")
       .toLowerCase();

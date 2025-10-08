@@ -25,7 +25,7 @@ export const getVerificacionesColumns = (
         <img
           src={row.image_source || `${imagen}`}
           alt={row.person_label ?? "Desconocido"}
-          className="w-10 h-10 rounded-full object-cover border-2 border-[#303036] group-hover:opacity-70 transition"
+          className="w-10 h-10 rounded-full object-cover border-2 border-[#ccc] group-hover:opacity-70 transition"
           onError={(e) => {
             (e.target as HTMLImageElement).src = `${imagen}`;
           }}
@@ -39,7 +39,7 @@ export const getVerificacionesColumns = (
     sortable: false,
   },
   {
-    name: "Nombre",
+    name: "Nombre Completo",
     selector: (row) => row.person_label ?? "Desconocido",
     sortable: true,
     cell: (row) => (
@@ -50,21 +50,21 @@ export const getVerificacionesColumns = (
   },
   {
     name: "Fecha",
-    selector: (row) => row.timestamp,
+    selector: (row) => row.ts,
     sortable: true,
     cell: (row) => (
       <span style={{ color: "#1f364a" }}>
-        {row.timestamp ? convertToCostaRicaTime(row.timestamp).fechaFormatted : 'N/A'}
+        {row.ts ? convertToCostaRicaTime(row.ts).fechaFormatted : 'N/A'}
       </span>
     ),
   },
   {
     name: "Hora",
-    selector: (row) => row.timestamp,
+    selector: (row) => row.ts,
     sortable: true,
     cell: (row) => (
       <span style={{ color: "#1f364a" }}>
-        {row.timestamp ? convertToCostaRicaTime(row.timestamp).horaFormatted : 'N/A'}
+        {row.ts ? convertToCostaRicaTime(row.ts).horaFormatted : 'N/A'}
       </span>
     ),
   },

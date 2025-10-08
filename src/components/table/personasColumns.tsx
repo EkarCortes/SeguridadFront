@@ -36,7 +36,7 @@ export const getPersonasColumns = (
               : `${imagen}`
           }
           alt={row.nombre}
-          className="w-10 h-10 rounded-full object-cover border-2 border-[#303036] group-hover:opacity-70 transition"
+          className="w-10 h-10 rounded-full object-cover border-2 border-[#ccc] group-hover:opacity-70 transition"
           onError={(e) => {
             (e.target as HTMLImageElement).src = `${imagen}`;
           }}
@@ -117,18 +117,18 @@ export const getPersonasColumns = (
     cell: (row) => (
       <div className="flex gap-2">
         <button
-          className="p-1 rounded hover:bg-blue-700 transition"
+          className="p-1 rounded hover:bg-gray-200 transition"
           onClick={() => handleEdit(row)}
           title="Editar"
         >
-          <EditIcon className="text-blue-400" fontSize="small" />
+          <EditIcon className="text-blue-400 hover:text-blue-600" fontSize="small" />
         </button>
         <button
-          className="p-1 rounded hover:bg-red-700 transition"
+          className="p-1 rounded hover:bg-gray-200 0 transition"
           onClick={() => handleDelete(row)}
           title="Eliminar"
         >
-          <DeleteIcon className="text-red-400" fontSize="small" />
+          <DeleteIcon className="text-red-400 hover:text-red-600" fontSize="small" />
         </button>
       </div>
     ),
