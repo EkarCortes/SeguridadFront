@@ -1,6 +1,7 @@
 import { useState } from "react";
 import DataTable, { type TableProps } from "react-data-table-component";
 import RefreshIcon from "@mui/icons-material/Refresh";
+import LoadingSpinner from "../Spinner";
 
 // Este componente es una tabla genérica reutilizable con funcionalidades comunes como búsqueda, paginación y manejo de estados de carga y error, utilizado en las paginas de listaAgregados y listaVerificaciones.
 
@@ -45,14 +46,7 @@ export default function DataTableGeneric<T>({
   }
 
   if (loading) {
-    return (
-      <div className="w-full min-h-[400px] p-2 md:p-4 flex items-center justify-center">
-        <div className="flex items-center gap-2">
-          <div className="w-6 h-6 border-2 border-blue-700 border-t-transparent rounded-full animate-spin"></div>
-          <span>Cargando...</span>
-        </div>
-      </div>
-    );
+    return <LoadingSpinner message="Cargando registros" size="md" />;
   }
 
   if (error) {

@@ -12,7 +12,13 @@ export const useMonthlyStats = () => {
       setLoading(true);
       setError(null);
       const data: MonthlyStatsResponse = await homeService.getMonthlyStats(year_from, year_to);
-      setMonthlyStats(data.estadisticas_mensuales);
+      const normalizados = data.estadisticas_mensuales.map(s => ({
+        ...s,
+        autorizados: typeof s.autorizados === 'string' ? Number(s.autorizados) : s.autorizados,
+        rechazados: typeof s.rechazados === 'string' ? Number(s.rechazados) : s.rechazados,
+        total_verificaciones: typeof s.total_verificaciones === 'string' ? Number(s.total_verificaciones) : s.total_verificaciones
+      }));
+      setMonthlyStats(normalizados);
       setTotalMeses(data.total_meses);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error al cargar estadísticas mensuales');

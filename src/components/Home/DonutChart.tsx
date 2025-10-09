@@ -136,7 +136,7 @@ const DonutChart: React.FC<DonutChartProps> = ({ monthlyData, loading, error }) 
             <div className="w-2 h-2 rounded-full bg-[#6FBF73]"></div>
             <span className="text-neutral-500 text-xs">Autorizados</span>
           </div>
-          <span className="text-white text-xs font-semibold">{autorizados}</span>
+          <span className="text-neutral-500  text-xs font-semibold">{autorizados}</span>
         </div>
         
         <div className="flex justify-between items-center">
@@ -144,7 +144,7 @@ const DonutChart: React.FC<DonutChartProps> = ({ monthlyData, loading, error }) 
             <div className="w-2 h-2 rounded-full bg-[#B85C5C]"></div>
             <span className="text-neutral-500 text-xs">Rechazados</span>
           </div>
-          <span className="text-white text-xs font-semibold">{rechazados}</span>
+          <span className="text-neutral-500  text-xs font-semibold">{rechazados}</span>
         </div>
 
         <div className="border-t border-[#303036] my-2"></div>
