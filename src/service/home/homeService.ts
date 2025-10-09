@@ -91,7 +91,6 @@ export const homeService = {
       const today = new Date().toLocaleString('sv-SE', { timeZone: 'America/Costa_Rica' }).slice(0, 10); 
       const url = `/verifications/daily?date=${hoy}`;
       const response = await api.get(url);
-      console.log('Daily verifications response:', response.data);
       return response.data;
     } catch (error) {
       console.error('Error fetching daily verifications:', error);

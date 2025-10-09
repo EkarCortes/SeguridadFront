@@ -1,10 +1,12 @@
+import  { useState } from "react";
 import DataTable, { type TableProps } from "react-data-table-component";
 import { useDailyVerifications } from "../../hooks/home/useDailyVerifications";
 import { type DetalleIntento } from "../../service/home/homeService";
 import LoadingSpinner from "../Spinner";
 import { convertToCostaRicaTime } from "../../utils/dateUtils";
 import image from "../../assets/noUser.jpg";
-
+import PersonaPhotoModal from "../ModalPhoto"; // Importa el modal
+import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 
 const accentColor = "#1f364a";
 const mutedText = "#a3a3a3";
@@ -28,34 +30,67 @@ const transformDataForTable = (data: any) => {
         imagen: intento.image_source || persona.foto_perfil_url || image,
         timestamp: intento.timestamp,
         localTimestamp: localDate.getTime(),
+        faces_detected: intento.faces_detected ?? null,
       });
     });
   });
   return tableData.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
 };
 
-const columns: TableProps<any>["columns"] = [
+interface AccessRow {
+  id: string | number;
+  nombre: string;
+  fecha: string;
+  hora: string;
+  acceso: "Permitido" | "Denegado";
+  imagen: string;
+  timestamp: string;
+  localTimestamp: number;
+  faces_detected?: number | null;
+}
+
+const getColumns = (
+  handleSelectPhoto: (row: AccessRow) => void
+): TableProps<AccessRow>["columns"] => [
   {
     name: "Foto",
-    selector: (row: any) => row.imagen,
-    cell: (row: any) => (
-      <img
-        src={row.imagen}
-        alt={row.nombre}
-        className="w-10 h-10 rounded-full object-cover border-2 border-[#ccc]"
-        onError={(e: any) => {
-          e.target.src = image;
+    selector: (row) => row.imagen,
+    cell: (row) => (
+      <button
+        className="group relative focus:outline-none"
+        onClick={() => handleSelectPhoto(row)}
+        title="Ver foto"
+        style={{
+          background: "none",
+          border: "none",
+          padding: 0,
+          margin: 0,
+          cursor: "pointer",
+          position: "relative",
         }}
-      />
+        type="button"
+      >
+        <img
+          src={row.imagen || image}
+            alt={row.nombre ?? "Desconocido"}
+          className="w-10 h-10 rounded-full object-cover border-2 border-[#ccc] group-hover:opacity-70 transition"
+          onError={(e) => {
+            (e.target as HTMLImageElement).src = image;
+          }}
+        />
+        <span className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
+          <PhotoCameraIcon className="text-white bg-black/60 rounded-full p-1" fontSize="small" />
+        </span>
+      </button>
     ),
     width: "80px",
     sortable: false,
   },
   {
     name: "Nombre",
-    selector: (row: any) => row.nombre,
+    selector: (row) => row.nombre,
     sortable: true,
-    cell: (row: any) => (
+    cell: (row) => (
       <span className="font-semibold" style={{ color: accentColor }}>
         {row.nombre}
       </span>
@@ -63,25 +98,21 @@ const columns: TableProps<any>["columns"] = [
   },
   {
     name: "Fecha",
-    selector: (row: any) => row.fecha,
+    selector: (row) => row.fecha,
     sortable: true,
-    cell: (row: any) => (
-      <span style={{ color: accentColor }}>{row.fecha}</span>
-    ),
+    cell: (row) => <span style={{ color: accentColor }}>{row.fecha}</span>,
   },
   {
     name: "Hora",
-    selector: (row: any) => row.hora,
+    selector: (row) => row.hora,
     sortable: true,
-    cell: (row: any) => (
-      <span style={{ color: accentColor }}>{row.hora}</span>
-    ),
+    cell: (row) => <span style={{ color: accentColor }}>{row.hora}</span>,
   },
   {
     name: "Acceso",
-    selector: (row: any) => row.acceso,
+    selector: (row) => row.acceso,
     sortable: true,
-    cell: (row: any) => (
+    cell: (row) => (
       <span
         className={`px-3 py-1 text-xs font-bold ${
           row.acceso === "Permitido"
@@ -161,6 +192,16 @@ const AccessTable = () => {
   const { data, loading, error } = useDailyVerifications();
   const tableData = data ? transformDataForTable(data) : [];
 
+  // Estado para el modal
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedRow, setSelectedRow] = useState<any | null>(null);
+
+  // Solo el handler de la foto
+  const handleSelectPhoto = (row: any) => {
+    setSelectedRow(row);
+    setModalOpen(true);
+  };
+
   if (loading) {
     return <LoadingSpinner message="Cargando registros de acceso" size="md" />;
   }
@@ -186,7 +227,7 @@ const AccessTable = () => {
         </div>
         <div className="rounded-lg shadow-lg bg-white p-2">
           <DataTable
-            columns={columns}
+            columns={getColumns(handleSelectPhoto)}
             data={tableData}
             customStyles={customStyles}
             pagination
@@ -201,6 +242,23 @@ const AccessTable = () => {
           />
         </div>
       </div>
+      {/* Modal */}
+      <PersonaPhotoModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        user={
+          selectedRow
+            ? {
+                image_source: selectedRow.imagen,
+                person_label: selectedRow.nombre,
+                ts: selectedRow.timestamp,
+                faces_detected: selectedRow.faces_detected ?? null,
+                authorized: selectedRow.acceso === "Permitido",
+              }
+            : null
+        }
+        type="ingresado"
+      />
     </div>
   );
 };
