@@ -87,9 +87,8 @@ export const homeService = {
 
   getDailyVerifications: async (): Promise<DailyVerificationsResponse> => {
     try {
-      const hoy = "2025-09-19";
-      const today = new Date().toLocaleString('sv-SE', { timeZone: 'America/Costa_Rica' }).slice(0, 10); 
-      const url = `/verifications/daily?date=${today}`;
+     
+      const url = `/verifications/daily`;
       const response = await api.get(url);
       return response.data;
     } catch (error) {
