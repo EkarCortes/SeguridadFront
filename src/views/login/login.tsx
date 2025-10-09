@@ -33,7 +33,7 @@ export default function Login({ onLogin }: LoginProps) {
     <div className="min-h-screen flex items-center justify-center px-4 bg-[#e4e7f7] relative overflow-hidden">
     
       
-      <div className="w-full max-w-md rounded-2xl bg-[#1c212c]/90 backdrop-blur-xl border border-[#2a3140] shadow-[0_0_0_1px_rgba(255,255,255,0.03),0_8px_40px_-10px_rgba(0,0,0,0.6)] p-8 sm:p-10 flex flex-col gap-7">
+      <div className="w-full max-w-md rounded-2xl bg-[#262c3e]/90 backdrop-blur-xl border border-[#2a3140] shadow-[0_0_0_1px_rgba(255,255,255,0.03),0_8px_40px_-10px_rgba(0,0,0,0.6)] p-8 sm:p-10 flex flex-col gap-7">
         <div className="flex flex-col items-center text-center gap-3">
           <img
             src={logo}
