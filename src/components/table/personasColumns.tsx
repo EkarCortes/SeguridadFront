@@ -10,7 +10,7 @@ import imagen from "../../assets/noUser.jpg";
 // Este componente se utiliza para definir las columnas de la tabla de personas, utilizado en las paginas lista de agregados.
 
 interface ExtendedPersona extends Persona {
-  id?: number;
+  id?: number  
 }
 
 export const getPersonasColumns = (
