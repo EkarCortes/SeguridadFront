@@ -235,9 +235,19 @@ const AccessTable = () => {
             paginationRowsPerPageOptions={[6, 12, 18, 24]}
             highlightOnHover
             noDataComponent={
-              <div className="py-6 text-center" style={{ color: accentColor }}>
-                Sin registros
-              </div>
+                <div className="flex flex-col items-center justify-center py-8">
+                <img
+                  src={image}
+                  alt="Sin registros"
+                  className="w-16 h-16 mb-4 rounded-full border-2 border-gray-200 object-cover opacity-60"
+                />
+                <span className="text-lg font-semibold" style={{ color: accentColor }}>
+                  No hay registros de acceso hoy
+                </span>
+                <span className="text-sm mt-1" style={{ color: mutedText }}>
+                  Los accesos aparecerán aquí cuando estén disponibles.
+                </span>
+                </div>
             }
           />
         </div>

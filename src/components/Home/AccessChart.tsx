@@ -49,9 +49,9 @@ const AccessChart: React.FC<AccessChartProps> = ({ totalData, loading, error }) 
       <div className="w-full h-full flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
           <div className="relative">
-            <div className="w-16 h-16 border-4 border-[#303036] border-t-green-500 rounded-full animate-spin"></div>
+            <div className="w-16 h-16 border-4 border-[#303036] border-t-[#262c3e] rounded-full animate-spin"></div>
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-8 h-8 border-2 border-transparent border-t-green-400 rounded-full animate-spin animate-reverse"></div>
+              <div className="w-8 h-8 border-2 border-transparent border-t-[#262c3e] rounded-full animate-spin animate-reverse"></div>
             </div>
           </div>
           <div className="text-center">
