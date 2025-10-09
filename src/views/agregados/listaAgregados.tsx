@@ -1,8 +1,9 @@
+import { useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import DataTableGeneric from "../../components/table/DataTableGeneric";
 import { getPersonasColumns } from "../../components/table/personasColumns";
 import { getTableStyles } from "../../styles/tableStyles";
-import PersonaPhotoModal from "../../components/ModalPhoto";
+import ImageModal from "../../components/ImageModal";
 import Modal from "../../components/Modal";
 import EditForm from "../../components/forms/EditForm";
 import AddForm from "../../components/forms/AddForm";
@@ -16,22 +17,36 @@ export default function ListaAgregados() {
     error,
     editUser,
     deleteUser,
-    photoUser,
     addModal,
     search,
     handleEdit,
     handleSaveEdit,
     handleDelete,
     confirmDelete,
-    handleSelectPhoto,
     handleAddUser,
     setSearch,
     setAddModal,
     setEditUser,
     setDeleteUser,
-    setPhotoUser,
     refetch
   } = usePersonManagement();
+
+  // Estado para el modal de imagen
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [imageAlt, setImageAlt] = useState<string>('');
+
+  const handleSelectPhoto = (imageUrl: string, alt: string) => {
+    setSelectedImage(imageUrl);
+    setImageAlt(alt);
+    setIsImageModalOpen(true);
+  };
+
+  const handleCloseImageModal = () => {
+    setIsImageModalOpen(false);
+    setSelectedImage(null);
+    setImageAlt('');
+  };
 
   return (
     <>
@@ -57,6 +72,7 @@ export default function ListaAgregados() {
             type="button"
           >
             <AddIcon fontSize="small" />
+            Nuevo
           </button>
         }
       />
@@ -98,11 +114,11 @@ export default function ListaAgregados() {
         </div>
       </Modal>
 
-      <PersonaPhotoModal
-        open={!!photoUser}
-        onClose={() => setPhotoUser(null)}
-        user={photoUser}
-        type="agregado"
+      <ImageModal
+        isOpen={isImageModalOpen}
+        imageUrl={selectedImage}
+        onClose={handleCloseImageModal}
+        alt={imageAlt}
       />
     </>
   );

@@ -1,19 +1,17 @@
-import  { useState } from "react";
+import { useState } from "react";
 import DataTable, { type TableProps } from "react-data-table-component";
 import { useDailyVerifications } from "../../hooks/home/useDailyVerifications";
 import { type DetalleIntento } from "../../service/home/homeService";
 import LoadingSpinner from "../Spinner";
 import { convertToCostaRicaTime } from "../../utils/dateUtils";
 import image from "../../assets/noUser.jpg";
-import PersonaPhotoModal from "../ModalPhoto"; // Importa el modal
+import ImageModal from "../ImageModal"; // Reemplazado PersonaPhotoModal con ImageModal
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 
 const accentColor = "#1f364a";
 const mutedText = "#a3a3a3";
 const selectedBg = "#e5e7eb";
 const paperColor = "#fff";
-
-// Función para convertir UTC a zona horaria de Costa Rica (UTC-6)
 
 const transformDataForTable = (data: any) => {
   if (!data?.actividad_por_persona) return [];
@@ -50,7 +48,7 @@ interface AccessRow {
 }
 
 const getColumns = (
-  handleSelectPhoto: (row: AccessRow) => void
+  handleSelectPhoto: (imageUrl: string, alt: string) => void
 ): TableProps<AccessRow>["columns"] => [
   {
     name: "Foto",
@@ -58,7 +56,7 @@ const getColumns = (
     cell: (row) => (
       <button
         className="group relative focus:outline-none"
-        onClick={() => handleSelectPhoto(row)}
+        onClick={() => handleSelectPhoto(row.imagen || image, row.nombre ?? "Desconocido")}
         title="Ver foto"
         style={{
           background: "none",
@@ -72,7 +70,7 @@ const getColumns = (
       >
         <img
           src={row.imagen || image}
-            alt={row.nombre ?? "Desconocido"}
+          alt={row.nombre ?? "Desconocido"}
           className="w-10 h-10 rounded-full object-cover border-2 border-[#ccc] group-hover:opacity-70 transition"
           onError={(e) => {
             (e.target as HTMLImageElement).src = image;
@@ -192,18 +190,25 @@ const AccessTable = () => {
   const { data, loading, error } = useDailyVerifications();
   const tableData = data ? transformDataForTable(data) : [];
 
-  // Estado para el modal
-  const [modalOpen, setModalOpen] = useState(false);
-  const [selectedRow, setSelectedRow] = useState<any | null>(null);
+  // Estado para el modal de imagen
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [imageAlt, setImageAlt] = useState<string>('');
 
-  // Solo el handler de la foto
-  const handleSelectPhoto = (row: any) => {
-    setSelectedRow(row);
-    setModalOpen(true);
+  const handleSelectPhoto = (imageUrl: string, alt: string) => {
+    setSelectedImage(imageUrl);
+    setImageAlt(alt);
+    setIsImageModalOpen(true);
+  };
+
+  const handleCloseImageModal = () => {
+    setIsImageModalOpen(false);
+    setSelectedImage(null);
+    setImageAlt('');
   };
 
   if (loading) {
-    return <LoadingSpinner message="Cargando registros de acceso" size="md" />;
+    return <LoadingSpinner size="md" />;
   }
 
   if (error) {
@@ -235,7 +240,7 @@ const AccessTable = () => {
             paginationRowsPerPageOptions={[6, 12, 18, 24]}
             highlightOnHover
             noDataComponent={
-                <div className="flex flex-col items-center justify-center py-8">
+              <div className="flex flex-col items-center justify-center py-8">
                 <img
                   src={image}
                   alt="Sin registros"
@@ -247,27 +252,17 @@ const AccessTable = () => {
                 <span className="text-sm mt-1" style={{ color: mutedText }}>
                   Los accesos aparecerán aquí cuando estén disponibles.
                 </span>
-                </div>
+              </div>
             }
           />
         </div>
       </div>
-      {/* Modal */}
-      <PersonaPhotoModal
-        open={modalOpen}
-        onClose={() => setModalOpen(false)}
-        user={
-          selectedRow
-            ? {
-                image_source: selectedRow.imagen,
-                person_label: selectedRow.nombre,
-                ts: selectedRow.timestamp,
-                faces_detected: selectedRow.faces_detected ?? null,
-                authorized: selectedRow.acceso === "Permitido",
-              }
-            : null
-        }
-        type="ingresado"
+
+      <ImageModal
+        isOpen={isImageModalOpen}
+        imageUrl={selectedImage}
+        onClose={handleCloseImageModal}
+        alt={imageAlt}
       />
     </div>
   );

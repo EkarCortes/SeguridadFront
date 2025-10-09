@@ -46,7 +46,7 @@ export default function DataTableGeneric<T>({
   }
 
   if (loading) {
-    return <LoadingSpinner message="Cargando registros" size="md" />;
+    return <LoadingSpinner  size="md" />;
   }
 
   if (error) {

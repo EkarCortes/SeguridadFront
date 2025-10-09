@@ -7,34 +7,38 @@ import imagen from "../../assets/noUser.jpg";
 
 // Este componente se utiliza para definir las columnas de la tabla de personas, utilizado en las paginas lista de verificaciones.
 
-
 export const getVerificacionesColumns = (
-  handleSelectPhoto: (row: ExtendedVerificacion) => void
+  handleSelectPhoto: (imageUrl: string, alt: string) => void
 ): TableProps<ExtendedVerificacion>["columns"] => [
   {
     name: "Foto",
     selector: (row) => row.image_source,
-    cell: (row) => (
-      <button
-        className="group relative focus:outline-none"
-        onClick={() => handleSelectPhoto(row)}
-        title="Ver foto"
-        style={{ background: "none", border: "none", padding: 0, margin: 0, cursor: "pointer" }}
-        type="button"
-      >
-        <img
-          src={row.image_source || `${imagen}`}
-          alt={row.person_label ?? "Desconocido"}
-          className="w-10 h-10 rounded-full object-cover border-2 border-[#ccc] group-hover:opacity-70 transition"
-          onError={(e) => {
-            (e.target as HTMLImageElement).src = `${imagen}`;
-          }}
-        />
-        <span className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
-          <PhotoCameraIcon className="text-white bg-black/60 rounded-full p-1" fontSize="small" />
-        </span>
-      </button>
-    ),
+    cell: (row) => {
+      const imageUrl = row.image_source || imagen;
+      const alt = row.person_label ?? "Desconocido";
+      
+      return (
+        <button
+          className="group relative focus:outline-none"
+          onClick={() => handleSelectPhoto(imageUrl, alt)}
+          title="Ver foto"
+          style={{ background: "none", border: "none", padding: 0, margin: 0, cursor: "pointer" }}
+          type="button"
+        >
+          <img
+            src={imageUrl}
+            alt={alt}
+            className="w-10 h-10 rounded-full object-cover border-2 border-[#ccc] group-hover:opacity-70 transition"
+            onError={(e) => {
+              (e.target as HTMLImageElement).src = imagen;
+            }}
+          />
+          <span className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
+            <PhotoCameraIcon className="text-white bg-black/60 rounded-full p-1" fontSize="small" />
+          </span>
+        </button>
+      );
+    },
     width: "80px",
     sortable: false,
   },

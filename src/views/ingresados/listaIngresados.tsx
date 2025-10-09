@@ -1,26 +1,32 @@
 import { useState } from "react";
-
 import DataTableGeneric from "../../components/table/DataTableGeneric";
-import { getVerificacionesColumns, convertToCostaRicaTime, type ExtendedVerificacion } from "../../components/table/verificacionesColumns";
+import { getVerificacionesColumns, convertToCostaRicaTime } from "../../components/table/verificacionesColumns";
 import { getTableStyles } from "../../styles/tableStyles";
 import { useVerifications } from "../../hooks/useVerifications";
-import PersonaPhotoModal from "../../components/ModalPhoto";
-
-
-// Modal para mostrar la foto en grande
-
-
+import ImageModal from "../../components/ImageModal";
 
 export default function ListaIngresados() {
   const { verifications, totalVerificaciones, loading, error, refetch } = useVerifications();
-  const [photoUser, setPhotoUser] = useState<ExtendedVerificacion | null>(null);
   const [search, setSearch] = useState("");
+  
+  // Estado para el modal de imagen
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [imageAlt, setImageAlt] = useState<string>('');
 
-  const extendedVerifications: ExtendedVerificacion[] = verifications || [];
+  const extendedVerifications = verifications || [];
 
-  function handleSelectPhoto(user: ExtendedVerificacion) {
-    setPhotoUser(user);
-  }
+  const handleSelectPhoto = (imageUrl: string, alt: string) => {
+    setSelectedImage(imageUrl);
+    setImageAlt(alt);
+    setIsImageModalOpen(true);
+  };
+
+  const handleCloseImageModal = () => {
+    setIsImageModalOpen(false);
+    setSelectedImage(null);
+    setImageAlt('');
+  };
 
   // Filtrado por búsqueda
   const filteredIngresados = extendedVerifications.filter((i) => {
@@ -53,11 +59,11 @@ export default function ListaIngresados() {
         customStyles={getTableStyles()}
       />
 
-      <PersonaPhotoModal
-        open={!!photoUser}
-        onClose={() => setPhotoUser(null)}
-        user={photoUser}
-        type="ingresado"
+      <ImageModal
+        isOpen={isImageModalOpen}
+        imageUrl={selectedImage}
+        onClose={handleCloseImageModal}
+        alt={imageAlt}
       />
     </>
   );

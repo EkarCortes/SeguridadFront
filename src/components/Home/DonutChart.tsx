@@ -47,7 +47,7 @@ const CustomTooltip = ({ active, payload }: any) => {
 
 const DonutChart: React.FC<DonutChartProps> = ({ monthlyData, loading, error }) => {
   if (loading) {
-    return <LoadingSpinner message="Cargando registros de acceso" size="md" />;
+    return <LoadingSpinner size="md" />;
 
   }
 

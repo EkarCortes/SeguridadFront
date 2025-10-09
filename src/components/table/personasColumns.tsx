@@ -16,36 +16,38 @@ interface ExtendedPersona extends Persona {
 export const getPersonasColumns = (
   handleEdit: (row: ExtendedPersona) => void,
   handleDelete: (row: ExtendedPersona) => void,
-  handleSelectPhoto: (row: ExtendedPersona) => void
+  handleSelectPhoto: (imageUrl: string, alt: string) => void
 ): TableProps<ExtendedPersona>["columns"] => [
   {
     name: "Foto",
     selector: (row) => row.foto_url,
-    cell: (row) => (
-      <button
-        className="group relative focus:outline-none"
-        onClick={() => handleSelectPhoto(row)}
-        title="Ver foto"
-        style={{ background: "none", border: "none", padding: 0, margin: 0, cursor: "pointer" }}
-        type="button"
-      >
-        <img
-            src={
-              row.foto_url
-                ? `${api}/${row.foto_url.replace(/^\/+/, "")}`
-              : `${imagen}`
-          }
-          alt={row.nombre}
-          className="w-10 h-10 rounded-full object-cover border-2 border-[#ccc] group-hover:opacity-70 transition"
-          onError={(e) => {
-            (e.target as HTMLImageElement).src = `${imagen}`;
-          }}
-        />
-        <span className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
-          <PhotoCameraIcon className="text-white bg-black/60 rounded-full p-1" fontSize="small" />
-        </span>
-      </button>
-    ),
+    cell: (row) => {
+      const imageUrl = row.foto_url 
+        ? `${api}/${row.foto_url.replace(/^\/+/, "")}` 
+        : imagen;
+      
+      return (
+        <button
+          className="group relative focus:outline-none"
+          onClick={() => handleSelectPhoto(imageUrl, row.nombre)}
+          title="Ver foto"
+          style={{ background: "none", border: "none", padding: 0, margin: 0, cursor: "pointer" }}
+          type="button"
+        >
+          <img
+            src={imageUrl}
+            alt={row.nombre}
+            className="w-10 h-10 rounded-full object-cover border-2 border-[#ccc] group-hover:opacity-70 transition"
+            onError={(e) => {
+              (e.target as HTMLImageElement).src = imagen;
+            }}
+          />
+          <span className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
+            <PhotoCameraIcon className="text-white bg-black/60 rounded-full p-1" fontSize="small" />
+          </span>
+        </button>
+      );
+    },
     width: "70px",
     sortable: false,
   },
