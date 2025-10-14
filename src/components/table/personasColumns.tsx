@@ -3,7 +3,6 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import { convertToCostaRicaTime } from "../../utils/dateUtils";
-import api from "../../config/apiconfig";
 import { type Persona } from "../../service/agregados/agregadosService";
 import imagen from "../../assets/noUser.jpg";
 
@@ -23,8 +22,9 @@ export const getPersonasColumns = (
     selector: (row) => row.foto_url,
     cell: (row) => {
       const imageUrl = row.foto_url 
-        ? `${api}/${row.foto_url.replace(/^\/+/, "")}` 
+        ? `${row.foto_url.replace(/^\/+/, "")}` 
         : imagen;
+
       
       return (
         <button

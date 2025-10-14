@@ -7,6 +7,8 @@ import {
   Tooltip,
 } from "recharts";
 
+//Este componente es el usado en el home para mostrar el grafico de donut de autorizados y rechazados
+
 interface DonutChartProps {
   monthlyData: {
     autorizados: number;
@@ -66,7 +68,7 @@ const DonutChart: React.FC<DonutChartProps> = ({ monthlyData, loading, error }) 
   }
 
   const { autorizados, rechazados, total_verificaciones, tasa_autorizacion, mes_nombre, personas_unicas } = monthlyData;
-  
+
   const donutData = [
     {
       name: "Autorizados",
@@ -83,11 +85,11 @@ const DonutChart: React.FC<DonutChartProps> = ({ monthlyData, loading, error }) 
   return (
     <div className="w-full h-full flex flex-col">
       <div className="text-center mb-3">
-        <h3 className="text-[#262c3e] font-semibold text-base">{mes_nombre} {}</h3>
+        <h3 className="text-[#262c3e] font-semibold text-base">{mes_nombre} { }</h3>
         <p className="text-neutral-400 text-xs">Estadísticas del mes</p>
       </div>
 
-      <div className="relative flex-1 min-h-[140px]" style={{ height: "180px" }}>
+      <div className="relative flex-1 min-h-[140px]" style={{ height: "180px", zIndex: 10 }}>
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie
@@ -96,22 +98,23 @@ const DonutChart: React.FC<DonutChartProps> = ({ monthlyData, loading, error }) 
               cy="50%"
               innerRadius={30}
               outerRadius={50}
+              className=''
               paddingAngle={3}
               dataKey="value"
               isAnimationActive={false}
             >
               {donutData.map((entry, index) => (
-                <Cell 
-                  key={`cell-${index}`} 
-                  fill={COLORS[entry.name as keyof typeof COLORS]} 
+                <Cell
+                  key={`cell-${index}`}
+                  fill={COLORS[entry.name as keyof typeof COLORS]}
                 />
               ))}
             </Pie>
             <Tooltip content={<CustomTooltip />} />
           </PieChart>
         </ResponsiveContainer>
-        
-        <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+
+        <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-[-1] opacity-80">
           <div className="text-black font-bold text-lg">{total_verificaciones}</div>
           <div className="text-neutral-400 text-xs">Total</div>
         </div>
@@ -125,7 +128,7 @@ const DonutChart: React.FC<DonutChartProps> = ({ monthlyData, loading, error }) 
           </div>
           <span className="text-neutral-500  text-xs font-semibold">{autorizados}</span>
         </div>
-        
+
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 rounded-full bg-[#B85C5C]"></div>
