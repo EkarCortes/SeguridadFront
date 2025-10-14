@@ -1,41 +1,6 @@
 import api from '../../config/apiconfig';
 import apiPy from '../../config/apipython';
-
-export interface Persona {
-  nombre: string;
-  cedula: string | null;
-  email: string | null;
-  telefono: string | null;
-  foto_url: string;
-  encodings_count: number;
-  total_intentos: number;
-  autorizados: number;
-  rechazados: number;
-  tasa_autorizacion: number;
-  ultimo_acceso: string | null;
-  primer_acceso: string | null;
-  fecha_registro: string;
-}
-
-export interface PersonsResponse {
-  total_personas: number;
-  personas: Persona[];
-}
-
-export interface PersonFormData {
-  nombre: string;
-  cedula: string;
-  email: string;
-  telefono: string;
-  fotos: File[];
-}
-
-export interface PersonUpdateData {
-  cedula?: string;
-  email?: string;
-  telefono?: string;
-  fotos_nuevas?: File[];
-}
+import type { PersonsResponse, PersonFormData, PersonUpdateData } from '../../types/agregados';
 
 export const agregadosService = {
   getPersons: async (): Promise<PersonsResponse> => {

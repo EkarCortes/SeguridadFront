@@ -72,7 +72,6 @@ export default function ListaAgregados() {
             type="button"
           >
             <AddIcon fontSize="small" />
-            Nuevo
           </button>
         }
       />

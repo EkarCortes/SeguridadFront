@@ -1,18 +1,7 @@
 import api from '../../config/apiconfig';
+import type { VerificationsResponse } from '../../types/ingresados';
 
-export interface Verificacion {
-  id: number;
-  ts: string;
-  image_source: string;
-  faces_detected: number;
-  authorized: boolean
-  person_label: string | null; 
-}
 
-export interface VerificationsResponse {
-  total_registros: number;
-  registros: Verificacion[];
-}
 
 export const ingresadosService = {
   getVerifications: async (): Promise<VerificationsResponse> => {
