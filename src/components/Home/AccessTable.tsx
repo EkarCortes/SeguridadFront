@@ -1,12 +1,12 @@
 import { useState } from "react";
 import DataTable, { type TableProps } from "react-data-table-component";
 import { useDailyVerifications } from "../../hooks/home/useDailyVerifications";
-import { type DetalleIntento } from "../../service/home/homeService";
 import LoadingSpinner from "../Spinner";
 import { convertToCostaRicaTime } from "../../utils/dateUtils";
 import image from "../../assets/noUser.jpg";
 import ImageModal from "../ImageModal"; // Reemplazado PersonaPhotoModal con ImageModal
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
+import type { DetalleIntento } from "../../types/homeTypes";
 
 const accentColor = "#1f364a";
 const mutedText = "#a3a3a3";

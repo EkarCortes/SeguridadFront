@@ -3,8 +3,8 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import { convertToCostaRicaTime } from "../../utils/dateUtils";
-import { type Persona } from "../../service/agregados/agregadosService";
 import imagen from "../../assets/noUser.jpg";
+import type { Persona } from "../../types/agregados";
 
 // Este componente se utiliza para definir las columnas de la tabla de personas, utilizado en las paginas lista de agregados.
 

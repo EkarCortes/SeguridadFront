@@ -2,7 +2,8 @@ import { useState } from "react";
 import FormField from "../FormField";
 import FileUpload from "../FileUpload";
 import { useFileUpload } from "../../hooks/useFileUpload";
-import { type PersonFormData } from "../../service/agregados/agregadosService";
+import type { PersonFormData } from "../../types/agregados";
+
 
 //Este componente se utiliza para registrar una nueva persona, incluye campos para nombre, cédula, email, teléfono y carga de fotos.
 

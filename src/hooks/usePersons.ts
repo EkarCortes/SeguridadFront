@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { agregadosService, type PersonsResponse, type Persona } from '../service/agregados/agregadosService';
+import { agregadosService } from '../service/agregados/agregadosService';
+import type { Persona, PersonsResponse } from '../types/agregados';
 
 export const usePersons = () => {
   const [persons, setPersons] = useState<Persona[]>([]);

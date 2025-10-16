@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
-import type { MonthlyStats } from '../../service/home/homeService';
+import type { MonthlyStats } from '../../types/homeTypes';
 
 //Este hook gestiona la selección de año y mes, y proporciona los datos correspondientes.
 

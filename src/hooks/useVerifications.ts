@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { ingresadosService, type VerificationsResponse, type Verificacion } from '../service/ingresados/ingresadosService';
+import { ingresadosService} from '../service/ingresados/ingresadosService';
+import type { Verificacion, VerificationsResponse } from '../types/ingresados';
 
 export const useVerifications = () => {
   const [verifications, setVerifications] = useState<Verificacion[]>([]);

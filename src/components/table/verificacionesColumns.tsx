@@ -1,9 +1,9 @@
 import { type TableProps } from "react-data-table-component";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
-import { type Verificacion } from "../../service/ingresados/ingresadosService";
 import { convertToCostaRicaTime } from "../../utils/dateUtils";
 interface ExtendedVerificacion extends Verificacion {}
 import imagen from "../../assets/noUser.jpg";
+import type { Verificacion } from "../../types/ingresados";
 
 // Este componente se utiliza para definir las columnas de la tabla de personas, utilizado en las paginas lista de verificaciones.
 

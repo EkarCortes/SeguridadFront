@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { homeService, type DailyVerificationsResponse } from '../../service/home/homeService';
+import { homeService } from '../../service/home/homeService';
+import type { DailyVerificationsResponse } from '../../types/homeTypes';
 
 export const useDailyVerifications = (date?: string) => {
   const [data, setData] = useState<DailyVerificationsResponse | null>(null);
