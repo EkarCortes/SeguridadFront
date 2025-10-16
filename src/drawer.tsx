@@ -30,8 +30,8 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 }));
 
 interface CustomDrawerProps {
-    onLogout: () => void;
     children: React.ReactNode;
+    onLogout: () => Promise<void>;
 }
 
 export default function CustomDrawer({ onLogout, children }: CustomDrawerProps) {
@@ -47,6 +47,11 @@ export default function CustomDrawer({ onLogout, children }: CustomDrawerProps) 
     } = useDrawerStyles(drawerWidth, accentColor, selectedBg, open, isMobile);
     
     const location = useLocation();
+
+    const handleLogout = async () => {
+        await onLogout();
+        // Navegar al login se manejará automáticamente por el contexto
+    };
 
     const getNavigationItemStyles = (isActive: boolean) => ({
         minHeight: 48,
@@ -157,7 +162,7 @@ export default function CustomDrawer({ onLogout, children }: CustomDrawerProps) 
                 >
                     <Box
                         component="button"
-                        onClick={onLogout}
+                        onClick={handleLogout}
                         sx={logoutButtonStyles}
                     >
                         {open ? (

@@ -5,28 +5,68 @@ import Home from './views/home/home'
 import CustomDrawer from './drawer'
 import ListaAgregados from './views/agregados/listaAgregados';
 import ListaIngresados from './views/ingresados/listaIngresados';
-import { useState } from 'react';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import { useEffect, useState } from 'react';
+import SessionExpiredModal from './components/SessionExpiredModal';
+import { setSessionExpiredHandler } from './config/apiconfig';
 
-function App() {
-  const [isLogged, setIsLogged] = useState(false);
+function AppContent() {
+  const { isAuthenticated, isLoading, logout, refreshAuth } = useAuth();
+  const [showSessionModal, setShowSessionModal] = useState(false);
 
-  // Si no está logueado, solo muestra el login
-  if (!isLogged) {
-    return <Login onLogin={() => setIsLogged(true)} />;
+  useEffect(() => {
+    setSessionExpiredHandler(() => {
+      setShowSessionModal(true);
+    });
+  }, []);
+
+  const handleExtendSession = async () => {
+    await refreshAuth();
+    setShowSessionModal(false);
+  };
+
+  const handleLogout = async () => {
+    setShowSessionModal(false);
+    await logout();
+  };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#e4e7f7]">
+        <div className="w-12 h-12 border-4 border-[#80858e]/30 border-t-[#80858e] rounded-full animate-spin" />
+      </div>
+    );
   }
 
-  // Si está logueado, muestra el Drawer y las rutas internas
+  if (!isAuthenticated) {
+    return <Login />;
+  }
+
   return (
-    <CustomDrawer onLogout={() => setIsLogged(false)}>
-      <Routes>
-        <Route path="/home" element={<Home />} />
-        <Route path="/listaAgregados" element={<ListaAgregados />} />
-      
-        <Route path="/listaIngresados" element={<ListaIngresados />} />
-      
-        <Route path="*" element={<Navigate to="/home" replace />} />
-      </Routes>
-    </CustomDrawer>
+    <>
+      <CustomDrawer onLogout={logout}>
+        <Routes>
+          <Route path="/home" element={<Home />} />
+          <Route path="/listaAgregados" element={<ListaAgregados />} />
+          <Route path="/listaIngresados" element={<ListaIngresados />} />
+          <Route path="*" element={<Navigate to="/home" replace />} />
+        </Routes>
+      </CustomDrawer>
+
+      <SessionExpiredModal
+        isOpen={showSessionModal}
+        onExtend={handleExtendSession}
+        onLogout={handleLogout}
+      />
+    </>
+  );
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   );
 }
 

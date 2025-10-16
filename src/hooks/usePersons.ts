@@ -14,7 +14,6 @@ export const usePersons = () => {
       setError(null);
       const data: PersonsResponse = await agregadosService.getPersons();
       setPersons(data.personas || []); // Asegurar que sea un array
-      console.log('Fetched persons:', data.personas);
       setTotalPersonas(data.total_personas || 0);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error al cargar las personas');
