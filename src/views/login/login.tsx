@@ -2,15 +2,13 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import FormField from "../../components/FormField";
 import logo from "../../assets/FaceCore 3.png";
-import { useAuth } from "../../context/AuthContext";
 
 export default function Login() {
   const [loading, setLoading] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const navigate = useNavigate();
-  const { login } = useAuth();
+  const navigate = useNavigate()
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -24,7 +22,6 @@ export default function Login() {
     setLoading(true);
     
     try {
-      await login(username, password);
       navigate("/home");
     } catch (err: any) {
       setError(err.response?.data?.message || "Error al iniciar sesión. Verifica tus credenciales.");
@@ -55,7 +52,7 @@ export default function Login() {
               onChange={e => setUsername(e.target.value)}
               required
               disabled={loading}
-              placeholder="EkarCortes"
+              placeholder="Nombre de usuario"
             />
             <FormField
               label="CONTRASEÑA"
