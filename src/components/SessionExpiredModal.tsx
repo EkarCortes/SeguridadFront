@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { authService } from '../services/authService';
 
 interface SessionExpiredModalProps {
   isOpen: boolean;
@@ -9,6 +10,23 @@ export default function SessionExpiredModal({
   isOpen,
   onRedirect,
 }: SessionExpiredModalProps) {
+  const [redirecting, setRedirecting] = useState(false);
+
+  const handleRedirect = async () => {
+    setRedirecting(true);
+    try {
+      await authService.logout();
+    } catch (error) {
+      console.error('Error haciendo logout en servidor:', error);
+    }
+
+    localStorage.removeItem('authMe');
+    localStorage.clear();
+    
+
+    onRedirect();
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -39,10 +57,14 @@ export default function SessionExpiredModal({
 
           <div className="pt-4">
             <button
-              onClick={onRedirect}
-              className="w-full py-2.5 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm transition"
+              onClick={handleRedirect}
+              disabled={redirecting}
+              className="w-full py-2.5 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm transition disabled:opacity-50 flex items-center justify-center gap-2"
             >
-              Ir al Login
+              {redirecting && (
+                <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              )}
+              {redirecting ? 'Cerrando sesión...' : 'Ir al Login'}
             </button>
           </div>
         </div>

@@ -38,8 +38,13 @@ export default function useAuth(): UseAuthReturn {
 
   const logout = async () => {
     try {
+
       await authService.logout();
+   
+    } catch (error) {
+      console.error('Error durante logout:', error);
     } finally {
+      
       clearAuthData();
     }
   };
@@ -54,7 +59,7 @@ export default function useAuth(): UseAuthReturn {
         return;
       }
 
-      // Verificar sesión con el servidor
+      // Verificar sesión con el servidor (las cookies se envían automáticamente)
       const response = await authService.me();
       if (response.success) {
         saveAuthData(response.data);

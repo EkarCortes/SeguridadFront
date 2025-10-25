@@ -45,12 +45,11 @@ export const authService = {
 
   async logout(): Promise<void> {
     try {
+      
       await api.post('/auth/logout');
     } catch (error) {
       console.error('Error durante logout:', error);
-    } finally {
-      // Limpiar localStorage independientemente del resultado
-      localStorage.removeItem('authMe');
+ 
     }
   }
 };

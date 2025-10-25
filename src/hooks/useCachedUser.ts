@@ -20,12 +20,35 @@ export function useCachedUser() {
     const raw = localStorage.getItem('authMe');
     if (raw) {
       try {
-        setCached(JSON.parse(raw));
+        const parsed = JSON.parse(raw);
+        setCached(parsed);
       } catch {
         setCached(null);
       }
     }
   }, []);
 
-  return cached;
+  const getCachedRefreshToken = (): string | null => {
+    const raw = localStorage.getItem('authMe');
+    if (raw) {
+      try {
+        const parsed = JSON.parse(raw);
+        return parsed.refreshToken || null;
+      } catch {
+        return null;
+      }
+    }
+    return null;
+  };
+
+  const clearCache = () => {
+    localStorage.removeItem('authMe');
+    setCached(null);
+  };
+
+  return {
+    cached,
+    getCachedRefreshToken,
+    clearCache
+  };
 }
