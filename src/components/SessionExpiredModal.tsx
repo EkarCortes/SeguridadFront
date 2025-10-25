@@ -2,30 +2,14 @@ import { useState } from 'react';
 
 interface SessionExpiredModalProps {
   isOpen: boolean;
-  onExtend: () => Promise<void>;
-  onLogout: () => void;
+  onRedirect: () => void;
 }
 
 export default function SessionExpiredModal({
   isOpen,
-  onExtend,
-  onLogout,
+  onRedirect,
 }: SessionExpiredModalProps) {
-  const [isExtending, setIsExtending] = useState(false);
-
   if (!isOpen) return null;
-
-  const handleExtend = async () => {
-    setIsExtending(true);
-    try {
-      await onExtend();
-    } catch (error) {
-      console.error('Error al extender sesión:', error);
-      onLogout();
-    } finally {
-      setIsExtending(false);
-    }
-  };
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
@@ -50,30 +34,15 @@ export default function SessionExpiredModal({
           <h2 className="text-2xl font-bold text-white">Sesión Expirada</h2>
           
           <p className="text-neutral-400 text-sm">
-            Tu sesión ha expirado por inactividad. ¿Deseas extender tu sesión o cerrarla?
+            Tu sesión ha expirado por inactividad. Serás redirigido al login.
           </p>
 
-          <div className="flex gap-3 pt-4">
+          <div className="pt-4">
             <button
-              onClick={onLogout}
-              className="flex-1 py-2.5 px-4 rounded-lg bg-red-600/20 hover:bg-red-600/30 border border-red-600/50 text-red-400 font-semibold text-sm transition"
+              onClick={onRedirect}
+              className="w-full py-2.5 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm transition"
             >
-              Cerrar Sesión
-            </button>
-            
-            <button
-              onClick={handleExtend}
-              disabled={isExtending}
-              className="flex-1 py-2.5 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold text-sm transition"
-            >
-              {isExtending ? (
-                <span className="flex items-center justify-center gap-2">
-                  <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  Extendiendo...
-                </span>
-              ) : (
-                'Extender Sesión'
-              )}
+              Ir al Login
             </button>
           </div>
         </div>

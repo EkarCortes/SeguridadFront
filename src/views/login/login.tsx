@@ -2,12 +2,18 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import FormField from "../../components/FormField";
 import logo from "../../assets/FaceCore 3.png";
+import useAuth from "../../hooks/useAuth";
 
-export default function Login() {
+interface LoginProps {
+  onLogin?: () => void;
+}
+
+export default function Login({ onLogin }: LoginProps) {
   const [loading, setLoading] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const { login } = useAuth();
   const navigate = useNavigate()
 
   async function handleSubmit(e: React.FormEvent) {
@@ -22,9 +28,11 @@ export default function Login() {
     setLoading(true);
     
     try {
+      await login(username, password);
+      onLogin?.();
       navigate("/home");
     } catch (err: any) {
-      setError(err.response?.data?.message || "Error al iniciar sesión. Verifica tus credenciales.");
+      setError(err.message || "Error al iniciar sesión. Verifica tus credenciales.");
     } finally {
       setLoading(false);
     }
