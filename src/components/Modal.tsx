@@ -26,12 +26,11 @@ const Modal: React.FC<ModalProps> = ({
       : "max-w-sm sm:max-w-md md:max-w-lg";
       
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 p-2 sm:p-4">
+    <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/60  backdrop-blur-sm  p-2 sm:p-4">
       <div
         className={`bg-[#2d3346] rounded-xl shadow-2xl w-full ${sizeClass} p-4 sm:p-6 relative
           max-h-[95vh] sm:max-h-[90vh] overflow-y-auto
         `}
-        
       >
         <button
           className="absolute top-2 right-2 sm:top-3 sm:right-3 text-neutral-400 hover:text-white text-xl z-10"

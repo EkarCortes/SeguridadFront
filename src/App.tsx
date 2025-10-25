@@ -26,17 +26,16 @@ function AppContent() {
     }
   }, [user, setSessionExpired]);
 
-  const handleSessionExpiredRedirect = () => {
-    setSessionExpired(false);
+  const handleLogout = async () => {
     setIsRedirecting(true);
+    await logout();
     window.location.replace('/');
   };
 
   if (loading || isRedirecting) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-[#e4e7f7]">
-        <LoadingSpinner  size="md" />;
-       
+        <LoadingSpinner size="md" />
       </div>
     );
   }
@@ -46,12 +45,12 @@ function AppContent() {
       {user && (
         <SessionExpiredModal 
           isOpen={isSessionExpired} 
-          onRedirect={handleSessionExpiredRedirect}
+          onRedirect={handleLogout}
         />
       )}
       
       {user ? (
-        <CustomDrawer onLogout={logout}>
+        <CustomDrawer onLogout={handleLogout}>
           <Routes>
             <Route path="/home" element={<Home />} />
             <Route path="/listaAgregados" element={<ListaAgregados />} />

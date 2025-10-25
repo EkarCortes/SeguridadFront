@@ -37,7 +37,7 @@ interface CustomDrawerProps {
     onLogout: () => Promise<void>;
 }
 
-export default function CustomDrawer({  children }: CustomDrawerProps) {
+export default function CustomDrawer({ onLogout, children }: CustomDrawerProps) {
     const { open, isMobile, handleOpenDrawer, handleCloseDrawer, handleNavigation } = useDrawer();
     const { drawerWidth, accentColor, mutedText, selectedBg, routeGroups } = useDrawerConfig();
     const {
@@ -60,10 +60,7 @@ export default function CustomDrawer({  children }: CustomDrawerProps) {
     const handleLogoutConfirm = async () => {
         setLogoutLoading(true);
         try {
-            await authService.logout();
-            localStorage.removeItem('authMe');
-            localStorage.clear();
-            window.location.replace('/');
+            await onLogout(); 
         } catch (error) {
             console.error('Error en logout desde drawer:', error);
         } finally {
