@@ -35,7 +35,7 @@ export default function LogoutConfirmModal({
         <h3 className="text-xl font-bold text-white">¿Cerrar Sesión?</h3>
         
         <p className="text-neutral-400 text-sm">
-          ¿Estás seguro de que quieres cerrar tu sesión? Tendrás que volver a iniciar sesión para acceder.
+          ¿Estás seguro de que quieres cerrar tu sesión? 
         </p>
 
         <div className="flex gap-3 pt-4">

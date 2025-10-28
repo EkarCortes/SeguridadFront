@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import FormField from "../../components/FormField";
 import logo from "../../assets/FaceCore 3.png";
 import useAuth from "../../hooks/useAuth";
+import Modal from "../../components/Modal";
 
 interface LoginProps {
   onLogin?: () => void;
@@ -14,19 +15,47 @@ export default function Login({ onLogin }: LoginProps) {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const { login } = useAuth();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+
+  const [showResetModal, setShowResetModal] = useState(false);
+  const [resetEmail, setResetEmail] = useState("");
+  const [resetLoading, setResetLoading] = useState(false);
+  const [resetError, setResetError] = useState<string | null>(null);
+  const [resetSuccess, setResetSuccess] = useState<string | null>(null);
+
+  const handleResetPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setResetError(null);
+    setResetSuccess(null);
+
+    if (!resetEmail) {
+      setResetError("Ingresa tu correo.");
+      return;
+    }
+
+    setResetLoading(true);
+    try {
+      // Aquí deberías llamar a tu API para enviar el correo de recuperación
+      // await sendResetEmail(resetEmail);
+      setResetSuccess("¡Correo enviado! Revisa tu bandeja de entrada.");
+    } catch (err: any) {
+      setResetError("No se pudo enviar el correo. Intenta de nuevo.");
+    } finally {
+      setResetLoading(false);
+    }
+  };
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
-    
+
     if (!username || !password) {
       setError("Completa ambos campos.");
       return;
     }
-    
+
     setLoading(true);
-    
+
     try {
       await login(username, password);
       onLogin?.();
@@ -103,14 +132,49 @@ export default function Login({ onLogin }: LoginProps) {
               className="text-blue-400 hover:underline"
               onClick={e => {
                 e.preventDefault();
-                // Aquí puedes navegar o mostrar modal de recuperación
+                setShowResetModal(true);
               }}
             >
               ¿Olvidaste tu contraseña?{" "}
             </a>
           </p>
         </div>
+
       </div>
+      
+      <Modal open={showResetModal} onClose={() => setShowResetModal(false)} title="Recuperar contraseña" size="sm">
+          <form onSubmit={handleResetPassword} className="space-y-4">
+            <div>
+              <label className="block text-sm text-white mb-1">Correo electrónico</label>
+              <input
+                type="email"
+                value={resetEmail}
+                onChange={e => setResetEmail(e.target.value)}
+                className="w-full rounded-md px-3 py-2 bg-[#23273a] text-white border border-[#3a405a] focus:outline-none focus:ring-2 focus:ring-blue-400"
+                placeholder="tu@email.com"
+                disabled={resetLoading}
+                required
+              />
+            </div>
+            {resetError && (
+              <div className="text-red-300 text-xs bg-red-900/30 border border-red-700/60 rounded-md px-3 py-2">
+                {resetError}
+              </div>
+            )}
+            {resetSuccess && (
+              <div className="text-green-300 text-xs bg-green-900/30 border border-green-700/60 rounded-md px-3 py-2">
+                {resetSuccess}
+              </div>
+            )}
+            <button
+              type="submit"
+              disabled={resetLoading}
+              className="w-full rounded-lg bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 text-sm transition disabled:opacity-60"
+            >
+              {resetLoading ? "Enviando..." : "Enviar"}
+            </button>
+          </form>
+        </Modal>
     </div>
   );
 }
