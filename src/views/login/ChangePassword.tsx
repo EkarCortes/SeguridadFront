@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import useResetPassword from '../../hooks/useResetPassword';
 import { FaEye, FaEyeSlash } from "react-icons/fa";
@@ -11,13 +11,20 @@ export default function ChangePassword() {
   const { loading, error, success, changePassword } = useResetPassword();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+
+  // Redirige cuando success cambia
+  useEffect(() => {
+    if (success) {
+      const timer = setTimeout(() => navigate('/login', { replace: true }), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [success, navigate]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newPassword || !token) return;
     await changePassword(token, newPassword);
-    if (success) {
-      setTimeout(() => navigate('/login'), 2000);
-    }
+    
   };
 
   return (
@@ -37,6 +44,7 @@ export default function ChangePassword() {
                 required
                 disabled={loading}
                 placeholder="********"
+        
               />
               <button
                 type="button"

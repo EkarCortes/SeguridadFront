@@ -43,6 +43,7 @@ export default function FormField({
         disabled={disabled}
         placeholder={placeholder}
         title={disabled ? `${label} no se puede editar` : undefined}
+        minLength={type === "password" ? 6 : undefined}
       />
       {helperText && (
         <p className="text-xs text-neutral-200 mt-1">{helperText}</p>

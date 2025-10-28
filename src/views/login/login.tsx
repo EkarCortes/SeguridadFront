@@ -4,7 +4,7 @@ import FormField from "../../components/FormField";
 import logo from "../../assets/FaceCore 3.png";
 import useAuth from "../../hooks/useAuth";
 import Modal from "../../components/Modal";
-import usePasswordReset from "../../hooks/usePasswordReset";
+import usePasswordReset from "../../hooks/usePasswordResetEmail";
 import { FaEye, FaEyeSlash } from "react-icons/fa"; 
 
 interface LoginProps {
