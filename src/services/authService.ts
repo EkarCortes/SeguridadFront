@@ -53,3 +53,8 @@ export const authService = {
     }
   }
 };
+
+export const requestPasswordReset = async (email: string) => {
+  const response = await api.post('/auth/requestPasswordReset', { email });
+  return response.data;
+};
