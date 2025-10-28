@@ -18,7 +18,7 @@ import { useDrawer } from "./hooks/drawer/useDrawer";
 import { useDrawerConfig } from "./hooks/drawer/useDrawerConfig";
 import { useDrawerStyles } from "./hooks/drawer/useDrawerStyles";
 import LogoutConfirmModal from "./components/LogoutConfirmModal";
-import { authService } from './services/authService';
+import { authService } from './service/authService';
 import './drawer.css';
 
 const DrawerHeader = styled("div")(({ theme }) => ({

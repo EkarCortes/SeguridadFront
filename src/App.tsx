@@ -12,6 +12,7 @@ import SessionExpiredModal from './components/SessionExpiredModal';
 import { SessionProvider, useSession } from './contexts/SessionContext';
 import { setSessionExpiredCallback } from './config/apiconfig';
 import LoadingSpinner from './components/Spinner';
+import ChangePassword from './views/login/ChangePassword';
 
 function AppContent() {
   const { user, loading, logout } = useAuth();
@@ -49,20 +50,23 @@ function AppContent() {
         />
       )}
       
-      {user ? (
-        <CustomDrawer onLogout={handleLogout}>
-          <Routes>
+      <Routes>
+        {/* Rutas públicas */}
+        <Route path="/login/changePassword" element={<ChangePassword />} />
+        {/* Rutas privadas */}
+        {user ? (
+          <>
             <Route path="/home" element={<Home />} />
             <Route path="/listaAgregados" element={<ListaAgregados />} />
             <Route path="/listaIngresados" element={<ListaIngresados />} />
             <Route path="*" element={<Navigate to="/home" replace />} />
-          </Routes>
-        </CustomDrawer>
-      ) : (
-        <Routes>
-          <Route path="*" element={<Login onLogin={() => window.location.reload()} />} />
-        </Routes>
-      )}
+          </>
+        ) : (
+          <>
+            <Route path="*" element={<Login onLogin={() => window.location.reload()} />} />
+          </>
+        )}
+      </Routes>
     </>
   );
 }

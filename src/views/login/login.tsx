@@ -5,6 +5,7 @@ import logo from "../../assets/FaceCore 3.png";
 import useAuth from "../../hooks/useAuth";
 import Modal from "../../components/Modal";
 import usePasswordReset from "../../hooks/usePasswordReset";
+import { FaEye, FaEyeSlash } from "react-icons/fa"; 
 
 interface LoginProps {
   onLogin?: () => void;
@@ -17,6 +18,7 @@ export default function Login({ onLogin }: LoginProps) {
   const [error, setError] = useState<string | null>(null);
   const { login } = useAuth();
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false); // Nuevo estado
 
   const {
     loading: resetLoading,
@@ -80,16 +82,27 @@ export default function Login({ onLogin }: LoginProps) {
               disabled={loading}
               placeholder="Nombre de usuario"
             />
-            <FormField
-              label="CONTRASEÑA"
-              name="password"
-              type="password"
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              required
-              disabled={loading}
-              placeholder="********"
-            />
+            <div className="relative">
+              <FormField
+                label="CONTRASEÑA"
+                name="password"
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                required
+                disabled={loading}
+                placeholder="********"
+              />
+              <button
+                type="button"
+                tabIndex={-1}
+                className="absolute right-3 top-9 text-gray-400 hover:text-gray-200"
+                onClick={() => setShowPassword(v => !v)}
+                style={{ background: "none", border: "none", padding: 0 }}
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </button>
+            </div>
           </div>
 
           {error && (

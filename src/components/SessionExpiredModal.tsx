@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { authService } from '../services/authService';
+import { authService } from '../service/authService';
 import Modal from './Modal';
 
 interface SessionExpiredModalProps {

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { authService, type User, type AuthResponse } from '../services/authService';
+import { authService, type User, type AuthResponse } from '../service/authService';
 import { setInitialLoadComplete } from '../config/apiconfig';
 
 interface UseAuthReturn {
