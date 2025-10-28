@@ -50,23 +50,21 @@ function AppContent() {
         />
       )}
       
-      <Routes>
-        {/* Rutas públicas */}
-        <Route path="/login/changePassword" element={<ChangePassword />} />
-        {/* Rutas privadas */}
-        {user ? (
-          <>
+      {user ? (
+        <CustomDrawer onLogout={handleLogout}>
+          <Routes>
             <Route path="/home" element={<Home />} />
             <Route path="/listaAgregados" element={<ListaAgregados />} />
             <Route path="/listaIngresados" element={<ListaIngresados />} />
             <Route path="*" element={<Navigate to="/home" replace />} />
-          </>
-        ) : (
-          <>
-            <Route path="*" element={<Login onLogin={() => window.location.reload()} />} />
-          </>
-        )}
-      </Routes>
+          </Routes>
+        </CustomDrawer>
+      ) : (
+        <Routes>
+          <Route path="/login/changePassword" element={<ChangePassword />} />
+          <Route path="*" element={<Login onLogin={() => window.location.reload()} />} />
+        </Routes>
+      )}
     </>
   );
 }

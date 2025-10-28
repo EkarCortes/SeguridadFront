@@ -18,7 +18,7 @@ export default function Login({ onLogin }: LoginProps) {
   const [error, setError] = useState<string | null>(null);
   const { login } = useAuth();
   const navigate = useNavigate();
-  const [showPassword, setShowPassword] = useState(false); // Nuevo estado
+  const [showPassword, setShowPassword] = useState(false); 
 
   const {
     loading: resetLoading,
