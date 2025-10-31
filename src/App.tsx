@@ -1,72 +1,79 @@
 import './App.css'
 import { Routes, Route, Navigate } from "react-router-dom";
-import Login from './views/login/login'
+import { useEffect, useState } from 'react';
+
 import Home from './views/home/home'
 import CustomDrawer from './drawer'
 import ListaAgregados from './views/agregados/listaAgregados';
 import ListaIngresados from './views/ingresados/listaIngresados';
-import { AuthProvider, useAuth } from './context/AuthContext';
-import { useEffect, useState } from 'react';
+import Login from './views/login/login';
+import useAuth from './hooks/useAuth';
 import SessionExpiredModal from './components/SessionExpiredModal';
-import { setSessionExpiredHandler } from './config/apiconfig';
+import { SessionProvider, useSession } from './contexts/SessionContext';
+import { setSessionExpiredCallback } from './config/apiconfig';
+import LoadingSpinner from './components/Spinner';
+import ChangePassword from './views/login/ChangePassword';
 
 function AppContent() {
-  const { isAuthenticated, isLoading, logout, refreshAuth } = useAuth();
-  const [showSessionModal, setShowSessionModal] = useState(false);
+  const { user, loading, logout } = useAuth();
+  const { isSessionExpired, setSessionExpired } = useSession();
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
   useEffect(() => {
-    setSessionExpiredHandler(() => {
-      setShowSessionModal(true);
-    });
-  }, []);
-
-  const handleExtendSession = async () => {
-    await refreshAuth();
-    setShowSessionModal(false);
-  };
+    if (user) {
+      setSessionExpiredCallback(() => {
+        setSessionExpired(true);
+      });
+    }
+  }, [user, setSessionExpired]);
 
   const handleLogout = async () => {
-    setShowSessionModal(false);
+    setIsRedirecting(true);
     await logout();
+    window.location.replace('/');
   };
 
-  if (isLoading) {
+  if (loading || isRedirecting) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#e4e7f7]">
-        <div className="w-12 h-12 border-4 border-[#80858e]/30 border-t-[#80858e] rounded-full animate-spin" />
+      <div className="flex flex-col items-center justify-center min-h-screen bg-[#e4e7f7]">
+        <LoadingSpinner size="md" />
       </div>
     );
   }
 
-  if (!isAuthenticated) {
-    return <Login />;
-  }
-
   return (
     <>
-      <CustomDrawer onLogout={logout}>
+      {user && (
+        <SessionExpiredModal 
+          isOpen={isSessionExpired} 
+          onRedirect={handleLogout}
+        />
+      )}
+      
+      {user ? (
+        <CustomDrawer onLogout={handleLogout}>
+          <Routes>
+            <Route path="/home" element={<Home />} />
+            <Route path="/listaAgregados" element={<ListaAgregados />} />
+            <Route path="/listaIngresados" element={<ListaIngresados />} />
+            <Route path="*" element={<Navigate to="/home" replace />} />
+          </Routes>
+        </CustomDrawer>
+      ) : (
         <Routes>
-          <Route path="/home" element={<Home />} />
-          <Route path="/listaAgregados" element={<ListaAgregados />} />
-          <Route path="/listaIngresados" element={<ListaIngresados />} />
-          <Route path="*" element={<Navigate to="/home" replace />} />
+          <Route path="/login/changePassword" element={<ChangePassword />} />
+          <Route path="*" element={<Login onLogin={() => window.location.reload()} />} />
         </Routes>
-      </CustomDrawer>
-
-      <SessionExpiredModal
-        isOpen={showSessionModal}
-        onExtend={handleExtendSession}
-        onLogout={handleLogout}
-      />
+      )}
     </>
   );
 }
 
 function App() {
   return (
-    <AuthProvider>
+    <SessionProvider>
       <AppContent />
-    </AuthProvider>
+    </SessionProvider>
   );
 }
 
