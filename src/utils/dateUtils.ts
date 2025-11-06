@@ -5,21 +5,25 @@
 export function convertToCostaRicaTime(utcTimestamp: string) {
   const utcDate = new Date(utcTimestamp);
 
-  // Costa Rica está en UTC-6 (CST) todo el año
-  const costaRicaOffset = -6 * 60; // -6 horas en minutos
-  const costaRicaTime = new Date(utcDate.getTime() + costaRicaOffset * 60 * 1000);
-
-  const fechaFormatted = costaRicaTime.toLocaleDateString('es-ES', {
+  // Costa Rica está en UTC-6 (America/Costa_Rica) todo el año
+  const fechaFormatted = utcDate.toLocaleDateString('es-CR', {
     day: '2-digit',
     month: '2-digit',
     year: 'numeric',
+    timeZone: 'America/Costa_Rica',
   });
 
-  const horaFormatted = costaRicaTime.toLocaleTimeString('es-ES', {
+  const horaFormatted = utcDate.toLocaleTimeString('es-CR', {
     hour: '2-digit',
     minute: '2-digit',
     hour12: false,
+    timeZone: 'America/Costa_Rica',
   });
 
-  return { fechaFormatted, horaFormatted, localDate: costaRicaTime };
+  // Obtenemos el objeto Date local en CR
+  const crDate = new Date(
+    utcDate.toLocaleString('en-US', { timeZone: 'America/Costa_Rica' })
+  );
+
+  return { fechaFormatted, horaFormatted, localDate: crDate };
 }
