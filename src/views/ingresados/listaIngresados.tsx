@@ -2,7 +2,7 @@ import { useState } from "react";
 import DataTableGeneric from "../../components/table/DataTableGeneric";
 import { getVerificacionesColumns, convertToCostaRicaTime } from "../../components/table/verificacionesColumns";
 import { getTableStyles } from "../../styles/tableStyles";
-import { useVerifications } from "../../hooks/useVerifications";
+import { useVerifications } from "../../hooks/verficados/useVerifications";
 import ImageModal from "../../components/ImageModal";
 
 export default function ListaIngresados() {

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import FormField from "../FormField";
 import FileUpload from "../FileUpload";
-import { useFileUpload } from "../../hooks/useFileUpload";
+import { useFileUpload } from "../../hooks/agregados/useFileUpload";
 import { type ExtendedPersona } from "../table/personasColumns";
 import image from "../../assets/noUser.jpg";
 

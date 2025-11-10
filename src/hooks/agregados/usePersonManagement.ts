@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { usePersons } from "./usePersons";
-import { agregadosService } from "../service/agregados/agregadosService";
-import { type ExtendedPersona } from "../components/table/personasColumns";
-import type { PersonFormData } from "../types/agregados";
+import { agregadosService } from "../../service/agregados/agregadosService";
+import { type ExtendedPersona } from "../../components/table/personasColumns";
+import type { PersonFormData } from "../../types/agregados";
 
 export function usePersonManagement() {
   const { persons, totalPersonas, loading, error, refetch } = usePersons();

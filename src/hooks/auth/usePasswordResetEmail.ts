@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { requestPasswordReset } from '../service/authService';
+import { requestPasswordReset } from '../../service/authService';
 
 export default function usePasswordReset() {
   const [loading, setLoading] = useState(false);

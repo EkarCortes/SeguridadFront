@@ -7,7 +7,7 @@ import ImageModal from "../../components/ImageModal";
 import Modal from "../../components/Modal";
 import EditForm from "../../components/forms/EditForm";
 import AddForm from "../../components/forms/AddForm";
-import { usePersonManagement } from "../../hooks/usePersonManagement";
+import { usePersonManagement } from "../../hooks/agregados/usePersonManagement";
 
 export default function ListaAgregados() {
   const {

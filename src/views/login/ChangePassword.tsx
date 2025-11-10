@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import useResetPassword from '../../hooks/useResetPassword';
+import useResetPassword from '../../hooks/auth/useResetPassword';
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import FormField from '../../components/FormField';
 

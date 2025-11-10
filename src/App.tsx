@@ -7,7 +7,7 @@ import CustomDrawer from './drawer'
 import ListaAgregados from './views/agregados/listaAgregados';
 import ListaIngresados from './views/ingresados/listaIngresados';
 import Login from './views/login/login';
-import useAuth from './hooks/useAuth';
+import useAuth from './hooks/auth/useAuth';
 import SessionExpiredModal from './components/SessionExpiredModal';
 import { SessionProvider, useSession } from './contexts/SessionContext';
 import { setSessionExpiredCallback } from './config/apiconfig';
