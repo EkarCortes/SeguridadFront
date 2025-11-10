@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { homeService } from '../../service/home/homeService';
 import type { MonthlyStats, MonthlyStatsResponse } from '../../types/homeTypes';
 
+// Hook que gestiona la obtención de las estadísticas mensuales
+
 export const useMonthlyStats = () => {
   const [monthlyStats, setMonthlyStats] = useState<MonthlyStats[]>([]);
   const [totalMeses, setTotalMeses] = useState<number>(0);

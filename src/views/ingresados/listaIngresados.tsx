@@ -3,7 +3,7 @@ import DataTableGeneric from "../../components/table/DataTableGeneric";
 import { getVerificacionesColumns, convertToCostaRicaTime } from "../../components/table/verificacionesColumns";
 import { getTableStyles } from "../../styles/tableStyles";
 import { useVerifications } from "../../hooks/verficados/useVerifications";
-import ImageModal from "../../components/ImageModal";
+import ImageModal from "../../components/Ui/ImageModal";
 
 export default function ListaIngresados() {
   const { verifications, totalVerificaciones, loading, error, refetch } = useVerifications();

@@ -1,5 +1,7 @@
 import { Toaster as HotToaster } from 'react-hot-toast';
 
+// Componente Toaster personalizado para mostrar notificaciones con estilos específicos para éxito y error.
+
 export default function Toaster() {
   return (
     <HotToaster

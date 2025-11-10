@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { requestPasswordReset } from '../../service/authService';
 
+// Hook que gestiona el envío de correos para restablecer la contraseña
+
 export default function usePasswordReset() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

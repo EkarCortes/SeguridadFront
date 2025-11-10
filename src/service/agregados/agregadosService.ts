@@ -2,6 +2,8 @@ import api from '../../config/apiconfig';
 import apiPy from '../../config/apipython';
 import type { PersonsResponse, PersonFormData, PersonUpdateData } from '../../types/agregados';
 
+// Servicio para gestionar las operaciones relacionadas con personas, incluyendo obtención, registro, actualización y eliminación.
+
 export const agregadosService = {
   getPersons: async (): Promise<PersonsResponse> => {
     try {

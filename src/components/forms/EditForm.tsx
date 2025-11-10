@@ -1,6 +1,6 @@
 import { useState } from "react";
-import FormField from "../FormField";
-import FileUpload from "../FileUpload";
+import FormField from "../Ui/FormField";
+import FileUpload from "../Ui/FileUpload";
 import { useFileUpload } from "../../hooks/agregados/useFileUpload";
 import { type ExtendedPersona } from "../table/personasColumns";
 import image from "../../assets/noUser.jpg";
@@ -43,7 +43,6 @@ export default function EditForm({ initial, onSave, onCancel }: EditFormProps) {
         fotos_nuevas: selectedFiles.length > 0 ? selectedFiles : undefined,
       };
 
-      // Filtrar campos undefined
       const filteredUpdateData = Object.fromEntries(
         Object.entries(updateData).filter(([_, value]) => value !== undefined)
       );

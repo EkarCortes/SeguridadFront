@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { ingresadosService} from '../../service/ingresados/ingresadosService';
 import type { Verificacion, VerificationsResponse } from '../../types/ingresados';
 
+// Hook que gestiona la obtención y el estado de las verificaciones
+
 export const useVerifications = () => {
   const [verifications, setVerifications] = useState<Verificacion[]>([]);
   const [totalVerificaciones, setTotalVerificaciones] = useState<number>(0);

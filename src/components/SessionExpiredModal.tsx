@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { authService } from '../service/authService';
-import Modal from './Modal';
+import Modal from './Ui/Modal';
+
+//Este modal se muestra cuando la sesión del usuario ha expirado
 
 interface SessionExpiredModalProps {
   isOpen: boolean;

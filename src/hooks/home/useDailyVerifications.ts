@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { homeService } from '../../service/home/homeService';
 import type { DailyVerificationsResponse } from '../../types/homeTypes';
 
+// Hook que gestiona la obtención de las verificaciones diarias
+
 export const useDailyVerifications = (date?: string) => {
   const [data, setData] = useState<DailyVerificationsResponse | null>(null);
   const [loading, setLoading] = useState(true);

@@ -1,4 +1,4 @@
-import Modal from './Modal';
+import Modal from './Ui/Modal';
 
 interface LogoutConfirmModalProps {
   isOpen: boolean;
@@ -6,7 +6,7 @@ interface LogoutConfirmModalProps {
   onCancel: () => void;
   loading?: boolean;
 }
-
+// Este componente muestra un modal de confirmación para cerrar sesión.
 export default function LogoutConfirmModal({
   isOpen,
   onConfirm,

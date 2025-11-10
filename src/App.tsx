@@ -11,7 +11,7 @@ import useAuth from './hooks/auth/useAuth';
 import SessionExpiredModal from './components/SessionExpiredModal';
 import { SessionProvider, useSession } from './contexts/SessionContext';
 import { setSessionExpiredCallback } from './config/apiconfig';
-import LoadingSpinner from './components/Spinner';
+import LoadingSpinner from './components/Ui/Spinner';
 import ChangePassword from './views/login/ChangePassword';
 
 function AppContent() {

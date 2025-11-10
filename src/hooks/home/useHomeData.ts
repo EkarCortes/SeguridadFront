@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { homeService } from '../../service/home/homeService';
 import type { TimeSeriesData } from '../../types/homeTypes';
 
+// Hook que gestiona la obtención de datos de series temporales para la página de inicio
+
 export const useHomeData = () => {
   const [timeSeriesData, setTimeSeriesData] = useState<TimeSeriesData[]>([]);
   const [loading, setLoading] = useState(true);

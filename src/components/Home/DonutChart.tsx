@@ -1,4 +1,4 @@
-import LoadingSpinner from '../Spinner';
+import LoadingSpinner from '../Ui/Spinner';
 import {
   PieChart,
   Pie,

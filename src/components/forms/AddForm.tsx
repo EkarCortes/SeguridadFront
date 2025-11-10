@@ -1,6 +1,6 @@
 import { useState } from "react";
-import FormField from "../FormField";
-import FileUpload from "../FileUpload";
+import FormField from "../Ui/FormField";
+import FileUpload from "../Ui/FileUpload";
 import { useFileUpload } from "../../hooks/agregados/useFileUpload";
 import type { PersonFormData } from "../../types/agregados";
 

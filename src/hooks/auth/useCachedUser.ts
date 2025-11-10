@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 
+// Hook para gestionar el usuario autenticado almacenado en localStorage
+
 interface CachedUser {
   user: {
     id: number;

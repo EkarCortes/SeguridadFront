@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { resetPassword } from '../../service/authService';
 
+// Hook que gestiona el restablecimiento de la contraseña
+
 export default function useResetPassword() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

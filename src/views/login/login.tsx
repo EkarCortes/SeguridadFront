@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import FormField from "../../components/FormField";
+import FormField from "../../components/Ui/FormField";
 import logo from "../../assets/FaceCore 3.png";
 import useAuth from "../../hooks/auth/useAuth";
-import Modal from "../../components/Modal";
+import Modal from "../../components/Ui/Modal";
 import usePasswordReset from "../../hooks/auth/usePasswordResetEmail";
 import { FaEye, FaEyeSlash } from "react-icons/fa"; 
 

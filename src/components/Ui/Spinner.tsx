@@ -4,6 +4,7 @@ interface LoadingSpinnerProps {
   message?: string;
   size?: 'sm' | 'md' | 'lg';
 }
+// Componente de spinner de carga con mensaje personalizable y tamaños ajustables.
 
 const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ 
   message = "Cargando...", 

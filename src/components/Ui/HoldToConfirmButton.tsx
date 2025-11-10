@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 
+// Este componente es un botón que requiere que el usuario mantenga presionado durante un período de tiempo para confirmar una acción, como eliminar un elemento.
 interface HoldToConfirmButtonProps {
   onConfirm: () => void;
   onCancel?: () => void;

@@ -1,5 +1,7 @@
 import api from '../config/apiconfig';
 
+// Servicio para gestionar la autenticación del usuario, incluyendo login, obtención de datos del usuario autenticado y logout.
+
 export interface LoginCredentials {
   username: string;
   password: string;

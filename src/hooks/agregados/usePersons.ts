@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { agregadosService } from '../../service/agregados/agregadosService';
 import type { Persona, PersonsResponse } from '../../types/agregados';
 
+// Hook que gestiona la obtención y el estado de las personas
+
 export const usePersons = () => {
   const [persons, setPersons] = useState<Persona[]>([]);
   const [totalPersonas, setTotalPersonas] = useState<number>(0);
@@ -13,11 +15,11 @@ export const usePersons = () => {
       setLoading(true);
       setError(null);
       const data: PersonsResponse = await agregadosService.getPersons();
-      setPersons(data.personas || []); // Asegurar que sea un array
+      setPersons(data.personas || []); 
       setTotalPersonas(data.total_personas || 0);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error al cargar las personas');
-      setPersons([]); // Asegurar array vacío en caso de error
+      setPersons([]); 
       console.error('Error fetching persons:', err);
     } finally {
       setLoading(false);

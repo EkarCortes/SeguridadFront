@@ -1,5 +1,7 @@
 import { useEffect } from 'react';
 
+// Hook para gestionar los estilos de un drawer (cajón lateral) responsivo
+
 export const useDrawerStyles = (
     drawerWidth: number,
     accentColor: string,

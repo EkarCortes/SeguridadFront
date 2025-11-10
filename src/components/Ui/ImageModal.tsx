@@ -1,3 +1,6 @@
+
+// Este componente muestra una imagen en un modal ampliado cuando se hace clic en ella.
+
 interface ImageModalProps {
   isOpen: boolean;
   imageUrl: string | null;

@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { authService, type User, type AuthResponse } from '../../service/authService';
 import { setInitialLoadComplete } from '../../config/apiconfig';
 
+// Hook que gestiona la autenticación del usuario
+
 interface UseAuthReturn {
   user: User | null;
   loading: boolean;

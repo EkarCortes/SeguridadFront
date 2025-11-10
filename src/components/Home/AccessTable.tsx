@@ -1,12 +1,14 @@
 import { useState } from "react";
 import DataTable, { type TableProps } from "react-data-table-component";
 import { useDailyVerifications } from "../../hooks/home/useDailyVerifications";
-import LoadingSpinner from "../Spinner";
+import LoadingSpinner from "../Ui/Spinner";
 import { convertToCostaRicaTime } from "../../utils/dateUtils";
 import image from "../../assets/noUser.jpg";
-import ImageModal from "../ImageModal"; // Reemplazado PersonaPhotoModal con ImageModal
+import ImageModal from "../Ui/ImageModal"; 
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import type { DetalleIntento } from "../../types/homeTypes";
+
+// Compontente AccessTable que muestra una tabla de registros de acceso diario con fotos y detalles.
 
 const accentColor = "#1f364a";
 const mutedText = "#a3a3a3";

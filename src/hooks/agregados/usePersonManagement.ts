@@ -4,6 +4,7 @@ import type { ExtendedPersona } from "../../components/table/personasColumns";
 import { agregadosService } from "../../service/agregados/agregadosService";
 import type { PersonFormData } from "../../types/agregados";
 
+// Hook para manejar la lógica de gestión de personas, incluyendo edición, eliminación, adición y búsqueda.
 
 export function usePersonManagement() {
   const { persons, totalPersonas, loading, error, refetch } = usePersons();
@@ -13,13 +14,13 @@ export function usePersonManagement() {
   const [addModal, setAddModal] = useState(false);
   const [search, setSearch] = useState("");
 
-  // Convertir personas a formato extendido con IDs
+
   const extendedPersons: ExtendedPersona[] = persons.map((person, index) => ({
     ...person,
     id: index + 1,
   }));
 
-  // Filtrado por búsqueda
+  
   const filteredPersons = extendedPersons.filter((a) =>
     [a.nombre, a.cedula, a.email, a.telefono]
       .join(" ")

@@ -1,5 +1,7 @@
 import * as React from "react";
 
+// Hook para gestionar el estado de un drawer (cajón lateral) responsivo
+
 export const useDrawer = () => {
     const [open, setOpen] = React.useState(false);
     const [isMobile, setIsMobile] = React.useState(window.innerWidth < 768);

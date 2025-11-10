@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+// Hook para manejar la subida de archivos con previews y límite de archivos
+
 export function useFileUpload(maxFiles: number = 5) {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);

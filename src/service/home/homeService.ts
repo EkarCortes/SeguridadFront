@@ -1,7 +1,7 @@
 import api from '../../config/apiconfig';
 import type { DailyVerificationsResponse, MonthlyStatsResponse, SummaryData, TimeSeriesData } from '../../types/homeTypes';
 
-
+// Servicio para gestionar las operaciones relacionadas con la página de inicio y sus estadísticas.
 
 export const homeService = {
   getTimeSeries: async (): Promise<TimeSeriesData[]> => {

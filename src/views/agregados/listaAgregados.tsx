@@ -3,11 +3,11 @@ import AddIcon from "@mui/icons-material/Add";
 import DataTableGeneric from "../../components/table/DataTableGeneric";
 import { getPersonasColumns } from "../../components/table/personasColumns";
 import { getTableStyles } from "../../styles/tableStyles";
-import ImageModal from "../../components/ImageModal";
-import Modal from "../../components/Modal";
+import ImageModal from "../../components/Ui/ImageModal";
+import Modal from "../../components/Ui/Modal";
 import EditForm from "../../components/forms/EditForm";
 import AddForm from "../../components/forms/AddForm";
-import HoldToConfirmButton from "../../components/HoldToConfirmButton";
+import HoldToConfirmButton from "../../components/Ui/HoldToConfirmButton";
 import { usePersonManagement } from '../../hooks/agregados/usePersonManagement';
 
 export default function ListaAgregados() {
