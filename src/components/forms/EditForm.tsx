@@ -37,10 +37,10 @@ export default function EditForm({ initial, onSave, onCancel }: EditFormProps) {
 
     try {
       const updateData = {
-        cedula: form.cedula !== initial.cedula ? form.cedula : undefined,
+        nombre: form.nombre !== initial.nombre ? form.nombre : undefined,
         email: form.email !== initial.email ? form.email : undefined,
         telefono: form.telefono !== initial.telefono ? form.telefono : undefined,
-        fotos_nuevas: selectedFiles.length > 0 ? selectedFiles : undefined,
+        photos: selectedFiles.length > 0 ? selectedFiles : undefined,
       };
 
       const filteredUpdateData = Object.fromEntries(
@@ -71,8 +71,6 @@ export default function EditForm({ initial, onSave, onCancel }: EditFormProps) {
           name="nombre"
           value={form.nombre}
           onChange={handleChange}
-          
-          helperText="El nombre no se puede modificar"
           className="w-full"
         />
        

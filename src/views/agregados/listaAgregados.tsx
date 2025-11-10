@@ -9,6 +9,7 @@ import EditForm from "../../components/forms/EditForm";
 import AddForm from "../../components/forms/AddForm";
 import HoldToConfirmButton from "../../components/Ui/HoldToConfirmButton";
 import { usePersonManagement } from '../../hooks/agregados/usePersonManagement';
+import CustomToaster from "../../components/Ui/CustomToaster";
 
 export default function ListaAgregados() {
   const {
@@ -67,7 +68,7 @@ export default function ListaAgregados() {
         customStyles={getTableStyles()}
         additionalActions={
           <button
-            className="flex items-center gap-2 px-4 py-2 rounded bg-green-600 text-white hover:bg-green-800 transition"
+            className="flex items-center gap-2 px-4 py-2 rounded bg-[#6FBF73] text-white hover:bg-[#58985C] transition"
             onClick={() => setAddModal(true)}
             title="Agregar nuevo"
             type="button"
@@ -120,6 +121,7 @@ export default function ListaAgregados() {
         onClose={handleCloseImageModal}
         alt={imageAlt}
       />
+      <CustomToaster />
     </>
   );
 }

@@ -3,6 +3,7 @@ import { usePersons } from "./usePersons";
 import type { ExtendedPersona } from "../../components/table/personasColumns";
 import { agregadosService } from "../../service/agregados/agregadosService";
 import type { PersonFormData } from "../../types/agregados";
+import { showCustomToast } from "../../components/Ui/CustomToaster";
 
 // Hook para manejar la lógica de gestión de personas, incluyendo edición, eliminación, adición y búsqueda.
 
@@ -35,15 +36,20 @@ export function usePersonManagement() {
   async function handleSaveEdit(data: ExtendedPersona, updateData: any) {
     try {
       if (!data.cedula) {
-        throw new Error("La cédula de la persona no puede ser nula.");
+      throw new Error("La cédula de la persona no puede ser nula.");
       }
       await agregadosService.updatePerson(data.cedula, updateData);
-      console.log("Usuario actualizado exitosamente:", data);
+
       setEditUser(null);
       refetch();
-    } catch (error) {
+      showCustomToast('Éxito', 'Persona actualizada correctamente.', 'success');
+    } catch (error: any) {
+      if (error?.response?.status === 400) {
+      showCustomToast('Atención', 'Debes actualizar algún dato para guardar los cambios.', 'info');
+      } else {
       console.error("Error al actualizar usuario:", error);
       alert("Error al actualizar la persona. Por favor, intenta nuevamente.");
+      }
     }
   }
 
@@ -57,8 +63,10 @@ export function usePersonManagement() {
         throw new Error("La cédula de la persona no puede ser nula.");
       }
       await agregadosService.deletePerson(deleteUser.cedula);
+      
       refetch();
       setDeleteUser(null);
+      showCustomToast('Éxito', 'Persona eliminada correctamente.', 'success');
     } catch (error) {
       console.error("Error al eliminar usuario:", error);
       alert("Error al eliminar la persona. Por favor, intenta nuevamente.");
@@ -75,6 +83,7 @@ export function usePersonManagement() {
       console.log("Usuario registrado exitosamente:", data);
       setAddModal(false);
       refetch();
+      showCustomToast('Éxito', 'Persona registrada correctamente.', 'success');
     } catch (error) {
       console.error("Error al registrar usuario:", error);
       alert("Error al registrar la persona. Por favor, intenta nuevamente.");

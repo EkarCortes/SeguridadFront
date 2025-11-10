@@ -85,7 +85,7 @@ export default function DataTableGeneric<T>({
             {additionalActions}
             {onRefresh && (
               <button
-                className="flex items-center gap-2 px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-800 transition"
+                className="flex items-center gap-2 px-4 py-2 rounded bg-[#5C7FB8] text-white hover:bg-[#496593] transition"
                 onClick={onRefresh}
                 title=""
                 type="button"

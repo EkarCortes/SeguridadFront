@@ -125,14 +125,14 @@ export const getPersonasColumns = (
             onClick={() => handleEdit(row)}
             title="Editar"
           >
-            <EditIcon className="text-blue-400 hover:text-blue-600" fontSize="small" />
+            <EditIcon className="text-[#5C7FB8] hover:text-[#496593]" fontSize="small" />
           </button>
           <button
             className="p-1 rounded hover:bg-gray-200 0 transition"
             onClick={() => handleDelete(row)}
             title="Eliminar"
           >
-            <DeleteIcon className="text-red-400 hover:text-red-600" fontSize="small" />
+            <DeleteIcon className="text-[#B85C5C] hover:text-[#934949]" fontSize="small" />
           </button>
         </div>
       ),
