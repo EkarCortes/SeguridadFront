@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { usePersons } from "./usePersons";
+import type { ExtendedPersona } from "../../components/table/personasColumns";
 import { agregadosService } from "../../service/agregados/agregadosService";
-import { type ExtendedPersona } from "../../components/table/personasColumns";
 import type { PersonFormData } from "../../types/agregados";
+
 
 export function usePersonManagement() {
   const { persons, totalPersonas, loading, error, refetch } = usePersons();
@@ -49,10 +50,18 @@ export function usePersonManagement() {
     setDeleteUser(user);
   }
 
-  function confirmDelete() {
-    console.log("Eliminar usuario:", deleteUser);
-    setDeleteUser(null);
-    refetch();
+  async function confirmDelete(): Promise<void> {
+    try {
+      if (!deleteUser?.cedula) {
+        throw new Error("La cédula de la persona no puede ser nula.");
+      }
+      await agregadosService.deletePerson(deleteUser.cedula);
+      refetch();
+      setDeleteUser(null);
+    } catch (error) {
+      console.error("Error al eliminar usuario:", error);
+      alert("Error al eliminar la persona. Por favor, intenta nuevamente.");
+    }
   }
 
   function handleSelectPhoto(user: ExtendedPersona) {

@@ -78,7 +78,7 @@ export default function DataTableGeneric<T>({
             placeholder={searchPlaceholder}
             value={searchValue}
             onChange={handleSearchChange}
-            className="rounded bg-[#f3f6fa] text-[#1f364a] px-3 py-2 w-full sm:w-80 border border-[#dbeafe] focus:outline-none focus:ring-2 focus:ring-blue-700"
+            className="rounded bg-[#f3f6fa] text-[#1f364a] px-3 py-2 w-full sm:w-100 border border-[#dbeafe] focus:outline-none focus:ring-2 focus:ring-slate-400"
           />
           
           <div className="flex gap-2 justify-end">

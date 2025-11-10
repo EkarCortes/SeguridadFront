@@ -7,7 +7,8 @@ import ImageModal from "../../components/ImageModal";
 import Modal from "../../components/Modal";
 import EditForm from "../../components/forms/EditForm";
 import AddForm from "../../components/forms/AddForm";
-import { usePersonManagement } from "../../hooks/agregados/usePersonManagement";
+import HoldToConfirmButton from "../../components/HoldToConfirmButton";
+import { usePersonManagement } from '../../hooks/agregados/usePersonManagement';
 
 export default function ListaAgregados() {
   const {
@@ -94,7 +95,7 @@ export default function ListaAgregados() {
       </Modal>
 
       <Modal open={!!deleteUser} onClose={() => setDeleteUser(null)} size="sm" title="Eliminar Persona">
-        <div className="mb-4" style={{ color: "#1f364a" }}>
+        <div className="mb-4" style={{ color: "#fff" }}>
           ¿Seguro que deseas eliminar a <span className="font-bold">{deleteUser?.nombre}</span>?
         </div>
         <div className="flex justify-end gap-2">
@@ -104,12 +105,12 @@ export default function ListaAgregados() {
           >
             Cancelar
           </button>
-          <button
-            className="px-4 py-2 rounded bg-red-700 text-white hover:bg-red-600"
-            onClick={confirmDelete}
-          >
-            Eliminar
-          </button>
+          <HoldToConfirmButton
+            onConfirm={confirmDelete}
+            holdDuration={2000}
+            label="Mantener para Eliminar"
+            holdingLabel="Manteniendo..."
+          />
         </div>
       </Modal>
 
