@@ -60,11 +60,11 @@ export default function DataTableGeneric<T>({
   return (
     <div className="w-full min-h-[400px] p-2 md:p-4 flex items-center justify-center">
       <div
-        className="w-full max-w-6xl bg-white rounded-xl shadow-2xl p-6 flex flex-col gap-6"
+        className="w-full max-w-full bg-white rounded-xl shadow-2xl p-3 md:p-6 flex flex-col gap-4 md:gap-6 overflow-hidden"
         style={{ color: "#1f364a" }}
       >
-        <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-bold" style={{ color: "#1f364a" }}>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+          <h2 className="text-xl md:text-2xl font-bold" style={{ color: "#1f364a" }}>
             {title}
           </h2>
           <div className="text-sm" style={{ color: "#1f364a" }}>
@@ -72,17 +72,16 @@ export default function DataTableGeneric<T>({
           </div>
         </div>
         
-        <div className="flex items-center justify-between mb-2">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-2">
           <input
             type="text"
             placeholder={searchPlaceholder}
             value={searchValue}
             onChange={handleSearchChange}
-            className="rounded bg-[#f3f6fa] text-[#1f364a] px-3 py-2 w-80 border border-[#dbeafe] focus:outline-none focus:ring-2 focus:ring-blue-700"
-            style={{ minWidth: 0 }}
+            className="rounded bg-[#f3f6fa] text-[#1f364a] px-3 py-2 w-full sm:w-80 border border-[#dbeafe] focus:outline-none focus:ring-2 focus:ring-blue-700"
           />
           
-          <div className="flex gap-2">
+          <div className="flex gap-2 justify-end">
             {additionalActions}
             {onRefresh && (
               <button
@@ -97,7 +96,7 @@ export default function DataTableGeneric<T>({
           </div>
         </div>
         
-        <div className="rounded-lg shadow-lg bg-white p-2">
+        <div className="rounded-lg shadow-lg bg-white p-2 overflow-x-auto">
           <DataTable
             columns={columns}
             data={data}
@@ -113,6 +112,7 @@ export default function DataTableGeneric<T>({
             }}
             onChangePage={setCurrentPage}
             paginationDefaultPage={currentPage}
+            responsive
             noDataComponent={
               <div className="py-6 text-center" style={{ color: "#1f364a" }}>
                 {noDataMessage}
