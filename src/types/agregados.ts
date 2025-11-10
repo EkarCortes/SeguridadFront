@@ -35,7 +35,8 @@ export interface PersonFormData {
 // Tipo para los datos que se pueden actualizar de una persona
 export interface PersonUpdateData {
   cedula?: string;
+  nombre?: string;
   email?: string;
   telefono?: string;
-  fotos_nuevas?: File[];
+  photos?: File[];
 }

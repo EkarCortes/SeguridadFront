@@ -35,11 +35,11 @@ export const agregadosService = {
     }
   },
 
-  updatePerson: async (nombre: string, updateData: PersonUpdateData): Promise<any> => {
+  updatePerson: async (cedula: string, updateData: PersonUpdateData): Promise<any> => {
     try {
       const formData = new FormData();
-      if (updateData.cedula) {
-        formData.append('cedula', updateData.cedula);
+      if (updateData.nombre) {
+        formData.append('nombre', updateData.nombre);
       }
       if (updateData.email) {
         formData.append('email', updateData.email);
@@ -47,13 +47,13 @@ export const agregadosService = {
       if (updateData.telefono) {
         formData.append('telefono', updateData.telefono);
       }
-      if (updateData.fotos_nuevas && updateData.fotos_nuevas.length > 0) {
-        updateData.fotos_nuevas.forEach((foto) => {
+      if (updateData.photos && updateData.photos.length > 0) {
+        updateData.photos.forEach((foto) => {
           formData.append('fotos_nuevas', foto);
         });
       }
 
-      const response = await api.put(`/persons/${encodeURIComponent(nombre)}/update`, formData, {
+      const response = await api.put(`/persons/cedula/${encodeURIComponent(cedula)}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -66,5 +66,16 @@ export const agregadosService = {
       }
       throw error;
     }
-  }
+  },
+
+  deletePerson: async (cedula: string): Promise<any> => {
+    try {
+      const response = await api.delete(`/persons/cedula/${encodeURIComponent(cedula)}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+
 };

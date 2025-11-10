@@ -3,7 +3,6 @@ import FormField from "../FormField";
 import FileUpload from "../FileUpload";
 import { useFileUpload } from "../../hooks/useFileUpload";
 import { type ExtendedPersona } from "../table/personasColumns";
-import api from "../../config/apiconfig";
 import image from "../../assets/noUser.jpg";
 
 // Este componente se utiliza para editar la información de una persona existente, permitiendo modificar campos como cédula, email, teléfono y cargar nuevas fotos.
@@ -60,22 +59,24 @@ export default function EditForm({ initial, onSave, onCancel }: EditFormProps) {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full">
       <div className="flex flex-col md:flex-row gap-2 w-full">
+      <FormField
+          label="Cédula"
+          name="cedula"
+          value={form.cedula}
+          onChange={handleChange}
+          disabled
+          className="w-full"
+        />
         <FormField
           label="Nombre"
           name="nombre"
           value={form.nombre}
           onChange={handleChange}
-          disabled
+          
           helperText="El nombre no se puede modificar"
           className="w-full"
         />
-        <FormField
-          label="Cédula"
-          name="cedula"
-          value={form.cedula}
-          onChange={handleChange}
-          className="w-full"
-        />
+       
       </div>
 
       <div className="flex flex-col md:flex-row gap-2 w-full">

@@ -32,7 +32,10 @@ export function usePersonManagement() {
 
   async function handleSaveEdit(data: ExtendedPersona, updateData: any) {
     try {
-      await agregadosService.updatePerson(data.nombre, updateData);
+      if (!data.cedula) {
+        throw new Error("La cédula de la persona no puede ser nula.");
+      }
+      await agregadosService.updatePerson(data.cedula, updateData);
       console.log("Usuario actualizado exitosamente:", data);
       setEditUser(null);
       refetch();
