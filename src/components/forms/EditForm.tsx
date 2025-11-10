@@ -103,7 +103,7 @@ export default function EditForm({ initial, onSave, onCancel }: EditFormProps) {
         <div className="mb-3">
           {initial.foto_url && (
             <img
-              src={`${api}/${initial.foto_url.replace(/^\/+/, "")}`}
+              src={`${initial.foto_url.replace(/^\/+/, "")}`}
               alt={initial.nombre}
               className="w-20 h-20 rounded-lg object-cover border-2 border-[#303036]"
               onError={(e) => {
