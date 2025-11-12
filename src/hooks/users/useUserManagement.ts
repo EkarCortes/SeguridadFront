@@ -90,9 +90,8 @@ const MOCK_USERS: User[] = [
 export const useUserManagement = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error] = useState<string | null>(null);
   const [search, setSearch] = useState('');
-  const [editUser, setEditUser] = useState<User | null>(null);
   const [deleteUser, setDeleteUser] = useState<User | null>(null);
   const [addModal, setAddModal] = useState(false);
 
@@ -123,33 +122,8 @@ export const useUserManagement = () => {
 
   const totalUsers = filteredUsers.length;
 
-  // Handlers
-  const handleEdit = (user: User) => {
-    setEditUser(user);
-  };
+ 
 
-  const handleSaveEdit = async (updatedUser: User) => {
-    try {
-      setLoading(true);
-      
-      // Simular delay de red
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      setUsers(prevUsers =>
-        prevUsers.map(user =>
-          user.id === updatedUser.id ? updatedUser : user
-        )
-      );
-      
-      setEditUser(null);
-     showCustomToast('Éxito', 'Usuario actualizado exitosamente', 'success');
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Error desconocido';
-      toast.error(errorMessage);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleDelete = (user: User) => {
     setDeleteUser(user);
@@ -178,7 +152,7 @@ export const useUserManagement = () => {
     }
   };
 
-  const handleAddUser = async (newUserData: Omit<User, 'id' | 'fecha_registro'>) => {
+  const handleAddUser = async (newUserData: Omit<User, 'id'>) => {
     try {
       setLoading(true);
       
@@ -216,18 +190,14 @@ export const useUserManagement = () => {
     totalUsers,
     loading,
     error,
-    editUser,
     deleteUser,
     addModal,
     search,
-    handleEdit,
-    handleSaveEdit,
     handleDelete,
     confirmDelete,
     handleAddUser,
     setSearch,
     setAddModal,
-    setEditUser,
     setDeleteUser,
     refetch,
   };

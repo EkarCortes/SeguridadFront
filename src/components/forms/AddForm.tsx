@@ -108,7 +108,7 @@ export default function AddForm({ onSave, onCancel }: AddFormProps) {
       <div className="flex flex-col sm:flex-row justify-end gap-2 mt-4 w-full">
         <button
           type="button"
-          className="px-4 py-2 rounded bg-neutral-600 text-white hover:bg-neutral-500 transition w-full sm:w-auto"
+          className="px-2 py-1 rounded bg-neutral-600 text-white hover:bg-neutral-500 transition w-full text-lg font-semibold"
           onClick={onCancel}
           disabled={isSubmitting}
         >
@@ -116,7 +116,7 @@ export default function AddForm({ onSave, onCancel }: AddFormProps) {
         </button>
         <button
           type="submit"
-          className="px-4 py-2 rounded bg-green-700 text-white hover:bg-green-600 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 w-full sm:w-auto"
+          className="px-2 py-2 rounded bg-[#6FBF73] text-white hover:bg-[#58985C] transition w-full text-lg font-semibold"
           disabled={isSubmitting}
         >
           {isSubmitting ? (

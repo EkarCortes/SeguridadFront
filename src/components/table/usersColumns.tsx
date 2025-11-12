@@ -1,5 +1,4 @@
 import { type TableProps } from "react-data-table-component";
-import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import { convertToCostaRicaTime } from "../../utils/dateUtils";
@@ -11,7 +10,6 @@ interface ExtendedUser extends User {
 }
 
 export const getUsersColumns = (
-  handleEdit: (row: ExtendedUser) => void,
   handleDelete: (row: ExtendedUser) => void,
   handleSelectPhoto: (imageUrl: string, alt: string) => void
 ): TableProps<ExtendedUser>["columns"] => [
@@ -68,8 +66,8 @@ export const getUsersColumns = (
       <span 
         className={`px-3 py-1 text-xs font-bold rounded ${
           row.rol === 'admin' 
-            ? 'bg-purple-100 text-purple-800' 
-            : 'bg-blue-100 text-blue-800'
+            ? 'bg-[#F3E8FF] text-[#7E22CE]' 
+            : 'bg-blue-100 text-[#496593]'
         }`}
       >
         {row.rol === 'admin' ? 'Administrador' : 'Usuario'}
@@ -107,13 +105,7 @@ export const getUsersColumns = (
     name: "Acciones",
     cell: (row) => (
       <div className="flex gap-2">
-        <button
-          className="p-1 rounded hover:bg-gray-200 transition"
-          onClick={() => handleEdit(row)}
-          title="Editar"
-        >
-          <EditIcon className="text-[#5C7FB8] hover:text-[#496593]" fontSize="small" />
-        </button>
+        
         <button
           className="p-1 rounded hover:bg-gray-200 transition"
           onClick={() => handleDelete(row)}

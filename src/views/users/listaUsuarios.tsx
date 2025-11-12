@@ -5,8 +5,7 @@ import { getUsersColumns } from "../../components/table/usersColumns";
 import { getTableStyles } from "../../styles/tableStyles";
 import ImageModal from "../../components/Ui/ImageModal";
 import Modal from "../../components/Ui/Modal";
-import EditUserForm from "../../components/forms/EditForm";
-import AddUserForm from "../../components/forms/AddForm";
+import AddUserForm from "../../components/forms/AddUserForm";
 import HoldToConfirmButton from "../../components/Ui/HoldToConfirmButton";
 import CustomToaster from "../../components/Ui/CustomToaster";
 import { useUserManagement } from '../../hooks/users/useUserManagement';
@@ -17,18 +16,14 @@ export default function ListaUsuarios() {
     totalUsers,
     loading,
     error,
-    editUser,
     deleteUser,
     addModal,
     search,
-    handleEdit,
-    handleSaveEdit,
     handleDelete,
     confirmDelete,
     handleAddUser,
     setSearch,
     setAddModal,
-    setEditUser,
     setDeleteUser,
     refetch
   } = useUserManagement();
@@ -54,7 +49,7 @@ export default function ListaUsuarios() {
     <>
       <DataTableGeneric
         data={filteredUsers}
-        columns={getUsersColumns(handleEdit, handleDelete, handleSelectPhoto)}
+        columns={getUsersColumns( handleDelete, handleSelectPhoto)}
         totalItems={totalUsers}
         loading={loading}
         error={error}
@@ -85,15 +80,7 @@ export default function ListaUsuarios() {
         />
       </Modal>
 
-      <Modal open={!!editUser} onClose={() => setEditUser(null)} size="md" title="Editar Usuario">
-        {editUser && (
-          <EditUserForm
-            initial={editUser}
-            onSave={handleSaveEdit}
-            onCancel={() => setEditUser(null)}
-          />
-        )}
-      </Modal>
+      
 
       <Modal open={!!deleteUser} onClose={() => setDeleteUser(null)} size="sm" title="Eliminar Usuario">
         <div className="mb-4" style={{ color: "#fff" }}>
