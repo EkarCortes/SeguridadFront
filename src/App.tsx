@@ -6,6 +6,7 @@ import Home from './views/home/home'
 import CustomDrawer from './drawer'
 import ListaAgregados from './views/agregados/listaAgregados';
 import ListaIngresados from './views/ingresados/listaIngresados';
+import ListaUsuarios from './views/users/listaUsuarios';
 import Login from './views/login/login';
 import useAuth from './hooks/auth/useAuth';
 import SessionExpiredModal from './components/SessionExpiredModal';
@@ -56,6 +57,7 @@ function AppContent() {
             <Route path="/home" element={<Home />} />
             <Route path="/listaAgregados" element={<ListaAgregados />} />
             <Route path="/listaIngresados" element={<ListaIngresados />} />
+            <Route path="/user" element={<ListaUsuarios />} />
             <Route path="*" element={<Navigate to="/home" replace />} />
           </Routes>
         </CustomDrawer>

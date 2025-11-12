@@ -1,6 +1,7 @@
 import HomeIcon from "@mui/icons-material/Home";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
+import PersonIcon from '@mui/icons-material/Person';
 
 // Hook para gestionar la configuración del drawer (cajón lateral)
 
@@ -27,6 +28,11 @@ export const useDrawerConfig = () => {
             label: "Ingresados",
             icon: ListAltIcon,
             to: "/listaIngresados",
+        },
+        {
+            label: "Usuarios",
+            icon: PersonIcon,
+            to: "/user",
         },
     ];
 
