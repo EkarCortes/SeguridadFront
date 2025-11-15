@@ -3,9 +3,9 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import { convertToCostaRicaTime } from "../../utils/dateUtils";
 import imagen from "../../assets/noUser.jpg";
-import type { User } from "../../types/users";
+import type {  UserAccount } from "../../types/users";
 
-interface ExtendedUser extends User {
+interface ExtendedUser extends UserAccount {
 
 }
 
@@ -15,9 +15,9 @@ export const getUsersColumns = (
 ): TableProps<ExtendedUser>["columns"] => [
   {
     name: "Foto",
-    selector: (row) => row.foto_url,
+    selector: (row) => row.foto,
     cell: (row) => {
-      const imageUrl = row.foto_url || imagen;
+      const imageUrl = row.foto || imagen;
 
       return (
         <button
@@ -45,6 +45,12 @@ export const getUsersColumns = (
     sortable: false,
   },
   {
+    name: "Username",
+    selector: (row) => row.username,
+    sortable: true,
+    cell: (row) => <span className="font-semibold" style={{ color: "#1f364a" }}>{row.username}</span>,
+  },
+  {
     name: "Nombre",
     selector: (row) => row.nombre,
     sortable: true,
@@ -63,31 +69,37 @@ export const getUsersColumns = (
     selector: (row) => row.rol,
     sortable: true,
     cell: (row) => (
-      <span 
+      <span
         className={`px-3 py-1 text-xs font-bold rounded ${
-          row.rol === 'admin' 
-            ? 'bg-[#1F2937] text-[#D1D5DB]' 
-            : 'bg-[#D1D5DB] text-[#1F2937]' 
+          row.rol === 'admin'
+        ? 'bg-[#1F2937] text-[#D1D5DB]'
+        : row.rol === 'operador'
+        ? 'bg-[#D1D5DB] text-[#1F2937]'
+        : 'bg-[#D1D5DB] text-[#1F2937]'
         }`}
       >
-        {row.rol === 'admin' ? 'Administrador' : 'Usuario'}
+        {row.rol === 'admin'
+          ? 'Administrador'
+          : row.rol === 'operador'
+          ? 'Operador'
+          : 'Guarda'}
       </span>
     ),
   },
   {
     name: "Estado",
-    selector: (row) => row.activo,
+    selector: (row) => row.estado,
     sortable: true,
     cell: (row) => (
       <span
         className={`px-3 py-1 text-xs font-bold ${
-          row.activo
+          row.estado
             ? "bg-[#6FBF73] text-green-100"
             : "bg-[#B85C5C] text-red-100"
         }`}
         style={{ borderRadius: "4px" }}
       >
-        {row.activo ? "Activo" : "Inactivo"}
+        {row.estado ? "Activo" : "Inactivo"}
       </span>
     ),
   },

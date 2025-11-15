@@ -1,26 +1,20 @@
 import { useState, useEffect } from "react";
 import FormField from "../Ui/FormField";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { userService } from "../../service/userService";
+import { showCustomToast } from "../Ui/CustomToaster";
+
+// Este componente maneja el formulario para agregar un nuevo usuario
 
 type AddUserFormData = {
-    id?: number;
+    person_id?: number;
     cedula: string;
     nombre: string;
     email: string;
-    telefono: string;
-    direccion?: string;
     username: string;
     password: string;
-    rol: "admin" | "user" | "viewer";
+    rol: "admin" | "operador" | "guarda";
 };
-
-interface UserSearchResult {
-    cedula: string;
-    nombre: string;
-    email: string;
-    telefono?: string;
-    direccion?: string;
-}
 
 interface AddUserFormProps {
     onSave: (data: AddUserFormData) => void;
@@ -29,67 +23,52 @@ interface AddUserFormProps {
 
 export default function AddUserForm({ onSave, onCancel }: AddUserFormProps) {
     const [formData, setFormData] = useState<AddUserFormData>({
-        id: 0,
         cedula: "",
         nombre: "",
         email: "",
-        telefono: "",
-        direccion: "",
         username: "",
         password: "",
-        rol: "user",
+        rol: "operador",
     });
 
-    const [searchResults, setSearchResults] = useState<UserSearchResult[]>([]);
     const [isSearching, setIsSearching] = useState(false);
-    const [showResults, setShowResults] = useState(false);
     const [searchTimeout, setSearchTimeout] = useState<ReturnType<typeof setTimeout> | null>(null);
     const [showPassword, setShowPassword] = useState(false);
+    const [personFound, setPersonFound] = useState(false);
 
-    // Función para buscar usuarios por cédula
     const searchUserByCedula = async (cedula: string) => {
         if (cedula.length < 3) {
-            setSearchResults([]);
-            setShowResults(false);
+            setPersonFound(false);
+            setFormData(prev => ({
+                ...prev,
+                person_id: undefined,
+                nombre: "",
+                email: "",
+            }));
             return;
         }
 
-
         setIsSearching(true);
         try {
-            const mockData: UserSearchResult[] = [
-                {
-                    cedula: "1234567890",
-                    nombre: "Juan Pérez García",
-                    email: "juan.perez@example.com",
-                    telefono: "0991234567",
-                    direccion: "Av. Principal 123",
-                },
-                {
-                    cedula: "1234567891",
-                    nombre: "María González López",
-                    email: "maria.gonzalez@example.com",
-                    telefono: "0991234568",
-                    direccion: "Calle Secundaria 456",
-                },
-                {
-                    cedula: "1234567892",
-                    nombre: "Carlos Rodríguez Sánchez",
-                    email: "carlos.rodriguez@example.com",
-                    telefono: "0991234569",
-                    direccion: "Av. Los Pinos 789",
-                },
-            ];
-
-            const filtered = mockData.filter(user =>
-                user.cedula.includes(cedula)
-            );
-
-            setSearchResults(filtered);
-            setShowResults(filtered.length > 0);
+            const person = await userService.getPersonByCedula(cedula);
+            
+            setFormData(prev => ({
+                ...prev,
+                person_id: person.person_id,
+                nombre: person.nombre_completo,
+                email: person.email,
+            }));
+            setPersonFound(true);
+            showCustomToast("Éxito", "Persona encontrada", "success");
         } catch (error) {
-            setSearchResults([]);
-            setShowResults(false);
+            setPersonFound(false);
+            setFormData(prev => ({
+                ...prev,
+                person_id: undefined,
+                nombre: "",
+                email: "",
+            }));
+            showCustomToast("Error", "No se encontró ninguna persona con esa cédula", "info");
         } finally {
             setIsSearching(false);
         }
@@ -103,11 +82,16 @@ export default function AddUserForm({ onSave, onCancel }: AddUserFormProps) {
         if (formData.cedula) {
             const timeout = setTimeout(() => {
                 searchUserByCedula(formData.cedula);
-            }, 500);
+            }, 500); // 500ms de debounce
             setSearchTimeout(timeout);
         } else {
-            setSearchResults([]);
-            setShowResults(false);
+            setPersonFound(false);
+            setFormData(prev => ({
+                ...prev,
+                person_id: undefined,
+                nombre: "",
+                email: "",
+            }));
         }
 
         return () => {
@@ -117,19 +101,6 @@ export default function AddUserForm({ onSave, onCancel }: AddUserFormProps) {
         };
     }, [formData.cedula]);
 
-    const handleSelectUser = (user: UserSearchResult) => {
-        setFormData(prev => ({
-            ...prev,
-            cedula: user.cedula,
-            nombre: user.nombre,
-            email: user.email,
-            telefono: user.telefono || "",
-            direccion: user.direccion || "",
-        }));
-        setShowResults(false);
-        setSearchResults([]);
-    };
-
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({
@@ -138,24 +109,43 @@ export default function AddUserForm({ onSave, onCancel }: AddUserFormProps) {
         }));
     };
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        onSave(formData);
-        setFormData({
-            cedula: "",
-            nombre: "",
-            email: "",
-            telefono: "",
-            direccion: "",
-            username: "",
-            password: "",
-            rol: "user",
-        });
+        
+        if (!formData.person_id) {
+            showCustomToast("Error", "Debe buscar y seleccionar una persona válida antes de registrar el usuario", "info");
+            return;
+        }
+
+        try {
+            await userService.registerUser({
+                username: formData.username,
+                password: formData.password,
+                person_id: formData.person_id,
+                rol: formData.rol,
+            });
+            
+      
+            onSave(formData);
+            
+            setFormData({
+                cedula: "",
+                nombre: "",
+                email: "",
+                username: "",
+                password: "",
+                rol: "operador",
+            });
+            setPersonFound(false);
+        } catch (error: any) {
+            const errorMessage = error.response?.data?.message || "Error al registrar usuario";
+            showCustomToast("Error", errorMessage, "error");
+        }
     };
 
     return (
         <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Búsqueda por Cédula */}
+
             <div className="relative mb-4">
                 <FormField
                     label="Buscar por cédula"
@@ -163,31 +153,21 @@ export default function AddUserForm({ onSave, onCancel }: AddUserFormProps) {
                     value={formData.cedula}
                     onChange={handleChange}
                     required
+                    placeholder="Ingrese la cédula"
                 />
                 {isSearching && (
                     <div className="absolute right-3 top-9 text-gray-400">
                         Buscando...
                     </div>
                 )}
-                {showResults && searchResults.length > 0 && (
-                    <div className="absolute z-10 w-full mt-1 bg-[#f3f6fa] border border-gray-600 rounded shadow-lg max-h-60 overflow-y-auto">
-                        {searchResults.map((user) => (
-                            <button
-                                key={user.cedula}
-                                type="button"
-                                onClick={() => handleSelectUser(user)}
-                                className="w-full text-left px-4 py-3 hover:bg-[#f3f6fa] transition border-b border-gray-700 last:border-b-0"
-                            >
-                                <div className="text-[3A3A3A] font-medium">{user.nombre}</div>
-                                <div className="text-gray-600 text-sm">CI: {user.cedula}</div>
-                                <div className="text-gray-700 text-xs">{user.email}</div>
-                            </button>
-                        ))}
+                {personFound && (
+                    <div className="mt-1 text-green-500 text-sm">
+                        ✓ Persona encontrada
                     </div>
                 )}
             </div>
 
-            {/* Campos horizontales */}
+       
             <div className="flex flex-wrap gap-4">
                 <FormField
                     label="Nombre Completo"
@@ -199,15 +179,6 @@ export default function AddUserForm({ onSave, onCancel }: AddUserFormProps) {
                     className="min-w-[220px] flex-1"
                 />
                 <FormField
-                    label="Teléfono"
-                    name="telefono"
-                    value={formData.telefono}
-                    onChange={handleChange}
-                    required
-                    disabled
-                    className="min-w-[180px] flex-1"
-                />
-                <FormField
                     label="Email"
                     name="email"
                     value={formData.email}
@@ -217,9 +188,8 @@ export default function AddUserForm({ onSave, onCancel }: AddUserFormProps) {
                     disabled
                     className="min-w-[220px] flex-1"
                 />
-
-
             </div>
+
             <div className="flex flex-wrap gap-4">
                 <FormField
                     label="Username"
@@ -227,6 +197,7 @@ export default function AddUserForm({ onSave, onCancel }: AddUserFormProps) {
                     value={formData.username}
                     onChange={handleChange}
                     required
+                    placeholder="Nombre de usuario"
                     className="min-w-[180px] flex-1"
                 />
                 
@@ -235,12 +206,10 @@ export default function AddUserForm({ onSave, onCancel }: AddUserFormProps) {
                         label="Contraseña"
                         name="password"
                         value={formData.password}
-                        onChange={e => setFormData(prev => ({
-                            ...prev,
-                            password: (e.target as HTMLInputElement).value,
-                        }))}
+                        onChange={handleChange}
                         type={showPassword ? "text" : "password"}
                         required
+                        placeholder="Mínimo 6 caracteres"
                         className="min-w-[180px] flex-1"
                     />
                     <button
@@ -265,13 +234,14 @@ export default function AddUserForm({ onSave, onCancel }: AddUserFormProps) {
                         required
                         className="w-full rounded px-3 py-2 border border-[#ccc] bg-white text-neutral-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
                     >
-                        <option value="user">Usuario</option>
+                        <option value="operador">Operador</option>
                         <option value="admin">Administrador</option>
-                        <option value="viewer">Visualizador</option>
+                        <option value="guarda">Guarda</option>
                     </select>
                 </div>
             </div>
-            {/* Botones */}
+
+
             <div className="flex flex-col sm:flex-row justify-center gap-4 pt-3 w-full">
                 <button
                     type="button"
@@ -282,7 +252,8 @@ export default function AddUserForm({ onSave, onCancel }: AddUserFormProps) {
                 </button>
                 <button
                     type="submit"
-                    className="px-2 py-2 rounded bg-[#6FBF73] text-white hover:bg-[#58985C] transition w-full text-lg font-semibold"
+                    disabled={!personFound || isSearching}
+                    className="px-2 py-2 rounded bg-[#6FBF73] text-white hover:bg-[#58985C] transition w-full text-lg font-semibold disabled:bg-gray-400 disabled:cursor-not-allowed"
                 >
                     Guardar
                 </button>

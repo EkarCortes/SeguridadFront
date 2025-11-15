@@ -8,3 +8,16 @@ export interface User {
     fecha_registro: string;
     ultimo_login?: string;
   }
+
+  export interface UserAccount {
+    id: number;
+    username: string;
+    foto: string;
+    nombre: string
+    email: string;
+    rol: 'admin' | 'operador' | 'guarda';
+    estado: string;
+    fecha_registro: string;
+    cedula?: number;
+  }
+

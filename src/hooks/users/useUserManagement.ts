@@ -1,114 +1,66 @@
 import { useState, useEffect, useMemo } from 'react';
 import toast from 'react-hot-toast';
-import type { User } from '../../types/users';
 import { showCustomToast } from '../../components/Ui/CustomToaster';
-
-// Datos quemados para pruebas
-const MOCK_USERS: User[] = [
-  {
-    id: 1,
-    nombre: "Juan Pérez",
-    email: "juan.perez@example.com",
-    rol: "admin",
-    activo: true,
-    foto_url: "https://randomuser.me/api/portraits/men/1.jpg",
-    fecha_registro: "2024-01-15T10:30:00Z",
-    ultimo_login: "2024-11-12T08:45:00Z"
-  },
-  {
-    id: 2,
-    nombre: "María García",
-    email: "maria.garcia@example.com",
-    rol: "user",
-    activo: true,
-    foto_url: "https://randomuser.me/api/portraits/women/2.jpg",
-    fecha_registro: "2024-02-20T14:20:00Z",
-    ultimo_login: "2024-11-11T15:30:00Z"
-  },
-  {
-    id: 3,
-    nombre: "Carlos López",
-    email: "carlos.lopez@example.com",
-    rol: "user",
-    activo: false,
-    foto_url: "https://randomuser.me/api/portraits/men/3.jpg",
-    fecha_registro: "2024-03-10T09:15:00Z",
-    ultimo_login: "2024-10-28T12:00:00Z"
-  },
-  {
-    id: 4,
-    nombre: "Ana Martínez",
-    email: "ana.martinez@example.com",
-    rol: "admin",
-    activo: true,
-    foto_url: "https://randomuser.me/api/portraits/women/4.jpg",
-    fecha_registro: "2024-04-05T11:45:00Z",
-    ultimo_login: "2024-11-12T09:20:00Z"
-  },
-  {
-    id: 5,
-    nombre: "Pedro Rodríguez",
-    email: "pedro.rodriguez@example.com",
-    rol: "user",
-    activo: true,
-    foto_url: "https://randomuser.me/api/portraits/men/5.jpg",
-    fecha_registro: "2024-05-18T16:30:00Z",
-    ultimo_login: "2024-11-10T14:15:00Z"
-  },
-  {
-    id: 6,
-    nombre: "Laura Fernández",
-    email: "laura.fernandez@example.com",
-    rol: "user",
-    activo: true,
-    foto_url: "https://randomuser.me/api/portraits/women/6.jpg",
-    fecha_registro: "2024-06-22T13:00:00Z",
-    ultimo_login: "2024-11-12T10:30:00Z"
-  },
-  {
-    id: 7,
-    nombre: "Roberto Sánchez",
-    email: "roberto.sanchez@example.com",
-    rol: "user",
-    activo: false,
-    foto_url: "https://randomuser.me/api/portraits/women/8.jpg",
-    fecha_registro: "2024-07-14T10:00:00Z",
-    ultimo_login: "2024-09-15T08:00:00Z"
-  },
-  {
-    id: 8,
-    nombre: "Sofia Torres",
-    email: "sofia.torres@example.com",
-    rol: "admin",
-    activo: true,
-    foto_url: "https://randomuser.me/api/portraits/women/8.jpg",
-    fecha_registro: "2024-08-30T12:30:00Z",
-    ultimo_login: "2024-11-12T07:45:00Z"
-  }
-];
+import { userService } from '../../service/userService';
+import type { UserAccount } from '../../types/users';
 
 export const useUserManagement = () => {
-  const [users, setUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState<UserAccount[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState('');
-  const [deleteUser, setDeleteUser] = useState<User | null>(null);
+  const [deleteUser, setDeleteUser] = useState<UserAccount | null>(null);
   const [addModal, setAddModal] = useState(false);
+  
 
-  // Simular carga de datos
-  useEffect(() => {
-    const loadUsers = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalUsers, setTotalUsers] = useState(0);
+  const [limit] = useState(10);
+
+
+  const loadUsers = async (page: number = 1) => {
+    try {
       setLoading(true);
-      setTimeout(() => {
-        setUsers(MOCK_USERS);
-        setLoading(false);
-      }, 800);
-    };
+      setError(null);
+      
+      const response = await userService.getUsers({ page, limit });
+      
+      if (response.success) {
 
-    loadUsers();
-  }, []);
+        const mappedUsers: UserAccount[] = response.data.map(user => ({
+          id: user.id,
+          cedula: user.cedula, 
+          username: user.username,
+          foto: user.foto ?? '', 
+          nombre: user.nombre,
+          email: user.email,
+          rol: user.rol as 'admin' | 'operador' | 'guarda',
+          estado: user.estado, 
+          fecha_registro: user.fecha_registro,
+          
+        }));
+        
+        setUsers(mappedUsers);
+        console.log('Usuarios cargados:', mappedUsers);
+        setCurrentPage(response.pagination.page);
+        setTotalPages(response.pagination.totalPages);
+        setTotalUsers(response.pagination.total);
+      }
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Error al cargar usuarios';
+      setError(errorMessage);
+      toast.error(errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  // Filtrar usuarios
+  useEffect(() => {
+    loadUsers(currentPage);
+  }, [currentPage]);
+
+
   const filteredUsers = useMemo(() => {
     if (!search.trim()) return users;
     
@@ -120,12 +72,7 @@ export const useUserManagement = () => {
     );
   }, [users, search]);
 
-  const totalUsers = filteredUsers.length;
-
- 
-
-
-  const handleDelete = (user: User) => {
+  const handleDelete = (user: UserAccount) => {
     setDeleteUser(user);
   };
 
@@ -134,42 +81,33 @@ export const useUserManagement = () => {
 
     try {
       setLoading(true);
-      
-      // Simular delay de red
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      setUsers(prevUsers =>
-        prevUsers.filter(user => user.id !== deleteUser.id)
-      );
+      await userService.deleteUser(deleteUser.cedula!);
       
       setDeleteUser(null);
       showCustomToast('Éxito', 'Usuario eliminado exitosamente', 'success');
+      
+
+      await loadUsers(currentPage);
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Error desconocido';
+      const errorMessage = err instanceof Error ? err.message : 'Error al eliminar usuario';
       toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleAddUser = async (newUserData: Omit<User, 'id'>) => {
+  const handleAddUser = async () => {
     try {
       setLoading(true);
       
-      // Simular delay de red
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      const newUser: User = {
-        ...newUserData,
-        id: Math.max(...users.map(u => u.id), 0) + 1,
-        fecha_registro: new Date().toISOString(),
-      };
-      
-      setUsers(prevUsers => [...prevUsers, newUser]);
+
       setAddModal(false);
       showCustomToast('Éxito', 'Usuario agregado exitosamente', 'success');
+      
+ 
+      await loadUsers(currentPage);
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Error desconocido';
+      const errorMessage = err instanceof Error ? err.message : 'Error al agregar usuario';
       toast.error(errorMessage);
     } finally {
       setLoading(false);
@@ -177,12 +115,25 @@ export const useUserManagement = () => {
   };
 
   const refetch = () => {
-    setLoading(true);
-    setTimeout(() => {
-      setUsers([...MOCK_USERS]);
-      setLoading(false);
-      showCustomToast('Éxito', 'Datos recargados correctamente', 'success');
-    }, 500);
+    loadUsers(currentPage);
+  };
+
+  const goToPage = (page: number) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
+  const nextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(prev => prev + 1);
+    }
+  };
+
+  const prevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(prev => prev - 1);
+    }
   };
 
   return {
@@ -193,6 +144,8 @@ export const useUserManagement = () => {
     deleteUser,
     addModal,
     search,
+    currentPage,
+    totalPages,
     handleDelete,
     confirmDelete,
     handleAddUser,
@@ -200,5 +153,8 @@ export const useUserManagement = () => {
     setAddModal,
     setDeleteUser,
     refetch,
+    goToPage,
+    nextPage,
+    prevPage,
   };
 };
