@@ -66,8 +66,8 @@ export const getUsersColumns = (
       <span 
         className={`px-3 py-1 text-xs font-bold rounded ${
           row.rol === 'admin' 
-            ? 'bg-[#F3E8FF] text-[#7E22CE]' 
-            : 'bg-blue-100 text-[#496593]'
+            ? 'bg-[#1F2937] text-[#D1D5DB]' 
+            : 'bg-[#D1D5DB] text-[#1F2937]' 
         }`}
       >
         {row.rol === 'admin' ? 'Administrador' : 'Usuario'}
