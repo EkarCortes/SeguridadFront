@@ -105,11 +105,11 @@ export const getUsersColumns = (
   },
   {
     name: "Fecha Registro",
-    selector: (row) => row.fecha_registro,
+    selector: (row) => row.estado_registro,
     sortable: true,
     cell: (row) => (
       <span style={{ color: "#1f364a" }}>
-        {convertToCostaRicaTime(row.fecha_registro).fechaFormatted}
+        {convertToCostaRicaTime(row.estado_registro).fechaFormatted}
       </span>
     ),
   },

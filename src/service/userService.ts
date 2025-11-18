@@ -16,7 +16,7 @@ interface UserResponse {
     email: string;
     rol: string;
     estado: string;
-    fecha_registro: string;
+    estado_registro: string;
   }>;
   pagination: {
     total: number;

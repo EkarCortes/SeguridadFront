@@ -17,7 +17,7 @@ export interface User {
     email: string;
     rol: 'admin' | 'operador' | 'guarda';
     estado: string;
-    fecha_registro: string;
+    estado_registro: string;
     cedula?: number;
   }
 

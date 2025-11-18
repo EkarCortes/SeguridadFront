@@ -37,7 +37,8 @@ export const useUserManagement = () => {
           email: user.email,
           rol: user.rol as 'admin' | 'operador' | 'guarda',
           estado: user.estado, 
-          fecha_registro: user.fecha_registro,
+          estado_registro: user.estado_registro,
+          
           
         }));
         
