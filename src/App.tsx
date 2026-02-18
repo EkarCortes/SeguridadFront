@@ -63,7 +63,7 @@ function AppContent() {
         </CustomDrawer>
       ) : (
         <Routes>
-          <Route path="/login/changePassword" element={<ChangePassword />} />
+         <Route path="/home" element={<Home />} />
           <Route path="*" element={<Login onLogin={() => window.location.reload()} />} />
         </Routes>
       )}
