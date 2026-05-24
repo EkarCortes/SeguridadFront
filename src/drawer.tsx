@@ -10,9 +10,7 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Divider from "@mui/material/Divider";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import LogoutIcon from "@mui/icons-material/Logout";
-import MenuIcon from "@mui/icons-material/Menu";
+import { PanelLeftOpen, PanelLeftClose, LogOut } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useDrawer } from "./hooks/drawer/useDrawer";
 import { useDrawerConfig } from "./hooks/drawer/useDrawerConfig";
@@ -77,14 +75,16 @@ export default function CustomDrawer({ onLogout, children }: CustomDrawerProps) 
         borderRadius: 2,
         mb: 1,
         justifyContent: open ? "initial" : "center",
-        px: 2.5,
+        px: open ? 2.5 : 1.5,
         color: isActive ? accentColor : mutedText,
         background: isActive ? selectedBg : "transparent",
         "&:hover": {
-            background: selectedBg,
+            background: isActive ? selectedBg : "transparent",
             color: accentColor,
+            transform: open ? "translateX(2px)" : "scale(1.06)",
+            opacity: 0.95,
         },
-        transition: "background 0.2s, color 0.2s",
+        transition: "background 0.2s, color 0.2s, transform 0.15s ease, opacity 0.15s ease",
     });
 
     const getIconStyles = () => ({
@@ -103,7 +103,7 @@ export default function CustomDrawer({ onLogout, children }: CustomDrawerProps) 
 
     return (
         <>
-            <Box sx={{ display: "flex" }}>
+            <Box className="drawer-layout">
                 {/* Botón hamburguesa */}
                 {!open && (
                     <Box sx={hamburgerButtonStyles}>
@@ -111,12 +111,24 @@ export default function CustomDrawer({ onLogout, children }: CustomDrawerProps) 
                             color="inherit"
                             aria-label="open drawer"
                             onClick={handleOpenDrawer}
+                            disableRipple
+                            disableFocusRipple
+                            disableTouchRipple
                             sx={{
                                 color: accentColor,
-                                "&:hover": { background: selectedBg, color: accentColor },
+                                background: "transparent",
+                                "&:hover": {
+                                    background: "transparent",
+                                    color: accentColor,
+                                    transform: "scale(1.08)",
+                                    opacity: 0.9,
+                                },
+                                "&:active": { background: "transparent" },
+                                "&.Mui-focusVisible": { background: "transparent" },
+                                transition: "transform 0.15s ease, opacity 0.15s ease",
                             }}
                         >
-                            <MenuIcon />
+                            <PanelLeftOpen size={22} strokeWidth={1.6} />
                         </IconButton>
                     </Box>
                 )}
@@ -134,9 +146,12 @@ export default function CustomDrawer({ onLogout, children }: CustomDrawerProps) 
                                 color="inherit"
                                 aria-label="close drawer"
                                 onClick={handleCloseDrawer}
+                                disableRipple
+                                disableFocusRipple
+                                disableTouchRipple
                                 sx={closeButtonStyles}
                             >
-                                <ChevronLeftIcon />
+                                <PanelLeftClose size={22} strokeWidth={1.6} />
                             </IconButton>
                         )}
                     </DrawerHeader>
@@ -147,6 +162,7 @@ export default function CustomDrawer({ onLogout, children }: CustomDrawerProps) 
                         <List>
                             {routeGroups.map((route) => {
                                 const isActive = location.pathname === route.to;
+                                const RouteIcon = route.icon;
                                 return (
                                     <ListItem disablePadding sx={{ display: "block" }} key={route.label}>
                                         <ListItemButton
@@ -156,7 +172,7 @@ export default function CustomDrawer({ onLogout, children }: CustomDrawerProps) 
                                             sx={getNavigationItemStyles(isActive)}
                                         >
                                             <ListItemIcon sx={getIconStyles()}>
-                                                {<route.icon />}
+                                                <RouteIcon size={20} strokeWidth={1.6} />
                                             </ListItemIcon>
                                             <ListItemText
                                                 primary={route.label}
@@ -196,28 +212,20 @@ export default function CustomDrawer({ onLogout, children }: CustomDrawerProps) 
                         >
                             {open ? (
                                 <>
-                                    <LogoutIcon sx={{ mr: 1 }} />
+                                    <Box sx={{ display: "inline-flex", mr: 1 }}>
+                                        <LogOut size={18} strokeWidth={1.6} />
+                                    </Box>
                                     {logoutLoading ? 'Cerrando...' : 'Cerrar sesión'}
                                 </>
                             ) : (
-                                <LogoutIcon />
+                                <LogOut size={20} strokeWidth={1.6} />
                             )}
                         </Box>
                     </Box>
                 </MuiDrawer>
 
-                <Box sx={mainContentStyles}>
-                    <Box
-                        sx={{
-                            flex: 1,
-                            width: "100%",
-                            height: "100%",
-                            display: "flex",
-                            alignItems: "stretch",
-                            justifyContent: "flex-start",
-                            background: "transparent",
-                        }}
-                    >
+                <Box sx={mainContentStyles} className="drawer-content">
+                    <Box className="drawer-panel">
                         {children}
                     </Box>
                 </Box>

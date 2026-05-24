@@ -45,6 +45,11 @@ export const authService = {
     return response.data;
   },
 
+  async refresh(refreshToken: string): Promise<AuthResponse> {
+    const response = await api.post('/auth/refresh', { refreshToken });
+    return response.data;
+  },
+
   async logout(): Promise<void> {
     try {
       

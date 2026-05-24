@@ -5,10 +5,12 @@ import { useEffect } from 'react';
 export const useDrawerStyles = (
     drawerWidth: number,
     accentColor: string,
-    selectedBg: string,
+    _selectedBg: string,
     open: boolean,
     isMobile: boolean
 ) => {
+    const collapsedWidth = 56;
+
     // Aplicar estilos globales al body para evitar el fondo blanco
     useEffect(() => {
         document.body.style.backgroundColor = "#18181b";
@@ -23,17 +25,16 @@ export const useDrawerStyles = (
 
     const hamburgerButtonStyles = {
         position: "fixed" as const,
-        top: 20,
-        left: 15,
+        top: 18,
+        left: 0,
+        width: collapsedWidth,
         zIndex: 1401,
-        background: "rgb(117, 116, 116)",
-        borderRadius: "50%",
-        display: "block",
-        "&:hover": {
-            transform: "scale(1.05)",
-            
-        },
-        transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+        display: "flex",
+        background: "transparent",
+        borderRadius: 0,
+        transition: "none",
+        alignItems: "center",
+        justifyContent: "center",
     };
 
     const drawerStyles = {
@@ -43,12 +44,12 @@ export const useDrawerStyles = (
             color: accentColor,
             border: "none",
             overflowX: "hidden",
-            borderRight: "1px solid #0F172A",
+            borderRight: "1px solid #262c3e",
             ...(isMobile && {
                 width: drawerWidth,
             }),
             ...(!isMobile && {
-                width: open ? drawerWidth : 72,
+                width: open ? drawerWidth : collapsedWidth,
                 transition: "width 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
                 position: "fixed",
                 top: 0,
@@ -64,16 +65,18 @@ export const useDrawerStyles = (
         position: "absolute" as const,
         top: 20,
         right: 20,
-        background: "rgb(184, 184, 184)",
+        background: "transparent",
         color: accentColor,
-        borderRadius: "50%",
-        backdropFilter: "blur(8px)",
+        borderRadius: 0,
+        backdropFilter: "none",
         "&:hover": { 
-            background: selectedBg,
-            color: accentColor,
-            transform: "scale(1.06)",
+            background: "transparent",
+            transform: "none",
         },
-        transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
+        "&.Mui-focusVisible": {
+            background: "transparent",
+        },
+        transition: "none",
         width: 38,
         height: 38,
     };
@@ -85,24 +88,23 @@ export const useDrawerStyles = (
         px: open ? 2 : 1,
         mt: 3,
         height: `calc(100vh - 100px - 16px - 90px)`,
-        "&::-webkit-scrollbar": { 
-            width: "6px",
-            borderRadius: "3px",
+        "&::-webkit-scrollbar": {
+            width: "8px",
         },
         "&::-webkit-scrollbar-track": {
-            background: "rgb(0, 255, 179)",
-            borderRadius: "3px",
-            margin: "8px 0",
+            background: "rgba(255, 255, 255, 0.06)",
+            borderRadius: "999px",
+            margin: "10px 0",
         },
-        "&::-webkit-scrollbar-thumb": { 
-            background: "linear-gradient(180deg, #4a4a55 0%, #2a2a30 100%)",
-            borderRadius: "3px",
+        "&::-webkit-scrollbar-thumb": {
+            background: "rgba(255, 255, 255, 0.22)",
+            borderRadius: "999px",
             "&:hover": {
-                background: "linear-gradient(180deg, #5a5a65 0%, #3a3a40 100%)",
+                background: "rgba(255, 255, 255, 0.32)",
             }
         },
         scrollbarWidth: "thin" as const,
-        scrollbarColor: `#4a4a55 transparent`,
+        scrollbarColor: "rgba(255, 255, 255, 0.22) rgba(255, 255, 255, 0.06)",
     };
 
     const logoutButtonStyles = {
@@ -141,10 +143,10 @@ export const useDrawerStyles = (
         width: "100%",
         display: "flex",
         flexDirection: "column" as const,
-        ml: { xs: 0, sm: open ? `${drawerWidth}px` : "72px" },
+        ml: { xs: 0, sm: open ? `${drawerWidth}px` : `${collapsedWidth}px` },
         transition: "margin-left 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
-        background: "#e4e7f7",
-        p: { xs: 2, sm: 4 },
+        background: "transparent",
+        p: 0,
        
     };
 

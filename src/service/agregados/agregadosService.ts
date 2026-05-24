@@ -1,5 +1,4 @@
 import api from '../../config/apiconfig';
-import apiPy from '../../config/apipython';
 import type { PersonsResponse, PersonFormData, PersonUpdateData } from '../../types/agregados';
 
 // Servicio para gestionar las operaciones relacionadas con personas, incluyendo obtención, registro, actualización y eliminación.
@@ -7,7 +6,9 @@ import type { PersonsResponse, PersonFormData, PersonUpdateData } from '../../ty
 export const agregadosService = {
   getPersons: async (): Promise<PersonsResponse> => {
     try {
+     
       const response = await api.get('/persons');
+       console.log('Fet ', response.data);
       return response.data;
     } catch (error) {
       throw error;
@@ -24,8 +25,8 @@ export const agregadosService = {
       personData.fotos.forEach((foto) => {
         formData.append('fotos', foto);
       });
-
-      const response = await apiPy.post('/persons/register', formData, {
+     console.log('Fet ', formData);
+      const response = await api.post('/persons/register', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

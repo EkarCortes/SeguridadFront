@@ -1,7 +1,4 @@
-import HomeIcon from "@mui/icons-material/Home";
-import ListAltIcon from "@mui/icons-material/ListAlt";
-import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
-import PersonIcon from '@mui/icons-material/Person';
+import { Home, ListChecks, List, Users } from "lucide-react";
 
 // Hook para gestionar la configuración del drawer (cajón lateral)
 
@@ -16,22 +13,22 @@ export const useDrawerConfig = () => {
     const routeGroups = [
         {
             label: "Inicio",
-            icon: HomeIcon,
+            icon: Home,
             to: "/main",
         },
         {
             label: "Agregados",
-            icon: PlaylistAddCheckIcon,
+            icon: ListChecks,
             to: "/listaAgregados",
         },
         {
             label: "Ingresados",
-            icon: ListAltIcon,
+            icon: List,
             to: "/listaIngresados",
         },
         {
             label: "Usuarios",
-            icon: PersonIcon,
+            icon: Users,
             to: "/user",
         },
     ];
