@@ -100,7 +100,11 @@ const DonutChart: React.FC<DonutChartProps> = ({ monthlyData, loading, error }) 
                 />
               ))}
             </Pie>
-            <Tooltip content={<CustomTooltip />} />
+            <Tooltip
+              content={<CustomTooltip />}
+              wrapperStyle={{ zIndex: 50, outline: "none" }}
+              position={{ y: -70 }}
+            />
           </PieChart>
         </ResponsiveContainer>
 
