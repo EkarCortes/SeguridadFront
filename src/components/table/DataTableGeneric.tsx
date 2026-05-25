@@ -1,13 +1,10 @@
-import { useState } from "react";
-import DataTable, { type TableProps } from "react-data-table-component";
-import RefreshIcon from "@mui/icons-material/Refresh";
-import LoadingSpinner from "../Ui/Spinner";
+import { Search, RefreshCw } from 'lucide-react';
+import type { ColumnProps } from 'primereact/column';
+import DataTableProp from './DataTableProp';
 
-// Este componente es una tabla genérica reutilizable con funcionalidades comunes como búsqueda, paginación y manejo de estados de carga y error, utilizado en las paginas de listaAgregados y listaVerificaciones.
-
-interface DataTableGenericProps<T> {
-  data: T[];
-  columns: TableProps<T>["columns"];
+interface DataTableGenericProps {
+  data: any[];
+  columns: (ColumnProps & { field: string })[];
   totalItems: number;
   loading?: boolean;
   error?: string | null;
@@ -15,14 +12,14 @@ interface DataTableGenericProps<T> {
   onSearchChange: (value: string) => void;
   onRefresh?: () => void;
   title: string;
+  subtitle?: string;
   searchPlaceholder: string;
-  noDataMessage: string;
-  rowsPerPage?: number;
+  rows?: number;
   additionalActions?: React.ReactNode;
-  customStyles?: any;
+  onRowDelete?: (id: number) => void;
 }
 
-export default function DataTableGeneric<T>({
+export default function DataTableGeneric({
   data,
   columns,
   totalItems,
@@ -32,94 +29,87 @@ export default function DataTableGeneric<T>({
   onSearchChange,
   onRefresh,
   title,
+  subtitle,
   searchPlaceholder,
-  noDataMessage,
-  rowsPerPage = 10,
+  rows = 10,
   additionalActions,
-  customStyles
-}: DataTableGenericProps<T>) {
-  const [currentPage, setCurrentPage] = useState(1);
-
-  function handleSearchChange(e: React.ChangeEvent<HTMLInputElement>) {
-    onSearchChange(e.target.value);
-    setCurrentPage(1);
-  }
-
-  if (loading) {
-    return <LoadingSpinner  size="md" />;
-  }
-
+  onRowDelete,
+}: DataTableGenericProps) {
   if (error) {
     return (
-      <div className="w-full min-h-[400px] p-2 md:p-4 flex items-center justify-center">
-        <div className="text-red-400 text-lg">Error: {error}</div>
+      <div className="w-full flex items-center justify-center py-20">
+        <span className="text-red-400 text-sm font-medium">{error}</span>
       </div>
     );
   }
 
   return (
-    <div className="w-full min-h-[400px] p-2 md:p-4 flex items-center justify-center">
-      <div
-        className="w-full max-w-full bg-white rounded-xl shadow-2xl p-3 md:p-6 flex flex-col gap-4 md:gap-6 overflow-hidden"
-        style={{ color: "#1f364a" }}
-      >
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-          <h2 className="text-xl md:text-2xl font-bold" style={{ color: "#1f364a" }}>
+    <div className="w-full flex flex-col gap-5 p-2 md:p-4">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-start gap-4">
+        <div className="flex-1 min-w-0">
+          <h1
+            className="text-2xl font-bold text-slate-900 leading-tight"
+            style={{ fontFamily: "'Manrope', sans-serif" }}
+          >
             {title}
-          </h2>
-          <div className="text-sm" style={{ color: "#1f364a" }}>
-            Total: {totalItems} {totalItems !== 1 ? 'elementos' : 'elemento'}
+          </h1>
+          {subtitle && (
+            <p
+              className="text-sm text-slate-500 mt-1"
+              style={{ fontFamily: "'Inter', sans-serif" }}
+            >
+              {subtitle}
+            </p>
+          )}
+        </div>
+
+        <div className="flex items-center gap-2 flex-shrink-0">
+          {onRefresh && (
+            <button
+              onClick={onRefresh}
+              className="flex items-center gap-2 px-4 h-9 rounded-xl border border-slate-200 bg-white text-slate-600 text-sm font-medium hover:bg-slate-50 transition"
+              style={{ fontFamily: "'Inter', sans-serif" }}
+              type="button"
+            >
+              <RefreshCw size={14} />
+              Actualizar
+            </button>
+          )}
+          {additionalActions}
+        </div>
+      </div>
+
+      {/* Card */}
+      <div className="w-full bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        {/* Search bar */}
+        <div className="px-5 py-4 border-b border-slate-100">
+          <div className="relative">
+            <Search
+              size={15}
+              className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"
+            />
+            <input
+              type="text"
+              placeholder={searchPlaceholder}
+              value={searchValue}
+              onChange={(e) => onSearchChange(e.target.value)}
+              className="w-full pl-10 pr-4 h-10 text-sm bg-slate-50 border border-slate-200 rounded-xl text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-200 focus:bg-white transition"
+              style={{ fontFamily: "'Inter', sans-serif" }}
+            />
           </div>
         </div>
-        
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-2">
-          <input
-            type="text"
-            placeholder={searchPlaceholder}
-            value={searchValue}
-            onChange={handleSearchChange}
-            className="rounded bg-[#f3f6fa] text-[#1f364a] px-3 py-2 w-full sm:w-100 border border-[#dbeafe] focus:outline-none focus:ring-2 focus:ring-slate-400"
-          />
-          
-          <div className="flex gap-2 justify-end">
-            {additionalActions}
-            {onRefresh && (
-              <button
-                className="flex items-center gap-2 px-4 py-2 rounded bg-[#5C7FB8] text-white hover:bg-[#496593] transition"
-                onClick={onRefresh}
-                title=""
-                type="button"
-              >
-             <RefreshIcon fontSize="small" />
-              </button>
-            )}
-          </div>
-        </div>
-        
-        <div className="rounded-lg shadow-lg bg-white p-2 overflow-x-auto">
-          <DataTable
-            columns={columns}
-            data={data}
-            customStyles={customStyles}
-            pagination
-            paginationPerPage={rowsPerPage}
-            paginationRowsPerPageOptions={[rowsPerPage]}
-            paginationComponentOptions={{
-              rowsPerPageText: "Filas por página",
-              rangeSeparatorText: "de",
-              noRowsPerPage: true,
-              selectAllRowsItem: false,
-            }}
-            onChangePage={setCurrentPage}
-            paginationDefaultPage={currentPage}
-            responsive
-            noDataComponent={
-              <div className="py-6 text-center" style={{ color: "#1f364a" }}>
-                {noDataMessage}
-              </div>
-            }
-          />
-        </div>
+
+        <DataTableProp
+          value={data}
+          loading={loading}
+          columns={columns}
+          rows={rows}
+          totalRecords={totalItems}
+          recordsReportLabel="registros"
+          onRowDelete={onRowDelete}
+          scrollHeight="auto"
+        />
       </div>
     </div>
   );

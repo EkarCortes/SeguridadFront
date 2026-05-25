@@ -1,102 +1,98 @@
-import { type TableProps } from "react-data-table-component";
+import type { ColumnProps } from 'primereact/column';
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import { convertToCostaRicaTime } from "../../utils/dateUtils";
-interface ExtendedVerificacion extends Verificacion {}
 import imagen from "../../assets/noUser.jpg";
 import type { Verificacion } from "../../types/ingresados";
 
-// Este componente se utiliza para definir las columnas de la tabla de personas, utilizado en las paginas lista de verificaciones.
+interface ExtendedVerificacion extends Verificacion {}
 
 export const getVerificacionesColumns = (
   handleSelectPhoto: (imageUrl: string, alt: string) => void
-): TableProps<ExtendedVerificacion>["columns"] => [
+): (ColumnProps & { field: string })[] => [
   {
-    name: "Foto",
-    selector: (row) => row.image_source,
-    cell: (row) => {
+    field: 'image_source',
+    header: 'Foto',
+    style: { width: '64px', paddingLeft: '20px', paddingRight: '8px' },
+    body: (row: ExtendedVerificacion) => {
       const imageUrl = row.image_source || imagen;
       const alt = row.person_label ?? "Desconocido";
-      
       return (
         <button
           className="group relative focus:outline-none"
           onClick={() => handleSelectPhoto(imageUrl, alt)}
           title="Ver foto"
-          style={{ background: "none", border: "none", padding: 0, margin: 0, cursor: "pointer" }}
+          style={{ background: "none", border: "none", padding: 0, cursor: "pointer" }}
           type="button"
         >
           <img
             src={imageUrl}
             alt={alt}
-            className="w-10 h-10 rounded-full object-cover border-2 border-[#ccc] group-hover:opacity-70 transition"
-            onError={(e) => {
-              (e.target as HTMLImageElement).src = imagen;
-            }}
+            className="w-9 h-9 rounded-full object-cover ring-2 ring-slate-200 group-hover:opacity-75 transition"
+            onError={(e) => { (e.target as HTMLImageElement).src = imagen; }}
           />
           <span className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
-            <PhotoCameraIcon className="text-white bg-black/60 rounded-full p-1" fontSize="small" />
+            <PhotoCameraIcon sx={{ fontSize: 14, color: '#fff', background: 'rgba(0,0,0,0.5)', borderRadius: '50%', padding: '2px' }} />
           </span>
         </button>
       );
     },
-    width: "80px",
-    sortable: false,
   },
   {
-    name: "Nombre Completo",
-    selector: (row) => row.person_label ?? "Desconocido",
+    field: 'person_label',
+    header: 'Nombre Completo',
     sortable: true,
-    cell: (row) => (
-      <span className="font-semibold" style={{ color: "#1f364a" }}>
-        {row.person_label ?? "Desconocido"}
+    body: (row: ExtendedVerificacion) => (
+      <div className="flex flex-col gap-0.5">
+        <span className="font-semibold text-slate-800 text-sm leading-tight">
+          {row.person_label ?? "Desconocido"}
+        </span>
+      
+      </div>
+    ),
+  },
+  {
+    field: 'ts_fecha',
+    header: 'Fecha',
+    sortable: true,
+    body: (row: ExtendedVerificacion) => (
+      <span className="text-slate-600 text-sm">
+        {row.ts ? convertToCostaRicaTime(row.ts).fechaFormatted : '—'}
       </span>
     ),
   },
   {
-    name: "Fecha",
-    selector: (row) => row.ts,
-    sortable: true,
-    cell: (row) => (
-      <span style={{ color: "#1f364a" }}>
-        {row.ts ? convertToCostaRicaTime(row.ts).fechaFormatted : 'N/A'}
+    field: 'ts_hora',
+    header: 'Hora',
+    body: (row: ExtendedVerificacion) => (
+      <span className="text-slate-600 text-sm">
+        {row.ts ? convertToCostaRicaTime(row.ts).horaFormatted : '—'}
       </span>
     ),
   },
   {
-    name: "Hora",
-    selector: (row) => row.ts,
+    field: 'authorized',
+    header: 'Estado',
     sortable: true,
-    cell: (row) => (
-      <span style={{ color: "#1f364a" }}>
-        {row.ts ? convertToCostaRicaTime(row.ts).horaFormatted : 'N/A'}
+    body: (row: ExtendedVerificacion) => (
+      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${
+        row.authorized
+          ? 'bg-green-50 text-green-700 ring-1 ring-green-200'
+          : 'bg-red-50 text-red-600 ring-1 ring-red-200'
+      }`}>
+        {row.authorized ? 'Autorizado' : 'Denegado'}
       </span>
     ),
   },
   {
-    name: "Acceso",
-    selector: (row) => row.authorized,
+    field: 'faces_detected',
+    header: 'Caras Detectadas',
     sortable: true,
-    cell: (row) => (
-      <span
-        className={`px-3 py-1 text-xs font-bold ${
-          row.authorized
-            ? "bg-[#6FBF73] text-green-100"
-            : "bg-[#B85C5C] text-red-100"
-        }`}
-        style={{ borderRadius: "4px" }}
-      >
-        {row.authorized ? "Autorizado" : "Denegado"}
-      </span>
+    style: { width: '80px' },
+    bodyClassName: 'text-center',
+    headerClassName: 'text-center',
+    body: (row: ExtendedVerificacion) => (
+      <span className="text-slate-500 text-sm">{row.faces_detected ?? '—'}</span>
     ),
-  },
-  {
-    name: "Caras Detectadas",
-    selector: (row) => row.faces_detected,
-    sortable: true,
-    cell: (row) => (
-      <span style={{ color: "#1f364a" }}>{row.faces_detected}</span>
-    ),
-    width: "150px",
   },
 ];
 

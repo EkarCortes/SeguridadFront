@@ -1,4 +1,5 @@
 import './App.css'
+import { PrimeReactProvider } from 'primereact/api';
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useEffect, useState } from 'react';
 
@@ -57,7 +58,7 @@ function AppContent() {
             <Route path="/listaAgregados" element={<ListaAgregados />} />
             <Route path="/listaIngresados" element={<ListaIngresados />} />
             <Route path="/user" element={<ListaUsuarios />} />
-            <Route path="*" element={<Navigate to="/home" replace />} />
+            <Route path="*" element={<Navigate to="/inicio" replace />} />
           </Routes>
         </CustomDrawer>
       ) : (
@@ -72,9 +73,11 @@ function AppContent() {
 
 function App() {
   return (
-    <SessionProvider>
-      <AppContent />
-    </SessionProvider>
+    <PrimeReactProvider>
+      <SessionProvider>
+        <AppContent />
+      </SessionProvider>
+    </PrimeReactProvider>
   );
 }
 

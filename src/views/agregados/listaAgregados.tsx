@@ -1,8 +1,7 @@
 import { useState } from "react";
-import AddIcon from "@mui/icons-material/Add";
+import { UserPlus } from "lucide-react";
 import DataTableGeneric from "../../components/table/DataTableGeneric";
 import { getPersonasColumns } from "../../components/table/personasColumns";
-import { getTableStyles } from "../../styles/tableStyles";
 import ImageModal from "../../components/Ui/ImageModal";
 import Modal from "../../components/Ui/Modal";
 import EditForm from "../../components/forms/EditForm";
@@ -62,18 +61,18 @@ export default function ListaAgregados() {
         onSearchChange={setSearch}
         onRefresh={refetch}
         title="Lista de Personas"
+        subtitle="Gestione los perfiles registrados y el acceso biométrico facial."
         searchPlaceholder="Buscar por nombre, cédula, email o teléfono..."
-        noDataMessage="No hay personas registradas."
-        rowsPerPage={10}
-        customStyles={getTableStyles()}
+        rows={10}
         additionalActions={
           <button
-            className="flex items-center gap-2 px-4 py-2 rounded bg-[#6FBF73] text-white hover:bg-[#58985C] transition"
+            className="flex items-center gap-2 px-4 h-9 rounded-xl bg-slate-900 text-white text-sm font-medium hover:bg-slate-800 transition"
+            style={{ fontFamily: "'Inter', sans-serif" }}
             onClick={() => setAddModal(true)}
-            title="Agregar nuevo"
             type="button"
           >
-            <AddIcon fontSize="small" />
+            <UserPlus size={14} />
+            Agregar Persona
           </button>
         }
       />

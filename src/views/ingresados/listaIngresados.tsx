@@ -1,7 +1,6 @@
 import { useState } from "react";
 import DataTableGeneric from "../../components/table/DataTableGeneric";
 import { getVerificacionesColumns, convertToCostaRicaTime } from "../../components/table/verificacionesColumns";
-import { getTableStyles } from "../../styles/tableStyles";
 import { useVerifications } from "../../hooks/verficados/useVerifications";
 import ImageModal from "../../components/Ui/ImageModal";
 
@@ -53,10 +52,9 @@ export default function ListaIngresados() {
         onSearchChange={setSearch}
         onRefresh={refetch}
         title="Lista de Verificaciones"
+        subtitle="Historial de intentos de acceso biométrico registrados."
         searchPlaceholder="Buscar por nombre, ID o fecha..."
-        noDataMessage="No hay registros de verificaciones."
-        rowsPerPage={10}
-        customStyles={getTableStyles()}
+        rows={10}
       />
 
       <ImageModal

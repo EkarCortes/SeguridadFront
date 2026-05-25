@@ -12,6 +12,9 @@ export default defineConfig({
     build: {
       outDir: "dist"
     },
+    resolve: {
+      dedupe: ['react', 'react-dom'],
+    },
     server: {
     }
 })
