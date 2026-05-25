@@ -66,7 +66,7 @@ export default function ListaAgregados() {
         rows={10}
         additionalActions={
           <button
-            className="flex items-center gap-2 px-4 h-9 rounded-xl bg-slate-900 text-white text-sm font-medium hover:bg-slate-800 transition"
+            className="flex items-center gap-2 px-4 h-9 rounded-xl bg-[#262c3e] text-white text-sm font-medium hover:bg-[#262c3e] transition"
             style={{ fontFamily: "'Inter', sans-serif" }}
             onClick={() => setAddModal(true)}
             type="button"

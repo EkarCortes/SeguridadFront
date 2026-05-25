@@ -152,7 +152,7 @@ export default function DataTableProp({
       text-base font-medium
       transition-all duration-200
       ${context.active
-										? 'bg-sky-900 text-white shadow-md'
+										? 'bg-[#262c3e] text-white shadow-md'
 										: 'text-slate-700 hover:bg-slate-200'
 									}
     `,
