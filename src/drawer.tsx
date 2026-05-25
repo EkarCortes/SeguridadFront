@@ -10,23 +10,24 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Divider from "@mui/material/Divider";
-import { PanelLeftOpen, PanelLeftClose, LogOut } from "lucide-react";
+import { PanelLeftOpen, PanelLeftClose, LogOut, Calendar } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useDrawer } from "./hooks/drawer/useDrawer";
 import { useDrawerConfig } from "./hooks/drawer/useDrawerConfig";
 import { useDrawerStyles } from "./hooks/drawer/useDrawerStyles";
 import LogoutConfirmModal from "./components/LogoutConfirmModal";
 import './drawer.css';
+import type { AuthResponse } from "./service/authService";
 
-const DrawerHeader = styled("div")(({ theme }) => ({
+const DrawerHeader = styled("div")(() => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    height: 80,
+    height: 62,
     position: "relative",
-    padding: theme.spacing(0, 1),
     flexDirection: "column",
     textAlign: "center",
+    flexShrink: 0,
 }));
 
 interface CustomDrawerProps {
@@ -36,7 +37,7 @@ interface CustomDrawerProps {
 
 export default function CustomDrawer({ onLogout, children }: CustomDrawerProps) {
     const { open, isMobile, handleOpenDrawer, handleCloseDrawer, handleNavigation } = useDrawer();
-    const { drawerWidth, accentColor, mutedText, selectedBg, routeGroups } = useDrawerConfig();
+    const { drawerWidth, accentColor, mutedText, selectedBg, hoverBg, routeGroups } = useDrawerConfig();
     const {
         hamburgerButtonStyles,
         drawerStyles,
@@ -45,71 +46,106 @@ export default function CustomDrawer({ onLogout, children }: CustomDrawerProps) 
         logoutButtonStyles,
         mainContentStyles,
     } = useDrawerStyles(drawerWidth, accentColor, selectedBg, open, isMobile);
-    
+
     const location = useLocation();
     const [showLogoutModal, setShowLogoutModal] = useState(false);
     const [logoutLoading, setLogoutLoading] = useState(false);
+    const [topUser, setTopUser] = useState<{ username: string; rol: string } | null>(null);
 
-    const handleLogoutClick = () => {
-        setShowLogoutModal(true);
-    };
+    React.useEffect(() => {
+        try {
+            const storedAuth = localStorage.getItem('authMe');
+            if (!storedAuth) return;
+            const parsed = JSON.parse(storedAuth) as AuthResponse['data'];
+            if (!parsed?.user?.username) return;
+            setTopUser({ username: parsed.user.username, rol: parsed.user.rol });
+        } catch {
+            // ignore
+        }
+    }, []);
+
+    const pageTitle = React.useMemo(() => {
+        const matched = routeGroups.find((r) => r.to === location.pathname);
+        if (matched) return matched.label;
+        if (location.pathname.startsWith('/home') || location.pathname.startsWith('/inicio')) return 'Inicio';
+        return 'Inicio';
+    }, [location.pathname, routeGroups]);
+
+    const dateLabel = React.useMemo(() => {
+        const now = new Date();
+        const day = now.getDate();
+        const month = now.toLocaleString('es-ES', { month: 'long' });
+        return `${day} ${month.charAt(0).toUpperCase() + month.slice(1)}, ${now.getFullYear()}`;
+    }, []);
+
+    const handleLogoutClick = () => setShowLogoutModal(true);
+    const handleLogoutCancel = () => setShowLogoutModal(false);
 
     const handleLogoutConfirm = async () => {
         setLogoutLoading(true);
         try {
-            await onLogout(); 
+            await onLogout();
         } catch (error) {
-            console.error('Error en logout desde drawer:', error);
+            console.error('Error en logout:', error);
         } finally {
             setLogoutLoading(false);
             setShowLogoutModal(false);
         }
     };
 
-    const handleLogoutCancel = () => {
-        setShowLogoutModal(false);
-    };
-
-    const getNavigationItemStyles = (isActive: boolean) => ({
-        minHeight: 48,
-        borderRadius: 2,
-        mb: 1,
-        justifyContent: open ? "initial" : "center",
-        px: open ? 2.5 : 1.5,
-        color: isActive ? accentColor : mutedText,
+    const getNavItemStyles = (isActive: boolean) => ({
+        minHeight: 40,
+        borderRadius: "10px",
+        mb: 0.5,
+        justifyContent: "flex-start",
+        px: open ? 1.5 : 0,
+        color: isActive ? "#ffffff" : mutedText,
         background: isActive ? selectedBg : "transparent",
+        position: "relative",
+        overflow: "hidden",
         "&:hover": {
-            background: isActive ? selectedBg : "transparent",
-            color: accentColor,
-            transform: open ? "translateX(2px)" : "scale(1.06)",
-            opacity: 0.95,
+            background: isActive ? "rgba(255,255,255,0.15)" : hoverBg,
+            color: "#ffffff",
         },
-        transition: "background 0.2s, color 0.2s, transform 0.15s ease, opacity 0.15s ease",
+        transition: "background 0.15s ease, color 0.15s ease, padding 0.24s ease",
     });
 
     const getIconStyles = () => ({
-        color: accentColor,
+        color: "inherit",
         minWidth: 0,
-        mr: open ? 3 : "auto",
+        mr: open ? 1.5 : 0,
+        width: open ? "auto" : "100%",
+        display: "flex",
+        alignItems: "center",
         justifyContent: "center",
+        flexShrink: 0,
+        transition: "margin-right 0.24s ease, width 0.24s ease",
     });
 
     const getTextStyles = () => ({
         opacity: open ? 1 : 0,
-        fontWeight: 700,
-        fontSize: 18,
-        color: accentColor,
+        maxWidth: open ? 180 : 0,
+        overflow: "hidden",
+        whiteSpace: "nowrap",
+        flex: open ? "1 1 auto" : "0 0 auto",
+        transition: "opacity 0.16s ease, max-width 0.24s ease",
+        "& .MuiTypography-root": {
+            fontWeight: 500,
+            fontSize: 13.5,
+            color: "inherit",
+            fontFamily: "'Inter', sans-serif",
+            letterSpacing: "0.01em",
+        },
     });
 
     return (
         <>
             <Box className="drawer-layout">
-                {/* Botón hamburguesa */}
-                {!open && (
+                {/* Hamburguesa cuando está cerrado en desktop */}
+                {!open && !isMobile && (
                     <Box sx={hamburgerButtonStyles}>
                         <IconButton
-                            color="inherit"
-                            aria-label="open drawer"
+                            aria-label="abrir menú"
                             onClick={handleOpenDrawer}
                             disableRipple
                             disableFocusRipple
@@ -117,21 +153,18 @@ export default function CustomDrawer({ onLogout, children }: CustomDrawerProps) 
                             sx={{
                                 color: accentColor,
                                 background: "transparent",
-                                "&:hover": {
-                                    background: "transparent",
-                                    color: accentColor,
-                                    transform: "scale(1.08)",
-                                    opacity: 0.9,
-                                },
-                                "&:active": { background: "transparent" },
-                                "&.Mui-focusVisible": { background: "transparent" },
-                                transition: "transform 0.15s ease, opacity 0.15s ease",
+                                borderRadius: "8px",
+                                width: 36,
+                                height: 36,
+                                "&:hover": { background: "rgba(255,255,255,0.08)" },
+                                transition: "background 0.15s ease",
                             }}
                         >
-                            <PanelLeftOpen size={22} strokeWidth={1.6} />
+                            <PanelLeftOpen size={20} strokeWidth={1.6} />
                         </IconButton>
                     </Box>
                 )}
+
 
                 <MuiDrawer
                     variant={isMobile ? "temporary" : "permanent"}
@@ -143,23 +176,22 @@ export default function CustomDrawer({ onLogout, children }: CustomDrawerProps) 
                     <DrawerHeader>
                         {open && (
                             <IconButton
-                                color="inherit"
-                                aria-label="close drawer"
+                                aria-label="cerrar menú"
                                 onClick={handleCloseDrawer}
                                 disableRipple
                                 disableFocusRipple
                                 disableTouchRipple
                                 sx={closeButtonStyles}
                             >
-                                <PanelLeftClose size={22} strokeWidth={1.6} />
+                                <PanelLeftClose size={20} strokeWidth={1.6} />
                             </IconButton>
                         )}
                     </DrawerHeader>
 
-                    <Divider sx={{ background: "#9ec5f1", mx: 2 }} />
+                    <Divider sx={{ background: "rgba(255,255,255,0.1)", mx: 1.5 }} />
 
                     <Box sx={scrollBoxStyles}>
-                        <List>
+                        <List sx={{ p: 0 }}>
                             {routeGroups.map((route) => {
                                 const isActive = location.pathname === route.to;
                                 const RouteIcon = route.icon;
@@ -169,10 +201,11 @@ export default function CustomDrawer({ onLogout, children }: CustomDrawerProps) 
                                             component={Link}
                                             to={route.to}
                                             onClick={() => handleNavigation()}
-                                            sx={getNavigationItemStyles(isActive)}
+                                            sx={getNavItemStyles(isActive)}
+                                            disableRipple
                                         >
                                             <ListItemIcon sx={getIconStyles()}>
-                                                <RouteIcon size={20} strokeWidth={1.6} />
+                                                <RouteIcon size={18} strokeWidth={1.6} />
                                             </ListItemIcon>
                                             <ListItemText
                                                 primary={route.label}
@@ -185,17 +218,9 @@ export default function CustomDrawer({ onLogout, children }: CustomDrawerProps) 
                         </List>
                     </Box>
 
-                    <Divider sx={{ background: "#9ec5f1", mx: 2 }} />
+                    <Divider sx={{ background: "rgba(255,255,255,0.1)", mx: 1.5 }} />
 
-                    <Box
-                        sx={{
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            px: 2,
-                            pb: 3,
-                        }}
-                    >
+                    <Box sx={{ display: "flex", justifyContent: "center", px: 1.5, pb: 2.5, pt: 1.5 }}>
                         <Box
                             component="button"
                             onClick={handleLogoutClick}
@@ -203,30 +228,78 @@ export default function CustomDrawer({ onLogout, children }: CustomDrawerProps) 
                                 ...logoutButtonStyles,
                                 opacity: logoutLoading ? 0.6 : 1,
                                 cursor: logoutLoading ? 'not-allowed' : 'pointer',
-                                '&:disabled': {
-                                    opacity: 0.6,
-                                    cursor: 'not-allowed'
-                                }
                             }}
                             disabled={logoutLoading}
                         >
-                            {open ? (
-                                <>
-                                    <Box sx={{ display: "inline-flex", mr: 1 }}>
-                                        <LogOut size={18} strokeWidth={1.6} />
-                                    </Box>
-                                    {logoutLoading ? 'Cerrando...' : 'Cerrar sesión'}
-                                </>
-                            ) : (
-                                <LogOut size={20} strokeWidth={1.6} />
-                            )}
+                            <Box sx={{ display: "inline-flex", flexShrink: 0 }}>
+                                <LogOut size={16} strokeWidth={1.6} />
+                            </Box>
+                            <Box
+                                component="span"
+                                sx={{
+                                    ml: open ? 1 : 0,
+                                    maxWidth: open ? 160 : 0,
+                                    opacity: open ? 1 : 0,
+                                    overflow: "hidden",
+                                    whiteSpace: "nowrap",
+                                    transition: "opacity 0.16s ease, max-width 0.24s ease, margin-left 0.24s ease",
+                                    transitionDelay: open ? "80ms" : "0ms",
+                                }}
+                            >
+                                {logoutLoading ? 'Cerrando...' : 'Cerrar sesión'}
+                            </Box>
                         </Box>
                     </Box>
                 </MuiDrawer>
 
                 <Box sx={mainContentStyles} className="drawer-content">
                     <Box className="drawer-panel">
-                        {children}
+                        <Box className="topbar">
+                            <Box className="topbar-left">
+                                {isMobile && (
+                                    <IconButton
+                                        aria-label="abrir menú"
+                                        onClick={handleOpenDrawer}
+                                        disableRipple
+                                        size="small"
+                                        sx={{
+                                            color: "#0f172a",
+                                            background: "transparent",
+                                            borderRadius: "8px",
+                                            width: 32,
+                                            height: 32,
+                                            flexShrink: 0,
+                                            mr: 0.5,
+                                            "&:hover": { background: "rgba(15,23,42,0.06)" },
+                                        }}
+                                    >
+                                        <PanelLeftOpen size={18} strokeWidth={1.6} />
+                                    </IconButton>
+                                )}
+                                <Box className="topbar-title">{pageTitle}</Box>
+                                <Box className="topbar-separator" />
+                                <Box className="topbar-date">
+                                    <Calendar size={13} strokeWidth={1.6} />
+                                    {dateLabel}
+                                </Box>
+                            </Box>
+
+                            {topUser && (
+                                <Box className="topbar-right">
+                                    <Box className="topbar-userText">
+                                        <Box className="topbar-username">{topUser.username}</Box>
+                                        <Box className="topbar-role">{topUser.rol}</Box>
+                                    </Box>
+                                    <Box className="topbar-avatar">
+                                        {topUser.username.slice(0, 1).toUpperCase()}
+                                    </Box>
+                                </Box>
+                            )}
+                        </Box>
+
+                        <Box className="page-content">
+                            {children}
+                        </Box>
                     </Box>
                 </Box>
             </Box>

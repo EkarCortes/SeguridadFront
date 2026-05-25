@@ -37,8 +37,8 @@ export const useMonthlySelection = (
   }, [monthlyStats, selectedYear]);
 
   const handleYearChange = useCallback(
-    (e: React.ChangeEvent<HTMLSelectElement>) => {
-      const year = Number(e.target.value);
+    (value: string) => {
+      const year = Number(value);
       setSelectedYear(year);
 
       const monthsForYear = monthlyStats
@@ -52,8 +52,7 @@ export const useMonthlySelection = (
   );
 
   const handleMonthChange = useCallback(
-    (e: React.ChangeEvent<HTMLSelectElement>) => {
-      const value = e.target.value;
+    (value: string) => {
       setSelectedMonth(value === '' ? null : Number(value));
     },
     []

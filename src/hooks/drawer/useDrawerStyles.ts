@@ -1,7 +1,5 @@
 import { useEffect } from 'react';
 
-// Hook para gestionar los estilos de un drawer (cajón lateral) responsivo
-
 export const useDrawerStyles = (
     drawerWidth: number,
     accentColor: string,
@@ -11,28 +9,21 @@ export const useDrawerStyles = (
 ) => {
     const collapsedWidth = 56;
 
-    // Aplicar estilos globales al body para evitar el fondo blanco
     useEffect(() => {
-        document.body.style.backgroundColor = "#18181b";
+        document.body.style.backgroundColor = "#262c3e";
         document.body.style.margin = "0";
         document.body.style.padding = "0";
-        document.documentElement.style.backgroundColor = "#18181b";
-        
-        return () => {
-            // Cleanup no es necesario ya que estos estilos deben persistir
-        };
+        document.documentElement.style.backgroundColor = "#262c3e";
     }, []);
 
     const hamburgerButtonStyles = {
         position: "fixed" as const,
-        top: 18,
+        top: 14,
         left: 0,
         width: collapsedWidth,
         zIndex: 1401,
         display: "flex",
         background: "transparent",
-        borderRadius: 0,
-        transition: "none",
         alignItems: "center",
         justifyContent: "center",
     };
@@ -44,127 +35,92 @@ export const useDrawerStyles = (
             color: accentColor,
             border: "none",
             overflowX: "hidden",
-            borderRight: "1px solid #262c3e",
-            ...(isMobile && {
-                width: drawerWidth,
-            }),
-            ...(!isMobile && {
-                width: open ? drawerWidth : collapsedWidth,
-                transition: "width 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
-                position: "fixed",
-                top: 0,
-                left: 0,
-                height: "100vh",
-                zIndex: 1300,
-            }),
+            willChange: "width",
+            boxShadow: "none",
+            ...(isMobile
+                ? { width: Math.min(drawerWidth, 240) }
+                : {
+                    width: open ? drawerWidth : collapsedWidth,
+                    transition: "width 240ms cubic-bezier(0.4, 0, 0.6, 1)",
+                    position: "fixed",
+                    top: 0,
+                    left: 0,
+                    height: "100vh",
+                    zIndex: 1300,
+                }
+            ),
         },
     };
 
     const closeButtonStyles = {
-        zIndex: 1,
         position: "absolute" as const,
-        top: 20,
-        right: 20,
-        background: "transparent",
+        top: 16,
+        right: 14,
         color: accentColor,
-        borderRadius: 0,
-        backdropFilter: "none",
-        "&:hover": { 
-            background: "transparent",
-            transform: "none",
-        },
-        "&.Mui-focusVisible": {
-            background: "transparent",
-        },
-        transition: "none",
-        width: 38,
-        height: 38,
+        background: "transparent",
+        borderRadius: "8px",
+        width: 34,
+        height: 34,
+        "&:hover": { background: "rgba(255,255,255,0.08)" },
+        "&.Mui-focusVisible": { background: "transparent" },
+        transition: "background 0.15s ease",
     };
 
     const scrollBoxStyles = {
         flex: 1,
         overflowY: "auto" as const,
         overflowX: "hidden" as const,
-        px: open ? 2 : 1,
-        mt: 3,
-        height: `calc(100vh - 100px - 16px - 90px)`,
-        "&::-webkit-scrollbar": {
-            width: "8px",
-        },
-        "&::-webkit-scrollbar-track": {
-            background: "rgba(255, 255, 255, 0.06)",
-            borderRadius: "999px",
-            margin: "10px 0",
-        },
+        px: open ? 1.5 : 0.75,
+        mt: 2,
+        "&::-webkit-scrollbar": { width: "4px" },
+        "&::-webkit-scrollbar-track": { background: "transparent" },
         "&::-webkit-scrollbar-thumb": {
-            background: "rgba(255, 255, 255, 0.22)",
+            background: "rgba(255,255,255,0.15)",
             borderRadius: "999px",
-            "&:hover": {
-                background: "rgba(255, 255, 255, 0.32)",
-            }
         },
         scrollbarWidth: "thin" as const,
-        scrollbarColor: "rgba(255, 255, 255, 0.22) rgba(255, 255, 255, 0.06)",
+        scrollbarColor: "rgba(255,255,255,0.15) transparent",
+        transition: "padding 0.24s ease",
     };
 
     const logoutButtonStyles = {
-        background: "rgb(223, 67, 67)",
-        color: "#ffffff",
-        borderRadius: open ? 12 : "50%",
-        px: open ? 3 : 0,
-        py: open ? 1.5 : 0,
+        background: "transparent",
+        color: "rgba(239, 68, 68, 0.9)",
+        border: "1px solid rgba(239, 68, 68, 0.4)",
+        borderRadius: "10px",
+        px: open ? 2 : 0,
+        py: 0,
         fontWeight: 600,
-        fontSize: open ? 14 : 12,
+        fontSize: 13,
+        fontFamily: "'Inter', sans-serif",
         cursor: "pointer",
-        "&:hover": { 
-            background:"linear-gradient(135deg, #ef4444 0%, #dc2626 100%)",
-            transform: "translateY(-2px) scale(1.02)",
+        "&:hover": {
+            background: "rgba(239, 68, 68, 0.1)",
+            borderColor: "rgba(239, 68, 68, 0.7)",
         },
-        width: open ? "auto" : 48,
-        height: 48, // Altura fija igual que los otros botones
-        minWidth: open ? 140 : 48,
-        textAlign: "center" as const,
+        width: open ? "100%" : 40,
+        height: 40,
         marginTop: 2,
-        transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+        transition: "background 0.15s ease, border-color 0.15s ease, width 0.24s ease",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         gap: open ? 1 : 0,
-        backdropFilter: "blur(10px)",
-        "& .MuiSvgIcon-root": {
-            fontSize: open ? "1.2rem" : "1.4rem",
-            transition: "font-size 0.3s ease",
-        }
+        userSelect: "none" as const,
     };
 
+    // Usa isMobile directamente en lugar de breakpoints MUI para evitar el desfase
     const mainContentStyles = {
         flex: 1,
         minHeight: "100vh",
-        width: "100%",
         display: "flex",
         flexDirection: "column" as const,
-        ml: { xs: 0, sm: open ? `${drawerWidth}px` : `${collapsedWidth}px` },
-        transition: "margin-left 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+        ml: isMobile ? 0 : `${open ? drawerWidth : collapsedWidth}px`,
+        transition: "margin-left 240ms cubic-bezier(0.4, 0, 0.6, 1)",
+        willChange: "margin-left",
         background: "transparent",
         p: 0,
-       
     };
-
-    // Estilos específicos para los iconos cuando está cerrado
-    const iconStyles = {
-        color: accentColor,
-        minWidth: 0,
-        mr: open ? 3 : "auto",
-        justifyContent: "center",
-        transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-        "& .MuiSvgIcon-root": {
-            fontSize: open ? "1.3rem" : "1.6rem",
-            filter: open ? "none" : "drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3))",
-        }
-    };
-
-    // Estilos para los botones de navegación - TODOS con el mismo tamaño
-    
 
     return {
         hamburgerButtonStyles,
@@ -173,6 +129,6 @@ export const useDrawerStyles = (
         scrollBoxStyles,
         logoutButtonStyles,
         mainContentStyles,
-        iconStyles,
+        collapsedWidth,
     };
 };

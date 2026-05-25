@@ -1,4 +1,3 @@
-import LoadingSpinner from '../Ui/Spinner';
 import {
   PieChart,
   Pie,
@@ -6,8 +5,6 @@ import {
   ResponsiveContainer,
   Tooltip,
 } from "recharts";
-
-//Este componente es el usado en el home para mostrar el grafico de donut de autorizados y rechazados
 
 interface DonutChartProps {
   monthlyData: {
@@ -23,23 +20,20 @@ interface DonutChartProps {
 }
 
 const COLORS = {
-  Autorizados: "#6FBF73",
-  Rechazados: "#B85C5C",
+  Autorizados: "#22c55e",
+  Rechazados: "#ef4444",
 };
 
 const CustomTooltip = ({ active, payload }: any) => {
   if (active && payload && payload.length) {
     const data = payload[0];
     return (
-      <div className="bg-[#1a1a1f] border border-[#303036] rounded-lg px-3 py-2 text-sm text-white shadow-lg">
-        <div className="font-semibold text-white">{data.name}</div>
-        <div className="flex items-center gap-2">
+      <div className="bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm shadow-md">
+        <div className="font-semibold text-slate-700">{data.name}</div>
+        <div className="flex items-center gap-2 mt-1">
           <span className="w-2 h-2 rounded-full" style={{ backgroundColor: data.payload.fill }} />
-          <span className="text-neutral-300">Cantidad: </span>
-          <span className="font-bold text-white">{data.value}</span>
-        </div>
-        <div className="text-neutral-400 text-xs mt-1">
-          {data.payload.percentage}% del total
+          <span className="text-slate-500">{data.value.toLocaleString()}</span>
+          <span className="text-slate-400 text-xs">({data.payload.percentage}%)</span>
         </div>
       </div>
     );
@@ -49,59 +43,55 @@ const CustomTooltip = ({ active, payload }: any) => {
 
 const DonutChart: React.FC<DonutChartProps> = ({ monthlyData, loading, error }) => {
   if (loading) {
-    return <LoadingSpinner size="md" />;
-
+    return (
+      <div className="w-full h-full flex items-center justify-center">
+        <div className="w-10 h-10 border-4 border-slate-200 border-t-slate-700 rounded-full animate-spin" />
+      </div>
+    );
   }
 
   if (error) {
     return (
       <div className="w-full h-full flex flex-col items-center justify-center gap-3">
-        <div className="w-12 h-12 bg-red-500/20 rounded-full flex items-center justify-center">
-          <span className="text-red-400 text-xl">⚠</span>
+        <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+          <span className="text-red-500 text-xl">⚠</span>
         </div>
-        <div className="text-center">
-          <span className="text-red-400 text-sm font-medium">Error al cargar datos</span>
-          <div className="text-neutral-500 text-xs mt-1 text-center max-w-48">{error}</div>
-        </div>
+        <span className="text-red-500 text-sm font-medium">Error al cargar datos</span>
       </div>
     );
   }
 
-  const { autorizados, rechazados, total_verificaciones, tasa_autorizacion, mes_nombre, personas_unicas } = monthlyData;
+  const { autorizados, rechazados, total_verificaciones, tasa_autorizacion, personas_unicas } = monthlyData;
 
   const donutData = [
     {
       name: "Autorizados",
       value: autorizados,
-      percentage: total_verificaciones > 0 ? ((autorizados / total_verificaciones) * 100).toFixed(1) : 0,
+      percentage: total_verificaciones > 0 ? ((autorizados / total_verificaciones) * 100).toFixed(1) : "0",
     },
     {
       name: "Rechazados",
       value: rechazados,
-      percentage: total_verificaciones > 0 ? ((rechazados / total_verificaciones) * 100).toFixed(1) : 0,
+      percentage: total_verificaciones > 0 ? ((rechazados / total_verificaciones) * 100).toFixed(1) : "0",
     },
   ];
 
   return (
     <div className="w-full h-full flex flex-col">
-      <div className="text-center mb-3">
-        <h3 className="text-[#262c3e] font-semibold text-base">{mes_nombre} { }</h3>
-        <p className="text-neutral-400 text-xs">Estadísticas del mes</p>
-      </div>
-
-      <div className="relative flex-1 min-h-[140px]" style={{ height: "180px", zIndex: 10 }}>
+      {/* Donut */}
+      <div className="relative flex-1 min-h-[160px]">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie
               data={donutData}
               cx="50%"
               cy="50%"
-              innerRadius={30}
-              outerRadius={50}
-              className=''
-              paddingAngle={3}
+              innerRadius={55}
+              outerRadius={80}
+              paddingAngle={2}
               dataKey="value"
               isAnimationActive={false}
+              strokeWidth={0}
             >
               {donutData.map((entry, index) => (
                 <Cell
@@ -114,39 +104,62 @@ const DonutChart: React.FC<DonutChartProps> = ({ monthlyData, loading, error }) 
           </PieChart>
         </ResponsiveContainer>
 
-        <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-[-1] opacity-80">
-          <div className="text-black font-bold text-lg">{total_verificaciones}</div>
-          <div className="text-neutral-400 text-xs">Total</div>
+        {/* Centro */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+          <span
+            className="text-2xl font-bold text-slate-800"
+            style={{ fontFamily: "'Manrope', sans-serif" }}
+          >
+            {total_verificaciones.toLocaleString()}
+          </span>
+          <span
+            className="text-[10px] font-semibold tracking-widest text-slate-400 uppercase mt-0.5"
+            style={{ fontFamily: "'Inter', sans-serif" }}
+          >
+            Total
+          </span>
         </div>
       </div>
 
-      <div className="mt-3 space-y-2">
-        <div className="flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-[#6FBF73]"></div>
-            <span className="text-neutral-500 text-xs">Autorizados</span>
-          </div>
-          <span className="text-neutral-500  text-xs font-semibold">{autorizados}</span>
+      {/* Leyenda */}
+      <div className="mt-3 space-y-2" style={{ fontFamily: "'Inter', sans-serif" }}>
+        <div className="flex justify-between items-center text-sm">
+          <span className="flex items-center gap-2 text-slate-500">
+            <span className="w-2 h-2 rounded-full bg-green-500 flex-shrink-0" />
+            Autorizados
+          </span>
+          <span className="font-semibold text-slate-700">{autorizados.toLocaleString()}</span>
+        </div>
+        <div className="flex justify-between items-center text-sm">
+          <span className="flex items-center gap-2 text-slate-500">
+            <span className="w-2 h-2 rounded-full bg-red-500 flex-shrink-0" />
+            Rechazados
+          </span>
+          <span className="font-semibold text-slate-700">{rechazados.toLocaleString()}</span>
         </div>
 
-        <div className="flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-[#B85C5C]"></div>
-            <span className="text-neutral-500 text-xs">Rechazados</span>
+        <div className="border-t border-slate-100 pt-3 mt-1 grid grid-cols-2 gap-2 text-xs text-center">
+          <div>
+            <div
+              className="text-slate-800 font-bold text-sm"
+              style={{ fontFamily: "'Manrope', sans-serif" }}
+            >
+              {(tasa_autorizacion * 100).toFixed(1)}%
+            </div>
+            <div className="text-slate-400 uppercase tracking-wide text-[10px] font-semibold mt-0.5">
+              Tasa éxito
+            </div>
           </div>
-          <span className="text-neutral-500  text-xs font-semibold">{rechazados}</span>
-        </div>
-
-        <div className="border-t border-[#303036] my-2"></div>
-
-        <div className="grid grid-cols-2 gap-3 text-xs">
-          <div className="text-center">
-            <div className="text-[#262c3e] font-semibold">{(tasa_autorizacion * 100).toFixed(0)}%</div>
-            <div className="text-neutral-400">Tasa éxito</div>
-          </div>
-          <div className="text-center">
-            <div className="text-[#262c3e] font-semibold">{personas_unicas}</div>
-            <div className="text-neutral-400">Personas</div>
+          <div>
+            <div
+              className="text-slate-800 font-bold text-sm"
+              style={{ fontFamily: "'Manrope', sans-serif" }}
+            >
+              {personas_unicas.toLocaleString()}
+            </div>
+            <div className="text-slate-400 uppercase tracking-wide text-[10px] font-semibold mt-0.5">
+              Personas
+            </div>
           </div>
         </div>
       </div>
