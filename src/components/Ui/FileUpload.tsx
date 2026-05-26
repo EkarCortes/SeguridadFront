@@ -23,7 +23,7 @@ export default function FileUpload({
 }: FileUploadProps) {
   return (
     <div>
-      <label className="block text-neutral-100 text-sm mb-1">
+      <label className="block text-slate-800 text-sm mb-1">
         {label} {required && <span className="text-red-400">*</span>}
       </label>
       <div className="space-y-3">
@@ -32,10 +32,10 @@ export default function FileUpload({
           accept="image/*"
           multiple
           onChange={onFileChange}
-          className="w-full rounded bg-[#2d3346] text-white px-3 py-2  focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:bg-gray-700 file:text-white hover:file:bg-gray-800"
+          className="w-full rounded bg-[#f7f9ff] text-slate-800 px-3 py-2  focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:bg-gray-700 file:text-white hover:file:bg-gray-800"
         />
         {helperText && (
-          <p className="text-neutral-200 text-xs">{helperText}</p>
+          <p className="text-slate-800 text-xs">{helperText}</p>
         )}
 
         <ImagePreview 

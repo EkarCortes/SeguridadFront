@@ -36,7 +36,7 @@ function AppContent() {
 
   if (loading || isRedirecting) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-[#e4e7f7]">
+      <div className="flex flex-col items-center justify-center min-h-screen bg-[#f7f9ff]">
         <LoadingSpinner size="md" />
       </div>
     );

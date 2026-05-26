@@ -30,7 +30,7 @@ export default function FormField({
 
   return (
     <div className={`flex-1 ${className}`}>
-      <label className="block text-neutral-200 text-sm mb-1">
+      <label className="block text-slate-700 text-sm mb-1">
         {label} {required && <span className="text-red-400">*</span>}
       </label>
       <input
@@ -46,7 +46,7 @@ export default function FormField({
         minLength={type === "password" ? 6 : undefined}
       />
       {helperText && (
-        <p className="text-xs text-neutral-200 mt-1">{helperText}</p>
+        <p className="text-xs text-slate-700 mt-1">{helperText}</p>
       )}
     </div>
   );

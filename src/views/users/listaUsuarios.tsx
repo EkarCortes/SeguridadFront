@@ -82,22 +82,27 @@ export default function ListaUsuarios() {
       
 
       <Modal open={!!deleteUser} onClose={() => setDeleteUser(null)} size="sm" title="Eliminar Usuario">
-        <div className="mb-4" style={{ color: "#fff" }}>
-          ¿Seguro que deseas eliminar al usuario <span className="font-bold">{deleteUser?.nombre}</span>?
-        </div>
-        <div className="flex justify-end gap-2">
-          <button
-            className="px-4 py-2 rounded bg-neutral-600 text-white hover:bg-neutral-500"
-            onClick={() => setDeleteUser(null)}
-          >
-            Cancelar
-          </button>
-          <HoldToConfirmButton
-            onConfirm={confirmDelete}
-            holdDuration={2000}
-            label="Mantener para Eliminar"
-            holdingLabel="Manteniendo..."
-          />
+        <div className="flex flex-col gap-4">
+          <p className="text-sm text-slate-600">
+            ¿Seguro que deseas eliminar al usuario{" "}
+            <span className="font-semibold text-slate-900">{deleteUser?.nombre}</span>?
+            Esta acción no se puede deshacer.
+          </p>
+          <div className="flex gap-2.5">
+            <button
+              className="flex-1 h-10 rounded-xl border border-slate-200 bg-white text-slate-700 text-sm font-medium hover:bg-slate-50 transition"
+              style={{ fontFamily: "'Inter', sans-serif" }}
+              onClick={() => setDeleteUser(null)}
+            >
+              Cancelar
+            </button>
+            <HoldToConfirmButton
+              onConfirm={confirmDelete}
+              holdDuration={2000}
+              label="Mantener para Eliminar para Eliminar"
+              holdingLabel="Manteniendo..."
+            />
+          </div>
         </div>
       </Modal>
 

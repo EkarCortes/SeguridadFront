@@ -15,7 +15,7 @@ export default function HoldToConfirmButton({
   onConfirm,
   onCancel,
   holdDuration = 2000,
-  label = 'Mantener para eliminar',
+  label = 'Mantener para Eliminar',
   holdingLabel = 'Manteniendo...',
   className = 'relative px-4 py-2 rounded bg-red-700 text-white overflow-hidden',
   progressClassName = 'absolute left-0 top-0 h-full bg-red-900'

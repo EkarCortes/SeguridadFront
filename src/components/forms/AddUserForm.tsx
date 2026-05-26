@@ -215,7 +215,7 @@ export default function AddUserForm({ onSave, onCancel }: AddUserFormProps) {
                     <button
                         type="button"
                         tabIndex={-1}
-                        className="absolute right-3 top-9 text-gray-400 hover:text-gray-200"
+                        className="absolute right-3 top-9 text-slate-400 hover:text-slate-600"
                         onClick={() => setShowPassword(v => !v)}
                         style={{ background: "none", border: "none", padding: 0 }}
                     >
@@ -224,7 +224,7 @@ export default function AddUserForm({ onSave, onCancel }: AddUserFormProps) {
                 </div>
 
                 <div className="flex-1 min-w-[180px]">
-                    <label className="block text-neutral-200 text-sm mb-1">
+                    <label className="block text-slate-700 text-sm mb-1">
                         Rol <span className="text-red-400">*</span>
                     </label>
                     <select
@@ -242,18 +242,20 @@ export default function AddUserForm({ onSave, onCancel }: AddUserFormProps) {
             </div>
 
 
-            <div className="flex flex-col sm:flex-row justify-center gap-4 pt-3 w-full">
+            <div className="flex flex-col sm:flex-row justify-end gap-2 pt-3 w-full">
                 <button
                     type="button"
                     onClick={onCancel}
-                    className="px-2 py-1 rounded bg-neutral-600 text-white hover:bg-neutral-500 transition w-full text-lg font-semibold"
+                    className="h-10 px-5 rounded-xl border border-slate-200 bg-white text-slate-700 text-sm font-medium hover:bg-slate-50 transition w-full"
+                    style={{ fontFamily: "'Inter', sans-serif" }}
                 >
                     Cancelar
                 </button>
                 <button
                     type="submit"
                     disabled={!personFound || isSearching}
-                    className="px-2 py-2 rounded bg-[#6FBF73] text-white hover:bg-[#58985C] transition w-full text-lg font-semibold disabled:bg-gray-400 disabled:cursor-not-allowed"
+                    className="h-10 px-5 rounded-xl text-white text-sm font-semibold transition w-full disabled:opacity-50 disabled:cursor-not-allowed"
+                    style={{ background: "#262c3e", fontFamily: "'Inter', sans-serif" }}
                 >
                     Guardar
                 </button>

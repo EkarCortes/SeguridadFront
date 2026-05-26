@@ -23,9 +23,7 @@ import type { AuthResponse } from "./service/authService";
 const DrawerHeader = styled("div")(() => ({
     display: "flex",
     alignItems: "center",
-    justifyContent: "space-between",
     height: 66,
-    padding: "0 14px 0 18px",
     flexShrink: 0,
 }));
 
@@ -174,11 +172,13 @@ export default function CustomDrawer({ onLogout, children }: CustomDrawerProps) 
                     <DrawerHeader>
                         {open ? (
                             <>
+                                <Box sx={{ flex: 1 }} />
+
                                 <img
                                     src={FaceCoreLogo}
                                     alt="FaceCore"
                                     style={{
-                                        height: 38,
+                                        height: 40,
                                         width: "auto",
                                         objectFit: "contain",
                                         opacity: 0.9,
@@ -186,25 +186,27 @@ export default function CustomDrawer({ onLogout, children }: CustomDrawerProps) 
                                         pointerEvents: "none",
                                     }}
                                 />
-                                <IconButton
-                                    aria-label="cerrar menú"
-                                    onClick={handleCloseDrawer}
-                                    disableRipple
-                                    disableFocusRipple
-                                    disableTouchRipple
-                                    sx={{
-                                        color: accentColor,
-                                        background: "transparent",
-                                        borderRadius: "8px",
-                                        width: 34,
-                                        height: 34,
-                                        flexShrink: 0,
-                                        "&:hover": { background: "rgba(255,255,255,0.08)" },
-                                        transition: "background 0.15s ease",
-                                    }}
-                                >
-                                    <PanelLeftClose size={20} strokeWidth={1.6} />
-                                </IconButton>
+
+                                <Box sx={{ flex: 1, display: "flex", justifyContent: "flex-end", pr: 1.5 }}>
+                                    <IconButton
+                                        aria-label="cerrar menú"
+                                        onClick={handleCloseDrawer}
+                                        disableRipple
+                                        disableFocusRipple
+                                        disableTouchRipple
+                                        sx={{
+                                            color: accentColor,
+                                            background: "transparent",
+                                            borderRadius: "8px",
+                                            width: 34,
+                                            height: 34,
+                                            "&:hover": { background: "rgba(255,255,255,0.08)" },
+                                            transition: "background 0.15s ease",
+                                        }}
+                                    >
+                                        <PanelLeftClose size={20} strokeWidth={1.6} />
+                                    </IconButton>
+                                </Box>
                             </>
                         ) : null}
                     </DrawerHeader>

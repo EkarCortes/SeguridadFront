@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import FormField from "../../components/Ui/FormField";
 import logo from "../../assets/FaceCore 3.png";
 import useAuth from "../../hooks/auth/useAuth";
 import Modal from "../../components/Ui/Modal";
 import usePasswordReset from "../../hooks/auth/usePasswordResetEmail";
-import { FaEye, FaEyeSlash } from "react-icons/fa"; 
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { LockKeyhole, User, MailCheck } from "lucide-react";
 
 interface LoginProps {
   onLogin?: () => void;
@@ -18,17 +18,22 @@ export default function Login({ onLogin }: LoginProps) {
   const [error, setError] = useState<string | null>(null);
   const { login } = useAuth();
   const navigate = useNavigate();
-  const [showPassword, setShowPassword] = useState(false); 
+  const [showPassword, setShowPassword] = useState(false);
 
   const {
     loading: resetLoading,
     error: resetError,
     success: resetSuccess,
-    sendResetEmail
+    sendResetEmail,
   } = usePasswordReset();
 
   const [showResetModal, setShowResetModal] = useState(false);
   const [resetEmail, setResetEmail] = useState("");
+
+  function handleCloseResetModal() {
+    setShowResetModal(false);
+    setResetEmail("");
+  }
 
   const handleResetPassword = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -59,123 +64,175 @@ export default function Login({ onLogin }: LoginProps) {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 bg-[#e4e7f7] relative overflow-hidden">
-      <div className="w-full max-w-md rounded-2xl bg-[#262c3e]/90 backdrop-blur-xl border border-[#2a3140] shadow-[0_0_0_1px_rgba(255,255,255,0.03),0_8px_40px_-10px_rgba(0,0,0,0.6)] p-8 sm:p-10 flex flex-col gap-7">
-        <div className="flex flex-col items-center text-center gap-3">
-          <img
-            src={logo}
-            alt="FaceCore"
-            className="h-40 select-none drop-shadow-[0_0_25px_rgba(255,255,255,0.08)]"
-            draggable={false}
-          />
-        </div>
-
-        <form onSubmit={handleSubmit} noValidate className="space-y-5">
-          <div className="space-y-4">
-            <FormField
-              label="USUARIO"
-              name="username"
-              type="text"
-              value={username}
-              onChange={e => setUsername(e.target.value)}
-              required
-              disabled={loading}
-              placeholder="Nombre de usuario"
+    <div className="min-h-screen flex items-center justify-center px-4 bg-[#f7f9ff]">
+      <div className="w-full max-w-sm">
+        <div className="rounded-2xl bg-white border border-slate-200 shadow-xl overflow-hidden">
+          {/* Dark header with logo — sidebar color */}
+          <div className="bg-[#262c3e] px-8 py-8 flex justify-center">
+            <img
+              src={logo}
+              alt="FaceCore"
+              className="h-28 select-none"
+              draggable={false}
             />
-            <div className="relative">
-              <FormField
-                label="CONTRASEÑA"
-                name="password"
-                type={showPassword ? "text" : "password"}
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                required
+          </div>
+
+          {/* Form body */}
+          <div className="px-8 py-7 flex flex-col gap-6">
+            <form onSubmit={handleSubmit} noValidate className="space-y-4">
+              {/* Username */}
+              <div className="space-y-1">
+                <label className="block text-slate-700 text-sm font-medium">
+                  Usuario
+                </label>
+                <div className="relative">
+                  <User
+                    size={14}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"
+                  />
+                  <input
+                    type="text"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    disabled={loading}
+                    placeholder="Nombre de usuario"
+                    required
+                    autoComplete="username"
+                    className="w-full rounded-lg bg-white border border-slate-200 text-slate-800 placeholder-slate-400 text-sm px-3 py-2.5 pl-9 focus:outline-none focus:ring-2 focus:ring-slate-400/30 focus:border-slate-400 transition disabled:opacity-50 disabled:bg-slate-50"
+                  />
+                </div>
+              </div>
+
+              {/* Password */}
+              <div className="space-y-1">
+                <label className="block text-slate-700 text-sm font-medium">
+                  Contraseña
+                </label>
+                <div className="relative">
+                  <LockKeyhole
+                    size={14}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"
+                  />
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    disabled={loading}
+                    placeholder="••••••••"
+                    required
+                    autoComplete="current-password"
+                    className="w-full rounded-lg bg-white border border-slate-200 text-slate-800 placeholder-slate-400 text-sm px-3 py-2.5 pl-9 pr-10 focus:outline-none focus:ring-2 focus:ring-slate-400/30 focus:border-slate-400 transition disabled:opacity-50 disabled:bg-slate-50"
+                  />
+                  <button
+                    type="button"
+                    tabIndex={-1}
+                    onClick={() => setShowPassword((v) => !v)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition"
+                  >
+                    {showPassword ? <FaEyeSlash size={13} /> : <FaEye size={13} />}
+                  </button>
+                </div>
+              </div>
+
+              {error && (
+                <div className="flex items-center gap-2 text-red-600 text-xs bg-red-50 border border-red-200 rounded-lg px-3 py-2.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-red-400 flex-shrink-0 animate-pulse" />
+                  {error}
+                </div>
+              )}
+
+              <button
+                type="submit"
                 disabled={loading}
-                placeholder="********"
-              />
+                className="w-full mt-1 rounded-lg bg-[#262c3e] hover:bg-[#2f3650] active:bg-[#1a1f2e] disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-2.5 text-sm tracking-wide shadow-md shadow-slate-900/20 transition-all duration-150"
+              >
+                <span className="flex items-center justify-center gap-2">
+                  {loading && (
+                    <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  )}
+                  {loading ? "Entrando..." : "Iniciar sesión"}
+                </span>
+              </button>
+            </form>
+
+            {/* Forgot password */}
+            <div className="text-center">
               <button
                 type="button"
-                tabIndex={-1}
-                className="absolute right-3 top-9 text-gray-400 hover:text-gray-200"
-                onClick={() => setShowPassword(v => !v)}
-                style={{ background: "none", border: "none", padding: 0 }}
+                onClick={() => setShowResetModal(true)}
+                className="text-slate-400 hover:text-slate-600 text-xs transition-colors underline underline-offset-2"
               >
-                {showPassword ? <FaEyeSlash /> : <FaEye />}
+                ¿Olvidaste tu contraseña?
               </button>
             </div>
           </div>
-
-          {error && (
-            <div className="text-red-300 text-xs bg-red-900/30 border border-red-700/60 rounded-md px-3 py-2 flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse" />
-              {error}
-            </div>
-          )}
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="relative w-full group rounded-lg overflow-hidden bg-[#80858e] hover:animate-[pulse_2s_ease-in-out_infinite] disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold py-2.5 text-sm tracking-wide shadow-lg shadow-gray-900/40 transition"
-          >
-            <span className="relative flex items-center justify-center gap-2">
-              {loading && (
-                <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-              )}
-              {loading ? "Entrando..." : "Iniciar sesión"}
-            </span>
-            <span className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-30 bg-[radial-gradient(circle_at_center,white,transparent_60%)] transition" />
-          </button>
-        </form>
-
-        <div className="pt-2 border-t border-[#e4e7f7] text-center">
-          <p className="text-neutral-500 text-[11px] tracking-wide">
-            <a
-              href="#"
-              className="text-blue-400 hover:underline"
-              onClick={e => {
-                e.preventDefault();
-                setShowResetModal(true);
-              }}
-            >
-              ¿Olvidaste tu contraseña?{" "}
-            </a>
-          </p>
         </div>
-
       </div>
-      
-      <Modal open={showResetModal} onClose={() => setShowResetModal(false)} title="Recuperar contraseña" size="sm">
-        <form onSubmit={handleResetPassword} className="space-y-4">
-          <div>
-            <label className="block text-sm text-white mb-1">Correo electrónico</label>
-            <input
-              type="email"
-              value={resetEmail}
-              onChange={e => setResetEmail(e.target.value)}
-              className="w-full rounded-md px-3 py-2 bg-[#23273a] text-white border border-[#3a405a] focus:outline-none focus:ring-2 focus:ring-blue-400"
-              placeholder="tu@email.com"
-              disabled={resetLoading}
-              required
-            />
+
+      {/* Password Reset Modal */}
+      <Modal
+        open={showResetModal}
+        onClose={handleCloseResetModal}
+        title="Recuperar contraseña"
+        size="sm"
+      >
+        {resetSuccess ? (
+          /* Confirmation state */
+          <div className="py-2 flex flex-col items-center text-center gap-5">
+            <div className="w-14 h-14 rounded-full bg-indigo-50 flex items-center justify-center">
+              <MailCheck size={26} className="text-[#6b7fd4]" />
+            </div>
+            <div className="space-y-2">
+              <p className="text-sm font-semibold text-neutral-700">Revisa tu bandeja</p>
+              <p className="text-sm text-neutral-500 leading-relaxed">
+                Si tu correo está registrado en el sistema, recibirás un enlace en los
+                próximos minutos para restablecer tu contraseña.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={handleCloseResetModal}
+              className="w-full rounded-lg bg-[#1e2336] hover:bg-[#252b42] text-white font-semibold py-2.5 text-sm transition"
+            >
+              Entendido
+            </button>
           </div>
-          {resetError && (
-            <div className="text-red-300 text-xs bg-red-900/30 border border-red-700/60 rounded-md px-3 py-2">
-              {resetError}
+        ) : (
+          /* Form state */
+          <form onSubmit={handleResetPassword} className="space-y-4">
+            <p className="text-sm text-neutral-500 leading-relaxed">
+              Ingresa tu correo electrónico y, si está registrado, te enviaremos un enlace
+              para restablecer tu contraseña.
+            </p>
+            <div className="space-y-1.5">
+              <label className="block text-sm font-medium text-neutral-700">
+                Correo electrónico
+              </label>
+              <input
+                type="email"
+                value={resetEmail}
+                onChange={(e) => setResetEmail(e.target.value)}
+                className="w-full rounded-lg px-3 py-2.5 bg-white text-neutral-800 border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-[#6b7fd4]/30 focus:border-[#6b7fd4]/50 text-sm transition placeholder-neutral-400"
+                placeholder="tu@correo.com"
+                disabled={resetLoading}
+                required
+                autoComplete="email"
+              />
             </div>
-          )}
-          {resetSuccess && (
-            <div className="text-green-300 text-xs bg-green-900/30 border border-green-700/60 rounded-md px-3 py-2">
-              {resetSuccess}
-            </div>
-          )}
-          <button
-            type="submit"
-            disabled={resetLoading}
-            className="w-full rounded-lg bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 text-sm transition disabled:opacity-60"
-          >
-            {resetLoading ? "Enviando..." : "Enviar"}
-          </button>
-        </form>
+            {resetError && (
+              <div className="text-red-600 text-xs bg-red-50 border border-red-200 rounded-lg px-3 py-2">
+                {resetError}
+              </div>
+            )}
+            <button
+              type="submit"
+              disabled={resetLoading}
+              className="w-full rounded-lg bg-[#6b7fd4] hover:bg-[#7a8ee3] text-white font-semibold py-2.5 text-sm transition disabled:opacity-60"
+            >
+              {resetLoading ? "Enviando..." : "Enviar enlace"}
+            </button>
+          </form>
+        )}
       </Modal>
     </div>
   );

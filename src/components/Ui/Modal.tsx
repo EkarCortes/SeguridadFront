@@ -1,6 +1,5 @@
-import React from "react";
-
-//Este componente Modal se utiliza para mostrar contenido en una ventana emergente centrada en la pantalla, con opciones para cerrar y personalizar el tamaño y título.
+import React, { useEffect } from "react";
+import { X } from "lucide-react";
 
 interface ModalProps {
   open: boolean;
@@ -10,38 +9,61 @@ interface ModalProps {
   title?: string;
 }
 
-const Modal: React.FC<ModalProps> = ({
-  open,
-  onClose,
-  children,
-  size = "md",
-  title,
-}) => {
+const sizeMap = {
+  sm: "max-w-sm",
+  md: "max-w-lg",
+  lg: "max-w-2xl",
+};
+
+const Modal: React.FC<ModalProps> = ({ open, onClose, children, size = "md", title }) => {
+  useEffect(() => {
+    if (!open) return;
+    const handler = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, [open, onClose]);
+
   if (!open) return null;
-  const sizeClass =
-    size === "sm"
-      ? "max-w-xs sm:max-w-sm"
-      : size === "lg"
-      ? "max-w-lg sm:max-w-xl md:max-w-2xl lg:max-w-4xl"
-      : "max-w-sm sm:max-w-md md:max-w-lg";
-      
+
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60  backdrop-blur-sm  p-2 sm:p-4">
+    <div
+      className="fixed inset-0 z-[9999] flex items-center justify-center p-4"
+      style={{ background: "rgba(15, 23, 42, 0.55)", backdropFilter: "blur(6px)" }}
+      onMouseDown={(e) => { if (e.target === e.currentTarget) onClose(); }}
+    >
       <div
-        className={`bg-[#2d3346] rounded-xl shadow-2xl w-full ${sizeClass} p-4 sm:p-6 relative
-          max-h-[95vh] sm:max-h-[90vh] overflow-y-auto
-        `}
+        className={`relative w-full ${sizeMap[size]} rounded-[20px] shadow-2xl overflow-hidden max-h-[90vh] flex flex-col`}
       >
-        <button
-          className="absolute top-2 right-2 sm:top-3 sm:right-3 text-neutral-400 hover:text-white text-xl z-10"
-          onClick={onClose}
+        {/* Header */}
+        <div
+          className="flex items-center justify-between px-5 py-4 flex-shrink-0"
+          style={{ background: "#262c3e" }}
         >
-          ×
-        </button>
-        {title && (
-          <h3 className="text-lg font-bold text-white mb-4 pr-8">{title}</h3>
-        )}
-        {children}
+          {title ? (
+            <h3
+              className="text-[15px] font-bold text-white leading-snug"
+              style={{ fontFamily: "'Manrope', sans-serif" }}
+            >
+              {title}
+            </h3>
+          ) : (
+            <span />
+          )}
+          <button
+            onClick={onClose}
+            className="flex items-center justify-center w-7 h-7 rounded-lg text-white/50 hover:text-white hover:bg-white/10 transition flex-shrink-0"
+          >
+            <X size={15} strokeWidth={2.5} />
+          </button>
+        </div>
+
+        {/* Body */}
+        <div
+          className="overflow-y-auto px-6 py-5 flex-1"
+          style={{ background: "#f7f9ff", fontFamily: "'Inter', sans-serif" }}
+        >
+          {children}
+        </div>
       </div>
     </div>
   );

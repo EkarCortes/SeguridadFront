@@ -1,3 +1,4 @@
+import { LogOut } from "lucide-react";
 import Modal from './Ui/Modal';
 
 interface LogoutConfirmModalProps {
@@ -6,7 +7,7 @@ interface LogoutConfirmModalProps {
   onCancel: () => void;
   loading?: boolean;
 }
-// Este componente muestra un modal de confirmación para cerrar sesión.
+
 export default function LogoutConfirmModal({
   isOpen,
   onConfirm,
@@ -14,47 +15,51 @@ export default function LogoutConfirmModal({
   loading = false
 }: LogoutConfirmModalProps) {
   return (
-    <Modal open={isOpen} onClose={onCancel} size="sm" title="Confirmar Cierre de Sesión">
-      <div className="text-center space-y-4">
-        <div className="w-16 h-16 mx-auto bg-red-500/20 rounded-full flex items-center justify-center">
-          <svg
-            className="w-8 h-8 text-red-400"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-            />
-          </svg>
+    <Modal open={isOpen} onClose={onCancel} size="sm" title="Cerrar sesión">
+      <div className="flex flex-col items-center text-center gap-5 py-1">
+        <div
+          className="w-14 h-14 rounded-2xl flex items-center justify-center"
+          style={{ background: "rgba(239,68,68,0.1)", border: "1.5px solid rgba(239,68,68,0.2)" }}
+        >
+          <LogOut size={22} strokeWidth={1.8} style={{ color: "#ef4444" }} />
         </div>
 
-        <h3 className="text-xl font-bold text-white">¿Cerrar Sesión?</h3>
-        
-        <p className="text-neutral-400 text-sm">
-          ¿Estás seguro de que quieres cerrar tu sesión? 
-        </p>
+        <div className="space-y-1.5">
+          <h3
+            className="text-base font-bold text-slate-900"
+            style={{ fontFamily: "'Manrope', sans-serif" }}
+          >
+            ¿Estás seguro?
+          </h3>
+          <p className="text-sm text-slate-500 leading-relaxed">
+            Tu sesión se cerrará y tendrás que volver a iniciar sesión.
+          </p>
+        </div>
 
-        <div className="flex gap-3 pt-4">
+        <div className="flex gap-2.5 w-full">
           <button
             onClick={onCancel}
             disabled={loading}
-            className="flex-1 py-2.5 px-4 rounded-lg bg-gray-600 hover:bg-gray-700 text-white font-semibold text-sm transition disabled:opacity-50"
+            className="flex-1 h-10 rounded-xl text-sm font-medium transition disabled:opacity-50"
+            style={{
+              fontFamily: "'Inter', sans-serif",
+              background: "white",
+              border: "1.5px solid #e2e8f0",
+              color: "#475569",
+            }}
           >
             Cancelar
           </button>
           <button
             onClick={onConfirm}
             disabled={loading}
-            className="flex-1 py-2.5 px-4 rounded-lg bg-red-600 hover:bg-red-700 text-white font-semibold text-sm transition disabled:opacity-50 flex items-center justify-center gap-2"
+            className="flex-1 h-10 rounded-xl text-white text-sm font-semibold transition disabled:opacity-60 flex items-center justify-center gap-2"
+            style={{ fontFamily: "'Inter', sans-serif", background: "#ef4444" }}
           >
             {loading && (
-              <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
             )}
-            {loading ? 'Cerrando...' : 'Cerrar Sesión'}
+            {loading ? "Cerrando..." : "Cerrar sesión"}
           </button>
         </div>
       </div>

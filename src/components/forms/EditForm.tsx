@@ -95,7 +95,7 @@ export default function EditForm({ initial, onSave, onCancel }: EditFormProps) {
       </div>
 
       <div>
-        <label className="block text-neutral-200 text-sm mb-1">
+        <label className="block text-slate-700 text-sm mb-1">
           Foto actual
         </label>
         <div className="mb-3">
@@ -124,7 +124,8 @@ export default function EditForm({ initial, onSave, onCancel }: EditFormProps) {
       <div className="flex flex-col sm:flex-row justify-end gap-2 mt-4 w-full">
         <button
           type="button"
-          className="px-4 py-2 rounded bg-neutral-600 text-white hover:bg-neutral-500 transition w-full sm:w-auto"
+          className="h-10 px-5 rounded-xl border border-slate-200 bg-white text-slate-700 text-sm font-medium hover:bg-slate-50 transition w-full sm:w-auto"
+          style={{ fontFamily: "'Inter', sans-serif" }}
           onClick={onCancel}
           disabled={isSubmitting}
         >
@@ -132,17 +133,16 @@ export default function EditForm({ initial, onSave, onCancel }: EditFormProps) {
         </button>
         <button
           type="submit"
-          className="px-4 py-2 rounded bg-blue-700 text-white hover:bg-blue-600 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 w-full sm:w-auto"
+          className="h-10 px-5 rounded-xl text-white text-sm font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 w-full sm:w-auto"
+          style={{ background: "#262c3e", fontFamily: "'Inter', sans-serif" }}
           disabled={isSubmitting}
         >
           {isSubmitting ? (
             <>
-              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              <div className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
               Actualizando...
             </>
-          ) : (
-            'Actualizar'
-          )}
+          ) : 'Actualizar'}
         </button>
       </div>
     </form>
