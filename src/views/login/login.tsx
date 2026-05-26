@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import logo from "../../assets/FaceCore 3.png";
 import useAuth from "../../hooks/auth/useAuth";
 import Modal from "../../components/Ui/Modal";
@@ -17,7 +16,6 @@ export default function Login({ onLogin }: LoginProps) {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const { login } = useAuth();
-  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
 
   const {
@@ -55,7 +53,6 @@ export default function Login({ onLogin }: LoginProps) {
     try {
       await login(username, password);
       onLogin?.();
-      navigate("/home");
     } catch (err: any) {
       setError(err.message || "Error al iniciar sesión. Verifica tus credenciales.");
     } finally {
