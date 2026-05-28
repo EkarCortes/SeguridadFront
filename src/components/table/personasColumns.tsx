@@ -18,10 +18,7 @@ export const getPersonasColumns = (
     style: { width: '64px', paddingLeft: '20px', paddingRight: '8px' },
     body: (row: ExtendedPersona) => {
       const imageUrl = row.foto_url
-        ? row.foto_url.startsWith("https://facerecognition.naturalaloe.dev/")
-          ? row.foto_url
-          : `https://facerecognition.naturalaloe.dev/${row.foto_url.replace(/^\/+/, "")}`
-        : imagen;
+      
       return (
         <button
           className="group relative focus:outline-none"

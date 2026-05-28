@@ -6,6 +6,8 @@ import { useEffect, useState } from 'react';
 import Home from './views/home/home'
 import CustomDrawer from './drawer'
 import ListaAgregados from './views/agregados/listaAgregados';
+import AgregarPersona from './views/agregados/agregarPersona';
+import EditarPersona from './views/agregados/editarPersona';
 import ListaIngresados from './views/ingresados/listaIngresados';
 import ListaUsuarios from './views/users/listaUsuarios';
 import Login from './views/login/login';
@@ -56,6 +58,8 @@ function AppContent() {
           <Routes>
             <Route path="/inicio" element={<Home />} />
             <Route path="/listaAgregados" element={<ListaAgregados />} />
+            <Route path="/agregarPersona" element={<AgregarPersona />} />
+            <Route path="/editarPersona" element={<EditarPersona />} />
             <Route path="/listaIngresados" element={<ListaIngresados />} />
             <Route path="/user" element={<ListaUsuarios />} />
             <Route path="*" element={<Navigate to="/inicio" replace />} />

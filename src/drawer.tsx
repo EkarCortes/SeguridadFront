@@ -64,6 +64,8 @@ export default function CustomDrawer({ onLogout, children }: CustomDrawerProps) 
         const matched = routeGroups.find((r) => r.to === location.pathname);
         if (matched) return matched.label;
         if (location.pathname.startsWith('/home') || location.pathname.startsWith('/inicio')) return 'Inicio';
+        if (location.pathname === '/agregarPersona') return 'Registrar Persona';
+        if (location.pathname === '/editarPersona') return 'Editar Persona';
         return 'Inicio';
     }, [location.pathname, routeGroups]);
 

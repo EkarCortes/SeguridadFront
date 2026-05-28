@@ -1,38 +1,31 @@
 import { useState } from "react";
 import { UserPlus } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import DataTableGeneric from "../../components/table/DataTableGeneric";
 import { getPersonasColumns } from "../../components/table/personasColumns";
 import ImageModal from "../../components/Ui/ImageModal";
 import Modal from "../../components/Ui/Modal";
-import EditForm from "../../components/forms/EditForm";
-import AddForm from "../../components/forms/AddForm";
 import HoldToConfirmButton from "../../components/Ui/HoldToConfirmButton";
 import { usePersonManagement } from '../../hooks/agregados/usePersonManagement';
 import CustomToaster from "../../components/Ui/CustomToaster";
+import type { ExtendedPersona } from "../../components/table/personasColumns";
 
 export default function ListaAgregados() {
+  const navigate = useNavigate();
   const {
     filteredPersons,
     totalPersonas,
     loading,
     error,
-    editUser,
     deleteUser,
-    addModal,
     search,
-    handleEdit,
-    handleSaveEdit,
     handleDelete,
     confirmDelete,
-    handleAddUser,
     setSearch,
-    setAddModal,
-    setEditUser,
     setDeleteUser,
     refetch
   } = usePersonManagement();
 
-  // Estado para el modal de imagen
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [imageAlt, setImageAlt] = useState<string>('');
@@ -43,10 +36,8 @@ export default function ListaAgregados() {
     setIsImageModalOpen(true);
   };
 
-  const handleCloseImageModal = () => {
-    setIsImageModalOpen(false);
-    setSelectedImage(null);
-    setImageAlt('');
+  const handleEdit = (persona: ExtendedPersona) => {
+    navigate("/editarPersona", { state: { persona } });
   };
 
   return (
@@ -68,7 +59,7 @@ export default function ListaAgregados() {
           <button
             className="flex items-center gap-2 px-4 h-9 rounded-xl bg-[#262c3e] text-white text-sm font-medium hover:bg-[#262c3e] transition"
             style={{ fontFamily: "'Inter', sans-serif" }}
-            onClick={() => setAddModal(true)}
+            onClick={() => navigate("/agregarPersona")}
             type="button"
           >
             <UserPlus size={14} />
@@ -76,23 +67,6 @@ export default function ListaAgregados() {
           </button>
         }
       />
-
-      <Modal open={addModal} onClose={() => setAddModal(false)} size="md" title="Registrar Nueva Persona">
-        <AddForm
-          onSave={handleAddUser}
-          onCancel={() => setAddModal(false)}
-        />
-      </Modal>
-
-      <Modal open={!!editUser} onClose={() => setEditUser(null)} size="md" title="Editar Persona">
-        {editUser && (
-          <EditForm
-            initial={editUser}
-            onSave={handleSaveEdit}
-            onCancel={() => setEditUser(null)}
-          />
-        )}
-      </Modal>
 
       <Modal open={!!deleteUser} onClose={() => setDeleteUser(null)} size="sm" title="Eliminar Persona">
         <div className="flex flex-col gap-4">
@@ -122,7 +96,7 @@ export default function ListaAgregados() {
       <ImageModal
         isOpen={isImageModalOpen}
         imageUrl={selectedImage}
-        onClose={handleCloseImageModal}
+        onClose={() => { setIsImageModalOpen(false); setSelectedImage(null); setImageAlt(''); }}
         alt={imageAlt}
       />
       <CustomToaster />
