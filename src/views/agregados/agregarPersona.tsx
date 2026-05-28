@@ -1,5 +1,7 @@
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
+import { PERSONS_QUERY_KEY } from "../../hooks/agregados/usePersons";
 import { UserPlus, Camera, X, ImagePlus,
   User, Mail, Phone, Hash,
 } from "lucide-react";
@@ -35,6 +37,7 @@ function Field({ label, icon: Icon, required, ...props }: FieldProps) {
 
 export default function AgregarPersona() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [form, setForm] = useState({ nombre: "", cedula: "", email: "", telefono: "" });
@@ -69,6 +72,7 @@ export default function AgregarPersona() {
     try {
       const personData: PersonFormData = { ...form, fotos: selectedFiles };
       await agregadosService.registerPerson(personData);
+      await queryClient.invalidateQueries({ queryKey: PERSONS_QUERY_KEY });
       showCustomToast("Éxito", "Persona registrada correctamente.", "success");
       navigate("/listaAgregados");
     } catch (err) {

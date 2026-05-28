@@ -1,46 +1,20 @@
-import { useState, useEffect } from 'react';
-import { ingresadosService} from '../../service/ingresados/ingresadosService';
-import type { Verificacion, VerificationsResponse } from '../../types/ingresados';
+import { useQuery } from '@tanstack/react-query';
+import { ingresadosService } from '../../service/ingresados/ingresadosService';
 
-// Hook que gestiona la obtención y el estado de las verificaciones
+export const VERIFICATIONS_QUERY_KEY = ['verifications'] as const;
 
 export const useVerifications = () => {
-  const [verifications, setVerifications] = useState<Verificacion[]>([]);
-  const [totalVerificaciones, setTotalVerificaciones] = useState<number>(0);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const fetchVerifications = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const data: VerificationsResponse = await ingresadosService.getVerifications();
-      if (data && Array.isArray(data.registros)) {
-        setVerifications(data.registros);
-        setTotalVerificaciones(data.total_registros );
-      } else {
-        console.warn('Estructura de datos inesperada:', data);
-        setVerifications([]);
-        setTotalVerificaciones(0);
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error al cargar las verificaciones');
-      setVerifications([]);
-      console.error('Error fetching verifications:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchVerifications();
-  }, []);
+  const { data, isLoading, error, refetch } = useQuery({
+    queryKey: VERIFICATIONS_QUERY_KEY,
+    queryFn: () => ingresadosService.getVerifications(),
+    staleTime: 5 * 60 * 1000,
+  });
 
   return {
-    verifications,
-    totalVerificaciones,
-    loading,
-    error,
-    refetch: fetchVerifications
+    verifications: data?.registros ?? [],
+    totalVerificaciones: data?.total_registros ?? 0,
+    loading: isLoading,
+    error: error instanceof Error ? error.message : error ? 'Error al cargar las verificaciones' : null,
+    refetch,
   };
 };

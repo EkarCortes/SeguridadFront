@@ -1,5 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
+import { PERSONS_QUERY_KEY } from "../../hooks/agregados/usePersons";
 import { UserPen, Camera, X, ImagePlus, User, Mail, Phone, Hash } from "lucide-react";
 import { useFileUpload } from "../../hooks/agregados/useFileUpload";
 import { agregadosService } from "../../service/agregados/agregadosService";
@@ -43,6 +45,7 @@ export default function EditarPersona() {
   const location = useLocation();
   const persona = (location.state as { persona: ExtendedPersona } | null)?.persona;
 
+  const queryClient = useQueryClient();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [form, setForm] = useState({
     nombre: persona?.nombre ?? "",
@@ -93,6 +96,7 @@ export default function EditarPersona() {
       }
 
       await agregadosService.updatePerson(persona?.cedula!, updateData);
+      await queryClient.invalidateQueries({ queryKey: PERSONS_QUERY_KEY });
       showCustomToast("Éxito", "Persona actualizada correctamente.", "success");
       navigate("/listaAgregados");
     } catch (err: any) {

@@ -1,4 +1,5 @@
 import './App.css'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { PrimeReactProvider } from 'primereact/api';
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useEffect, useState } from 'react';
@@ -75,13 +76,23 @@ function AppContent() {
   );
 }
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000,
+    },
+  },
+});
+
 function App() {
   return (
-    <PrimeReactProvider>
-      <SessionProvider>
-        <AppContent />
-      </SessionProvider>
-    </PrimeReactProvider>
+    <QueryClientProvider client={queryClient}>
+      <PrimeReactProvider>
+        <SessionProvider>
+          <AppContent />
+        </SessionProvider>
+      </PrimeReactProvider>
+    </QueryClientProvider>
   );
 }
 
