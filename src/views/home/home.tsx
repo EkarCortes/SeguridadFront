@@ -136,11 +136,11 @@ const Dashboard = () => {
       <div className="flex flex-col gap-4 w-full">
         <StatsCards />
         <div className="flex flex-col md:flex-row gap-4 w-full">
-          <div className="flex-1 bg-white rounded-2xl shadow-sm border border-slate-100 p-5 min-h-[370px] flex flex-col">
+          <div className="flex-1 bg-white rounded-2xl shadow-sm border border-slate-100 p-5">
             <AccessChart totalData={totalData} loading={loading} error={error} />
           </div>
 
-          <div className="w-full md:w-[320px] bg-white rounded-2xl shadow-sm border border-slate-100 p-5 flex flex-col" style={{ minHeight: "370px" }}>
+          <div className="w-full md:w-[320px] bg-white rounded-2xl shadow-sm border border-slate-100 p-5">
             <div className="flex items-center justify-between mb-1">
               <span className="text-base font-bold text-slate-800" style={{ fontFamily: "'Manrope', sans-serif" }}>
                 {currentMonthData?.mes_nombre ?? "—"} {selectedYear}

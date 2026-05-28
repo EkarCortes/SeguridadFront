@@ -77,9 +77,9 @@ const DonutChart: React.FC<DonutChartProps> = ({ monthlyData, loading, error }) 
   ];
 
   return (
-    <div className="w-full h-full flex flex-col">
+    <div className="w-full flex flex-col">
       {/* Donut */}
-      <div className="relative flex-1 min-h-[160px]">
+      <div className="relative w-full h-[200px]">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie

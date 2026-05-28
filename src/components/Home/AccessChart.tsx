@@ -80,7 +80,7 @@ const AccessChart: React.FC<AccessChartProps> = ({ totalData, loading, error }) 
   ];
 
   return (
-    <div className="w-full h-full flex flex-col">
+    <div className="w-full flex flex-col">
       {/* Header */}
       <div className="flex items-start justify-between mb-4">
         <div>
@@ -108,7 +108,7 @@ const AccessChart: React.FC<AccessChartProps> = ({ totalData, loading, error }) 
       </div>
 
       {/* Chart */}
-      <div className="flex-1 min-h-0">
+      <div className="w-full h-[280px]">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={accessData} barCategoryGap="55%" margin={{ top: 8, right: 8, left: -20, bottom: 24 }}>
             <CartesianGrid vertical={false} stroke="#f1f5f9" strokeDasharray="0" />
