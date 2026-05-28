@@ -45,7 +45,7 @@ export default function ListaUsuarios() {
   };
 
   return (
-    <>
+    <div className="page-enter w-full">
       <DataTableGeneric
         data={filteredUsers}
         columns={getUsersColumns(handleDelete, handleSelectPhoto)}
@@ -99,7 +99,7 @@ export default function ListaUsuarios() {
             <HoldToConfirmButton
               onConfirm={confirmDelete}
               holdDuration={2000}
-              label="Mantener para Eliminar para Eliminar"
+              label="Mantener para Eliminar"
               holdingLabel="Manteniendo..."
             />
           </div>
@@ -113,6 +113,6 @@ export default function ListaUsuarios() {
         alt={imageAlt}
       />
       <CustomToaster />
-    </>
+    </div>
   );
 }

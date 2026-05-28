@@ -41,7 +41,7 @@ export default function ListaAgregados() {
   };
 
   return (
-    <>
+    <div className="page-enter w-full">
       <DataTableGeneric
         data={filteredPersons}
         columns={getPersonasColumns(handleEdit, handleDelete, handleSelectPhoto)}
@@ -100,6 +100,6 @@ export default function ListaAgregados() {
         alt={imageAlt}
       />
       <CustomToaster />
-    </>
+    </div>
   );
 }

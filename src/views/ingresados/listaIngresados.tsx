@@ -41,7 +41,7 @@ export default function ListaIngresados() {
   });
 
   return (
-    <>
+    <div className="page-enter w-full">
       <DataTableGeneric
         data={filteredIngresados}
         columns={getVerificacionesColumns(handleSelectPhoto)}
@@ -63,6 +63,6 @@ export default function ListaIngresados() {
         onClose={handleCloseImageModal}
         alt={imageAlt}
       />
-    </>
+    </div>
   );
 }

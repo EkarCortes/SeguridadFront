@@ -1,7 +1,6 @@
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  ArrowLeft, UserPlus, Camera, X, ImagePlus,
+import { UserPlus, Camera, X, ImagePlus,
   User, Mail, Phone, Hash,
 } from "lucide-react";
 import { useFileUpload } from "../../hooks/agregados/useFileUpload";
@@ -83,7 +82,7 @@ export default function AgregarPersona() {
   const remaining = 5 - selectedFiles.length;
 
   return (
-    <div className="w-full flex flex-col gap-4">
+    <div className="page-enter w-full flex flex-col gap-4">
 
       {/* ── Header ── */}
     

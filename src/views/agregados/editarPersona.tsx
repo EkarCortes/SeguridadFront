@@ -110,7 +110,7 @@ export default function EditarPersona() {
   const remaining = 5 - selectedFiles.length;
 
   return (
-    <div className="w-full min-h-[600px] p-2 md:p-4">
+    <div className="page-enter w-full min-h-[600px] p-2 md:p-4">
       <div className="flex flex-col gap-4 w-full">
          {/* ── Header ── */}
     
