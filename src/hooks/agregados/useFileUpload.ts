@@ -4,6 +4,7 @@ import imageCompression from "browser-image-compression";
 export function useFileUpload(maxFiles: number = 5) {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
+  const [isCompressing, setIsCompressing] = useState(false);
 
   async function convertToPng(file: File): Promise<File> {
     const originalKB = (file.size / 1024).toFixed(1);
