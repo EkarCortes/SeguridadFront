@@ -2,29 +2,35 @@ import { useState, useEffect } from 'react';
 import { homeService } from '../../service/home/homeService';
 import type { DailyVerificationsResponse } from '../../types/homeTypes';
 
-// Hook que gestiona la obtención de las verificaciones diarias
-
 export const useDailyVerifications = (date?: string) => {
   const [data, setData] = useState<DailyVerificationsResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchData = async () => {
+    let cancelled = false;
+
+    const fetchData = async (isInitial = false) => {
+      if (isInitial) setLoading(true);
       try {
-        setLoading(true);
         setError(null);
         const result = await homeService.getDailyVerifications();
-        setData(result);
+        if (!cancelled) setData(result);
       } catch (err) {
-        setError('Error al cargar los datos diarios');
+        if (!cancelled) setError('Error al cargar los datos diarios');
         console.error('Error fetching daily verifications:', err);
       } finally {
-        setLoading(false);
+        if (isInitial && !cancelled) setLoading(false);
       }
     };
 
-    fetchData();
+    fetchData(true);
+    const interval = setInterval(() => fetchData(false), 3000);
+
+    return () => {
+      cancelled = true;
+      clearInterval(interval);
+    };
   }, [date]);
 
   return { data, loading, error };

@@ -65,8 +65,8 @@ export const getUsersColumns = (
         row.rol === 'admin'
           ? 'bg-slate-800 text-slate-100'
           : row.rol === 'operador'
-          ? 'bg-blue-50 text-blue-700 ring-1 ring-blue-200'
-          : 'bg-slate-100 text-slate-600'
+          ? 'bg-slate-100 text-slate-800 ring-1 ring-slate-800'
+          : 'bg-slate-100 text-slate-800 ring-1 ring-slate-300'
       }`}>
         {row.rol === 'admin' ? 'Administrador' : row.rol === 'operador' ? 'Operador' : 'Guarda'}
       </span>

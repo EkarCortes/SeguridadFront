@@ -7,6 +7,7 @@ import StatsCards from "../../components/Home/StatsCards";
 import { useHomeData } from "../../hooks/home/useHomeData";
 import { useMonthlyStats } from "../../hooks/home/useMonthlyStats";
 import { useMonthlySelection } from "../../hooks/home/useMonthlySelection";
+import { useDailyVerifications } from "../../hooks/home/useDailyVerifications";
 
 interface SelectOption { value: string | number; label: string }
 interface CustomSelectProps {
@@ -118,6 +119,7 @@ function CustomSelect({ options, value, onChange, disabled }: CustomSelectProps)
 const Dashboard = () => {
   const { totalData, loading, error } = useHomeData();
   const { monthlyStats, loading: monthlyLoading, error: monthlyError, refetch } = useMonthlyStats();
+  const { data: dailyData, loading: dailyLoading, error: dailyError } = useDailyVerifications();
 
   const {
     years,
@@ -134,7 +136,11 @@ const Dashboard = () => {
   return (
     <div className="page-enter w-full min-h-[600px] p-2 md:p-4">
       <div className="flex flex-col gap-4 w-full">
-        <StatsCards />
+        <StatsCards
+          total={dailyData?.total_verificaciones ?? 0}
+          autorizadas={dailyData?.total_autorizadas ?? 0}
+          rechazadas={dailyData?.total_rechazadas ?? 0}
+        />
         <div className="flex flex-col md:flex-row gap-4 w-full">
           <div className="flex-1 bg-white rounded-2xl shadow-sm border border-slate-100 p-5">
             <AccessChart totalData={totalData} loading={loading} error={error} />
@@ -177,7 +183,7 @@ const Dashboard = () => {
         </div>
 
         <div className="bg-white rounded-2xl shadow-sm border border-slate-100">
-          <AccessTable />
+          <AccessTable data={dailyData} loading={dailyLoading} error={dailyError} />
         </div>
       </div>
     </div>

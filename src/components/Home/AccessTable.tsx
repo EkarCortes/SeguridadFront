@@ -1,12 +1,17 @@
 import { useState } from "react";
-import { useDailyVerifications } from "../../hooks/home/useDailyVerifications";
 import { convertToCostaRicaTime } from "../../utils/dateUtils";
 import image from "../../assets/noUser.jpg";
 import ImageModal from "../Ui/ImageModal";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import DataTableProp from "../table/DataTableProp";
 import type { ColumnProps } from "primereact/column";
-import type { DetalleIntento } from "../../types/homeTypes";
+import type { DetalleIntento, DailyVerificationsResponse } from "../../types/homeTypes";
+
+interface AccessTableProps {
+  data: DailyVerificationsResponse | null;
+  loading: boolean;
+  error: string | null;
+}
 
 interface AccessRow {
   id: string | number;
@@ -38,8 +43,7 @@ const transformDataForTable = (data: any): AccessRow[] => {
   return rows.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
 };
 
-const AccessTable = () => {
-  const { data, loading, error } = useDailyVerifications();
+const AccessTable = ({ data, loading, error }: AccessTableProps) => {
   const tableData = data ? transformDataForTable(data) : [];
 
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);

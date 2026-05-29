@@ -24,9 +24,9 @@ export default function FormField({
   helperText,
   className = ""
 }: FormFieldProps) {
-  const baseClasses = "w-full rounded px-3 py-2 border border-[#ccc] focus:outline-none focus:ring-2 focus:ring-gray-500";
-  const enabledClasses = "bg-white text-neutral-700";
-  const disabledClasses = "bg-white text-neutral-700 cursor-not-allowed";
+  const baseClasses = "w-full rounded-xl border text-sm px-3 py-2.5 focus:outline-none transition";
+  const enabledClasses = "bg-slate-50 border-slate-200 text-slate-800 focus:ring-2 focus:ring-[#262c3e]/10 focus:border-slate-400 placeholder-slate-300";
+  const disabledClasses = "bg-slate-50 border-slate-200 text-slate-700 cursor-not-allowed";
 
   return (
     <div className={`flex-1 ${className}`}>

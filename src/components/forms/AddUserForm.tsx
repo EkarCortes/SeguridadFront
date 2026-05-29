@@ -227,17 +227,24 @@ export default function AddUserForm({ onSave, onCancel }: AddUserFormProps) {
                     <label className="block text-slate-700 text-sm mb-1">
                         Rol <span className="text-red-400">*</span>
                     </label>
-                    <select
-                        name="rol"
-                        value={formData.rol}
-                        onChange={handleChange}
-                        required
-                        className="w-full rounded px-3 py-2 border border-[#ccc] bg-white text-neutral-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
-                    >
-                        <option value="operador">Operador</option>
-                        <option value="admin">Administrador</option>
-                        <option value="guarda">Guarda</option>
-                    </select>
+                    <div className="relative">
+                        <select
+                            name="rol"
+                            value={formData.rol}
+                            onChange={handleChange}
+                            required
+                            className="w-full appearance-none rounded-xl border text-sm px-3 py-2.5 pr-9 bg-slate-50 border-slate-200 text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#262c3e]/10 focus:border-slate-400 transition cursor-pointer"
+                        >
+                            <option value="operador">Operador</option>
+                            <option value="admin">Administrador</option>
+                            <option value="guarda">Guarda</option>
+                        </select>
+                        <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center">
+                            <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </div>
+                    </div>
                 </div>
             </div>
 
