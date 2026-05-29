@@ -45,6 +45,10 @@ export default function CustomDrawer({ onLogout, children }: CustomDrawerProps) 
 
     const location = useLocation();
     const [showLogoutModal, setShowLogoutModal] = useState(false);
+
+    React.useEffect(() => {
+        document.querySelector('.drawer-panel')?.scrollTo({ top: 0, behavior: 'instant' });
+    }, [location.pathname]);
     const [logoutLoading, setLogoutLoading] = useState(false);
     const [topUser, setTopUser] = useState<{ username: string; rol: string } | null>(null);
 
